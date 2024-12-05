@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation";
+
 export default function Home() {
-  return <>ss</>;
+  redirect("/home");
+  return null;
 }

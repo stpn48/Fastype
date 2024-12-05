@@ -1,7 +1,8 @@
 ## TASKS
 
-[] - create pages, folder structure
+[x] - create pages, folder structure
 [] - navbar, footer
+[] - dark mode
 [] - auth
 [] - Home page: find race section, practice alone section, create race section (play with friends)
 [] - Prep prisma schema

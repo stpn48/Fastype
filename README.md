@@ -1,7 +1,8 @@
 ## TASKS
 
 [x] - create pages, folder structure
-[] - navbar, footer
+[x] - mock navbar, footer
+[] - init shadcn
 [] - dark mode
 [] - auth
 [] - Home page: find race section, practice alone section, create race section (play with friends)

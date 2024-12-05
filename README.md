@@ -1,5 +1,20 @@
 ## TASKS
 
+[] - create pages, folder structure
+[] - navbar, footer
+[] - auth
+[] - Home page: find race section, practice alone section, create race section (play with friends)
+[] - Prep prisma schema
+[] - Profile Page:
+
+page:
+
+- Home Page [x]
+- Profile Page [x]
+- Race Page [x]
+- About Page [x]
+- Settings Page
+
 ## GOALS
 
 [] - Realtime race track with other players

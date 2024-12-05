@@ -1,3 +1,4 @@
+import { NextThemeProvider } from "@/app/_components/next-theme-provider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -25,7 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <NextThemeProvider>{children}</NextThemeProvider>
+      </body>
     </html>
   );
 }

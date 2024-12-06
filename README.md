@@ -4,18 +4,12 @@
 [x] - mock navbar, footer
 [x] - init shadcn
 [x] - dark mode
-[] - auth
+[x] - auth
+[] - connect supabase db
+[] - init user in db when user.create
 [] - Home page: find race section, practice alone section, create race section (play with friends)
 [] - Prep prisma schema
 [] - Profile Page:
-
-page:
-
-- Home Page [x]
-- Profile Page [x]
-- Race Page [x]
-- About Page [x]
-- Settings Page
 
 ## GOALS
 

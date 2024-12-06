@@ -13,10 +13,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum RaceStatus {
+  open
+  completed
+}
+
 // basic data like name, email, avatar are in clerk, here is the stats for this user
 model User {
   id                String @id @default(uuid())
   clerkId           String @unique
+  raceHistory       Race[]
   avgWpmLast10Races Int    @default(0)
   avgWpmAllTime     Int    @default(0)
   lastRaceWpm       Int    @default(0)
@@ -24,4 +30,13 @@ model User {
   racesCompleted    Int    @default(0)
   racesWon          Int    @default(0)
   country           String @default("unknown")
+}
+
+model Race {
+  id        String     @id @default(uuid())
+  users     User[]
+  avgWpm    Int
+  createdAt DateTime   @default(now())
+  status    RaceStatus @default(open)
+  text      String
 }

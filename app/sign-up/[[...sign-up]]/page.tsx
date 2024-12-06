@@ -9,3 +9,5 @@ export default function Page() {
     </div>
   );
 }
+
+// TODO: Create the user in the db with the stats after sign up in clerk

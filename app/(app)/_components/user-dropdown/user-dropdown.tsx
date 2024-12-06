@@ -1,14 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { SignoutItem } from "./signout-item";
 
 export async function UserDropdown() {
-  const { userId } = await auth();
-
-  const clerk = await clerkClient();
-
-  const user = await clerk.users.getUser(userId!);
+  const user = await currentUser();
 
   return (
     <DropdownMenu>

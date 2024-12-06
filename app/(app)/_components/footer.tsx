@@ -1,3 +1,3 @@
 export default function Footer() {
-  return <div className="bg-orange-500 h-[250px]">Footer</div>;
+  return <div className="bg-background border-t border-border p-4 h-[250px]">Footer</div>;
 }

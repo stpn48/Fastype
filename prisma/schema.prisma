@@ -13,7 +13,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// basic data like name, email, avatar are in clerk, here is the stats for this user
 model User {
-  id      String @id @default(uuid())
-  clerkId String @unique
+  id                String @id @default(uuid())
+  clerkId           String @unique
+  avgWpmLast10Races Int    @default(0)
+  avgWpmAllTime     Int    @default(0)
+  lastRaceWpm       Int    @default(0)
+  bestRaceWpm       Int    @default(0)
+  racesCompleted    Int    @default(0)
+  racesWon          Int    @default(0)
+  country           String @default("unknown")
 }

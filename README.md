@@ -2,8 +2,8 @@
 
 [x] - create pages, folder structure
 [x] - mock navbar, footer
-[] - init shadcn
-[] - dark mode
+[x] - init shadcn
+[x] - dark mode
 [] - auth
 [] - Home page: find race section, practice alone section, create race section (play with friends)
 [] - Prep prisma schema

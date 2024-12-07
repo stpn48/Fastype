@@ -30,6 +30,7 @@ model User {
   country           String          @default("unknown")
   raceId            String?
   Race              Race?           @relation(fields: [raceId], references: [id])
+  raceProgress      Int             @default(0)
 }
 
 model Race {

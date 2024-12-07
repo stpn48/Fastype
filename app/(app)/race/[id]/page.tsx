@@ -11,6 +11,7 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
     redirect("/home");
   }
 
+  // TODO: Move this to queries
   const raceDetails = await prisma.race.findUnique({
     where: {
       id: paramsResolved.id,

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/backend": "^1.20.0",
     "@clerk/nextjs": "^6.8.0",
     "@prisma/client": "6.0.1",
     "@radix-ui/react-avatar": "^1.1.1",
@@ -19,6 +20,8 @@
     "lucide-react": "^0.468.0",
     "next": "15.0.3",
     "next-themes": "^0.4.4",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9",
     "prisma": "^6.0.1",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",

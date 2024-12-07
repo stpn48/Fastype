@@ -7,7 +7,7 @@
 [x] - auth
 [x] - connect supabase db
 [x] - init user in db when user.create
-[] - Home page: find race section, practice alone section, create race section (play with friends)
+[x] - Home page: find race section, practice alone section, create race section (play with friends)
 [] - add theme toggle to footer
 [] - Prep prisma schema
 [] - Profile Page:

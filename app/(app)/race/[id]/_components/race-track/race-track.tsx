@@ -1,19 +1,13 @@
-import { getRaceDetails } from "@/server/queries";
+import { User } from "@prisma/client";
 import { UserTrack } from "./user-track";
 
-type Props = { raceId: string };
+type Props = { users: User[] };
 
-export async function RaceTrack({ raceId }: Props) {
-  const raceDetails = await getRaceDetails(raceId);
-
-  if (!raceDetails) {
-    return null;
-  }
-
+export function RaceTrack({ users }: Props) {
   return (
     <div className="flex w-full flex-col rounded-lg border border-border">
-      {raceDetails.users.map(async (user) => (
-        <UserTrack userId={user.id} userClerkId={user.clerkId} />
+      {users.map(async (user) => (
+        <UserTrack userClerkId={user.clerkId} />
       ))}
     </div>
   );

@@ -4,10 +4,10 @@ import { Navbar } from "./_components/navbar";
 
 export default function AppLayout({ children }: PropsWithChildren) {
   return (
-    <div className="h-screen flex flex-col">
+    <div className="flex h-screen flex-col">
       <Navbar />
-      <main className="mt-[56px] flex-1 flex flex-col">
-        <div className="p-4 flex-1">{children}</div>
+      <main className="mt-[56px] flex flex-1 flex-col">
+        <div className="flex-1 p-10">{children}</div>
         <Footer />
       </main>
     </div>

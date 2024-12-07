@@ -5,11 +5,13 @@
 [x] - init shadcn
 [x] - dark mode
 [x] - auth
-[] - connect supabase db
-[] - init user in db when user.create
+[x] - connect supabase db
+[x] - init user in db when user.create
 [] - Home page: find race section, practice alone section, create race section (play with friends)
+[] - add theme toggle to footer
 [] - Prep prisma schema
 [] - Profile Page:
+[] - create logo
 
 ## GOALS
 

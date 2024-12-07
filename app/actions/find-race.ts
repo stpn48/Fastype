@@ -1,7 +1,7 @@
 "use server";
 
 import { catchError } from "@/lib/catch-error";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { Race } from "@prisma/client";
 
@@ -13,12 +13,14 @@ type Response = {
 };
 
 export async function findRace(): Promise<Response> {
+  // get clerk user
   const user = await currentUser();
 
   if (!user) {
     return { error: "Unauthenticated", race: null };
   }
 
+  // get user data from db
   const [userData, userDataError] = await catchError(
     prisma.user.findFirst({
       where: {
@@ -39,6 +41,7 @@ export async function findRace(): Promise<Response> {
     return { error: "User not found", race: null };
   }
 
+  // find a race in users wpm range and status open
   const [race, findRaceError] = await catchError(
     prisma.race.findFirst({
       where: {
@@ -63,13 +66,14 @@ export async function findRace(): Promise<Response> {
     const userAlreadyInRace = race.users.some((u) => u.id === userData.id);
 
     if (userAlreadyInRace) {
-      return { error: "User is already in the race", race };
+      return { error: null, race };
     }
 
     // Calculate new avgWpm after adding the new user
     const totalUsersWpm = race.users.reduce((acc, curr) => acc + curr.avgWpmLast10Races, 0) + userData.avgWpmAllTime;
     const newAvgWpm = totalUsersWpm / (race.users.length + 1);
 
+    // join the race and update the avgWpm for the race
     const [, joinRaceError] = await catchError(
       prisma.race.update({
         where: {

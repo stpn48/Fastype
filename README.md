@@ -10,6 +10,8 @@
 [x] - Home page: find race section, practice alone section, create race section (play with friends)
 [] - implement find race
 [] - add theme toggle to footer
+[] - add toast with sonner
+[] - update race status to closed after 10 sec of creating the race
 [x] - Prep prisma schema
 [] - Profile Page:
 [] - create logo

@@ -19,9 +19,9 @@ export async function RaceTrack({ raceId }: Props) {
   }
 
   return (
-    <div className="border flex flex-col border-border w-full rounded-lg">
-      {raceDetails?.users.map(async (user) => (
-        <UserTrack userClerkId={user.clerkId} />
+    <div className="flex w-full flex-col rounded-lg border border-border">
+      {raceDetails.users.map(async (user) => (
+        <UserTrack userId={user.id} userClerkId={user.clerkId} />
       ))}
     </div>
   );

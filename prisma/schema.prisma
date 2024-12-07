@@ -37,7 +37,6 @@ model Race {
   users         User[]
   avgWpm        Int
   createdAt     DateTime        @default(now())
-  status        RaceStatus      @default(open)
   text          String
   CompletedRace CompletedRace[]
 }

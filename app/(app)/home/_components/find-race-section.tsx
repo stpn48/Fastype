@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Earth } from "lucide-react";
+import { FindRaceButton } from "./find-race-button";
 
 export function FindRaceSection() {
   return (
@@ -10,7 +10,8 @@ export function FindRaceSection() {
         <h1 className="text-2xl font-bold">Find Race</h1>
         <p className="text-muted-foreground">Race against other players</p>
       </div>
-      <Button className="w-full h-10 z-10 text-base">Find Race</Button>
+
+      <FindRaceButton />
     </section>
   );
 }

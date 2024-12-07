@@ -15,7 +15,7 @@ datasource db {
 
 enum RaceStatus {
   open
-  completed
+  closed
 }
 
 // basic data like name, email, avatar are in clerk, here is the stats for this user
@@ -36,6 +36,7 @@ model Race {
   id            String          @id @default(uuid())
   users         User[]
   avgWpm        Int
+  status        RaceStatus      @default(open)
   createdAt     DateTime        @default(now())
   text          String
   CompletedRace CompletedRace[]

@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@prisma/client";
 import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   firstName: string;

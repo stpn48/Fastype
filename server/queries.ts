@@ -17,7 +17,7 @@ export async function getUser() {
       include: {
         Race: true,
       },
-    })
+    }),
   );
 
   if (!userData || userDataError) {
@@ -25,4 +25,42 @@ export async function getUser() {
   }
 
   return { ...clerkUser, ...userData };
+}
+
+export async function getUserData(userId: string) {
+  const [userData, error] = await catchError(
+    prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      select: {
+        raceProgress: true,
+      },
+    }),
+  );
+
+  if (error) {
+    return null;
+  }
+
+  return userData;
+}
+
+export async function getRaceDetails(raceId: string) {
+  const [raceDetails, error] = await catchError(
+    prisma.race.findUnique({
+      where: {
+        id: raceId,
+      },
+      include: {
+        users: true,
+      },
+    }),
+  );
+
+  if (error) {
+    return null;
+  }
+
+  return raceDetails;
 }

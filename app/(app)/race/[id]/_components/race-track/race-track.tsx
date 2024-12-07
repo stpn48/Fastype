@@ -1,18 +1,10 @@
-import { prisma } from "@/lib/prisma";
+import { getRaceDetails } from "@/server/queries";
 import { UserTrack } from "./user-track";
 
 type Props = { raceId: string };
 
 export async function RaceTrack({ raceId }: Props) {
-  // TODO: Move this to queries
-  const raceDetails = await prisma.race.findUnique({
-    where: {
-      id: raceId,
-    },
-    include: {
-      users: true,
-    },
-  });
+  const raceDetails = await getRaceDetails(raceId);
 
   if (!raceDetails) {
     return null;

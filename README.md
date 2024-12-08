@@ -10,6 +10,8 @@
 [x] - Home page: find race section, practice alone section, create race section (play with friends)
 [x] - implement find race
 [x] - Prep prisma schema
+[] - leave user from race when they leave the page
+[] - leave user from the race after the race ends
 [] - reset race progress to 0 when race is closed
 [] - close race after 10 sec of creating the race
 [] - fix the bug where hte user profile is a little bit off when he start typing

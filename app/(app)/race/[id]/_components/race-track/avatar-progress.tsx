@@ -33,13 +33,7 @@ export function AvatarProgress({ firstName, lastName, imageUrl }: Props) {
   }, []);
 
   return (
-    <div
-      className="absolute px-4"
-      style={{
-        left: raceProgress + "%",
-        transform: raceProgress === 0 ? "translateX(0px)" : "translateX(-100%)",
-      }}
-    >
+    <div className="flex min-w-fit justify-end px-4" style={{ width: raceProgress + "%" }}>
       <Avatar className="size-8">
         <AvatarImage src={imageUrl} />
         <AvatarFallback>

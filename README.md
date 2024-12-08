@@ -10,8 +10,12 @@
 [x] - Home page: find race section, practice alone section, create race section (play with friends)
 [x] - implement find race
 [x] - Prep prisma schema
+[] - reset race progress to 0 when race is closed
+[] - close race after 10 sec of creating the race
+[] - fix the bug where hte user profile is a little bit off when he start typing
 [] - implement race track
 [] - implement typing field
+[] - sync typing field progress with progress for the user in the db
 [] - implement stats
 [] - add theme toggle to footer
 [] - add toast with sonner

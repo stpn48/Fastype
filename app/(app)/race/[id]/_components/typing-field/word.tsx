@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { Char } from "./char";
+import { OverflowLetters } from "./overflow-letters";
 
 type Props = {
   word: string;
@@ -22,21 +22,9 @@ export function Word({ word, userWord, wordIndex }: Props) {
         ))}
       </span>
 
+      {/* user words length is bigger than the word length, show overflow letters */}
       {userWord && userWord.length > word.length && (
-        <span>
-          {userWord
-            .slice(word.length)
-            .split("")
-            .map((char, overflowCharIndex) => (
-              <span
-                key={overflowCharIndex}
-                id={`word-${wordIndex}-char-${overflowCharIndex + word.length}`}
-                className={cn("text-red-700")}
-              >
-                {char}
-              </span>
-            ))}
-        </span>
+        <OverflowLetters word={word} userWord={userWord} wordIndex={wordIndex} />
       )}
 
       <span

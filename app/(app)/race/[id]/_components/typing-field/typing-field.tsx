@@ -4,6 +4,7 @@ import { memo, useCallback, useEffect, useState } from "react";
 
 import { Caret } from "./caret";
 import { Word } from "./word";
+import { useHandleUserProgress } from "../../hooks/use-handle-user-progress";
 
 type Props = {
   text: string;
@@ -15,6 +16,8 @@ export function TypingField({ text }: Props) {
   const [currWordIndex, setCurrWordIndex] = useState(0);
   const [currCharIndex, setCurrCharIndex] = useState(0);
   const [userWords, setUserWords] = useState<string[]>([""]);
+
+  useHandleUserProgress(userWords, text);
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {

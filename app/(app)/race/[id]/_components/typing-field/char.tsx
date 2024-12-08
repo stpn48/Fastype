@@ -3,11 +3,14 @@ import { cn } from "@/lib/utils";
 type Props = {
   char: string;
   userChar: string | null;
+  wordIndex: number;
+  charIndex: number;
 };
 
-export function Char({ char, userChar }: Props) {
+export function Char({ char, userChar, wordIndex, charIndex }: Props) {
   return (
     <span
+      id={`word-${wordIndex}-char-${charIndex}`}
       className={cn(
         "",
         userChar === null && "text-muted-foreground",

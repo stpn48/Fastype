@@ -2,6 +2,7 @@
 
 import { memo, useCallback, useEffect, useState } from "react";
 
+import { Caret } from "./caret";
 import { Word } from "./word";
 
 type Props = {
@@ -77,14 +78,6 @@ export function TypingField({ text }: Props) {
   );
 
   useEffect(() => {
-    console.log(userWords);
-    console.log("curr user word", userWords[currWordIndex]);
-    console.log("curr char index", currCharIndex);
-    const realWord = text.split(" ")[currWordIndex];
-    console.log("real word", realWord);
-  }, [userWords, currWordIndex, currCharIndex, text]);
-
-  useEffect(() => {
     window.addEventListener("keydown", handleKeydown);
 
     return () => {
@@ -93,10 +86,13 @@ export function TypingField({ text }: Props) {
   }, [handleKeydown]);
 
   return (
-    <div className="font-geist-mono h-[300px] w-full rounded-lg border border-border p-4 text-xl text-muted-foreground">
+    <div className="font-geist-mono relative h-[300px] w-full rounded-lg border border-border p-4 text-xl text-muted-foreground">
+      <Caret currCharIndex={currCharIndex} currWordIndex={currWordIndex} />
+
       {text.split(" ").map((word, wordIndex) => (
         <MemoWord
           word={word}
+          wordIndex={wordIndex}
           userWord={wordIndex <= currWordIndex ? userWords[wordIndex] : null}
           key={wordIndex}
         />

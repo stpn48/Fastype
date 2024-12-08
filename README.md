@@ -8,11 +8,14 @@
 [x] - connect supabase db
 [x] - init user in db when user.create
 [x] - Home page: find race section, practice alone section, create race section (play with friends)
-[] - implement find race
+[x] - implement find race
+[x] - Prep prisma schema
+[] - implement race track
+[] - implement typing field
+[] - implement stats
 [] - add theme toggle to footer
 [] - add toast with sonner
 [] - update race status to closed after 10 sec of creating the race
-[x] - Prep prisma schema
 [] - Profile Page:
 [] - create logo
 

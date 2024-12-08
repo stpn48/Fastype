@@ -1,7 +1,7 @@
 import { getRaceDetails, getUser } from "@/server/queries";
 import { redirect } from "next/navigation";
 import { RaceTrack } from "./_components/race-track/race-track";
-import { TypingField } from "./_components/typing-field";
+import { TypingField } from "./_components/typing-field/typing-field";
 
 // resolvedParams.id = raceId
 export default async function RacePage({ params }: { params: Promise<{ id: string }> }) {
@@ -23,7 +23,7 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
     <div className="flex items-center justify-center">
       <section className="flex w-full max-w-4xl grid-cols-1 grid-rows-2 flex-col gap-10">
         <RaceTrack users={raceDetails.users} />
-        <TypingField />
+        <TypingField text={raceDetails.text} />
       </section>
     </div>
   );

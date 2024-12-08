@@ -30,7 +30,7 @@ export async function findRace(): Promise<Response> {
         avgWpmAllTime: true,
         id: true,
       },
-    })
+    }),
   );
 
   if (userDataError) {
@@ -54,7 +54,7 @@ export async function findRace(): Promise<Response> {
       include: {
         users: true,
       },
-    })
+    }),
   );
 
   if (findRaceError) {
@@ -70,7 +70,8 @@ export async function findRace(): Promise<Response> {
     }
 
     // Calculate new avgWpm after adding the new user
-    const totalUsersWpm = race.users.reduce((acc, curr) => acc + curr.avgWpmLast10Races, 0) + userData.avgWpmAllTime;
+    const totalUsersWpm =
+      race.users.reduce((acc, curr) => acc + curr.avgWpmLast10Races, 0) + userData.avgWpmAllTime;
     const newAvgWpm = totalUsersWpm / (race.users.length + 1);
 
     // join the race and update the avgWpm for the race
@@ -87,7 +88,7 @@ export async function findRace(): Promise<Response> {
             },
           },
         },
-      })
+      }),
     );
 
     if (joinRaceError) {
@@ -108,9 +109,9 @@ export async function findRace(): Promise<Response> {
               id: userData.id,
             },
           },
-          text: "random ass text todo bro",
+          text: `Empty out your pockets, I need all that I get the millions, then I fall back Niggas chameleons, they'll change for some changeDays ain't the same, niggas switch for the fameLouis Vuitton, I'm in my bagGet high, then my memory gone, I've been hurtin'I rock like electric guitars, I be ragin'Countin' big knots, look like yellow pages`,
         },
-      })
+      }),
     );
 
     if (createRaceError) {

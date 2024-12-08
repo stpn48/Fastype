@@ -51,13 +51,12 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
-    const { id, image_url } = evt.data;
+    const { id } = evt.data;
 
     // create user in db
     await prisma.user.create({
       data: {
         clerkId: id,
-        imageUrl: image_url,
       },
     });
   }

@@ -1,37 +1,51 @@
+"use client";
+
+import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { cn } from "@/lib/utils";
+import { memo } from "react";
 import { Char } from "./char";
-import { OverflowLetters } from "./overflow-letters";
 
 type Props = {
   word: string;
   userWord: string | null;
   wordIndex: number;
+  isActive: boolean;
 };
 
-export function Word({ word, userWord, wordIndex }: Props) {
+const MemoChar = memo(Char);
+
+export function Word({ word, userWord, wordIndex, isActive }: Props) {
+  const { currCharIndex } = useTypingFieldStore();
+
   return (
-    <>
-      <span>
-        {word.split("").map((char, charIndex) => (
-          <Char
-            key={charIndex}
-            char={char}
-            userChar={userWord ? userWord[charIndex] : null}
-            wordIndex={wordIndex}
-            charIndex={charIndex}
-          />
-        ))}
-      </span>
+    <span className="h-fit">
+      {word.split("").map((char, charIndex) => (
+        <MemoChar
+          key={charIndex}
+          char={char}
+          userChar={userWord ? userWord[charIndex] : undefined}
+          isActive={isActive && charIndex === currCharIndex}
+        />
+      ))}
 
       {/* user words length is bigger than the word length, show overflow letters */}
       {userWord && userWord.length > word.length && (
-        <OverflowLetters word={word} userWord={userWord} wordIndex={wordIndex} />
+        <>
+          {userWord!
+            .slice(word.length)
+            .split("")
+            .map((char, overflowCharIndex) => (
+              <Char
+                char={char}
+                userChar={"overflow-letter"}
+                key={overflowCharIndex}
+                isActive={isActive && overflowCharIndex === currCharIndex}
+              />
+            ))}
+        </>
       )}
 
-      <span
-        id={`word-${wordIndex}-char-${userWord && userWord?.length > word.length ? userWord.length : word.length}`}
-      >
-        {" "}
-      </span>
-    </>
+      <span className={cn("", isActive && currCharIndex >= word.length && "active")}>&nbsp;</span>
+    </span>
   );
 }

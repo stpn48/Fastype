@@ -11,9 +11,7 @@ export function Caret({ currCharIndex, currWordIndex }: Props) {
   const caretRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const currChar: HTMLSpanElement | null = document.querySelector(
-      `#word-${currWordIndex}-char-${currCharIndex}`,
-    );
+    const currChar: HTMLSpanElement | null = document.querySelector(".active");
 
     if (!currChar) {
       return;

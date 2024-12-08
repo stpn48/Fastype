@@ -1,10 +1,10 @@
 "use client";
 
-import { memo, useCallback, useEffect, useState } from "react";
-
+import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { memo, useCallback, useEffect } from "react";
+import { useHandleUserProgress } from "../../hooks/use-handle-user-progress";
 import { Caret } from "./caret";
 import { Word } from "./word";
-import { useHandleUserProgress } from "../../hooks/use-handle-user-progress";
 
 type Props = {
   text: string;
@@ -13,12 +13,18 @@ type Props = {
 const MemoWord = memo(Word);
 
 export function TypingField({ text }: Props) {
-  const [currWordIndex, setCurrWordIndex] = useState(0);
-  const [currCharIndex, setCurrCharIndex] = useState(0);
-  const [userWords, setUserWords] = useState<string[]>([""]);
+  const {
+    currWordIndex,
+    setCurrWordIndex,
+    currCharIndex,
+    setCurrCharIndex,
+    userWords,
+    setUserWords,
+  } = useTypingFieldStore();
 
-  useHandleUserProgress(userWords, text);
+  useHandleUserProgress(text);
 
+  // TODO: move this into hook
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key.length === 1 && e.code !== "Space") {
@@ -89,15 +95,16 @@ export function TypingField({ text }: Props) {
   }, [handleKeydown]);
 
   return (
-    <div className="font-geist-mono relative h-[300px] w-full rounded-lg border border-border p-4 text-xl text-muted-foreground">
+    <div className="relative flex w-full flex-wrap rounded-lg border border-border p-6 font-geist-mono text-xl text-muted-foreground">
       <Caret currCharIndex={currCharIndex} currWordIndex={currWordIndex} />
 
       {text.split(" ").map((word, wordIndex) => (
         <MemoWord
+          key={wordIndex}
+          isActive={wordIndex === currWordIndex}
           word={word}
           wordIndex={wordIndex}
           userWord={wordIndex <= currWordIndex ? userWords[wordIndex] : null}
-          key={wordIndex}
         />
       ))}
     </div>

@@ -1,37 +1,53 @@
 import { updateUserProgress } from "@/app/actions/update-user-progress";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { debounce } from "lodash";
-import { useCallback, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export function useHandleUserProgress(text: string) {
   const { userWords } = useTypingFieldStore();
 
-  // Wrap the updateProgress function with debounce
-  const debouncedUpdateProgress = useCallback(
-    debounce(async (userProgress: number) => {
-      const { error } = await updateUserProgress(userProgress);
+  // Ref to store the latest progress
+  const progressBuffer = useRef<number | null>(null);
+
+  // Ref to track the interval
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const sendBatchedUpdate = async () => {
+    if (progressBuffer.current !== null) {
+      const { error } = await updateUserProgress(progressBuffer.current);
 
       if (error) {
-        console.log("error updating user progress", error);
+        console.error("Error updating user progress:", error);
+      } else {
+        console.log("User progress updated (batched):", progressBuffer.current);
       }
 
-      console.log("user progress updated", userProgress);
-    }, 500), // Debounce with 500ms delay
-    [],
-  );
+      // Clear the buffer after sending
+      progressBuffer.current = null;
+    }
+  };
 
   useEffect(() => {
     const totalChars = text.length;
-
     const userChars = userWords.join("").length;
-
     const userProgress = (userChars / totalChars) * 100;
 
-    debouncedUpdateProgress(userProgress);
+    // Store the latest progress in the buffer
+    progressBuffer.current = userProgress;
+  }, [userWords, text]);
 
-    // Cleanup the debounced function on unmount
+  useEffect(() => {
+    // Set up a fixed interval to send updates every 1s
+    intervalRef.current = setInterval(() => {
+      sendBatchedUpdate();
+    }, 1000);
+
+    // Cleanup the interval on unmount
     return () => {
-      debouncedUpdateProgress.cancel();
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
     };
-  }, [userWords, text, debouncedUpdateProgress]);
+  }, []);
+
+  return null;
 }

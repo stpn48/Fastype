@@ -23,6 +23,7 @@ model User {
   id           String          @id @default(uuid())
   clerkId      String          @unique
   firstName    String
+  lastName     String
   imageUrl     String?
   username     String
   country      String          @default("unknown")

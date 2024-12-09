@@ -27,8 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${geistSans.variable} font-medium text-sm font-geist-sans ${geistMono.variable} antialiased`}>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          suppressHydrationWarning
+          className={`${geistSans.variable} font-geist-sans text-sm font-medium ${geistMono.variable} antialiased`}
+        >
           <NextThemeProvider>{children}</NextThemeProvider>
         </body>
       </html>

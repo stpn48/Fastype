@@ -2,11 +2,9 @@
 
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
-import { getUserData } from "@/services/race";
+import { findRaceBasedOnUserAvgWpm, getUserData, openNewRace } from "@/services/find-race";
 import { currentUser } from "@clerk/nextjs/server";
 import { Race } from "@prisma/client";
-
-const WPM_THRESHOLD = 30;
 
 type Response = {
   error: string | null;
@@ -21,6 +19,7 @@ export async function findRace(): Promise<Response> {
     return { error: "Unauthenticated", race: null };
   }
 
+  // get user data from the db
   const { error: userDataError, userData } = await getUserData(user.id);
 
   if (userDataError) {
@@ -32,37 +31,38 @@ export async function findRace(): Promise<Response> {
   }
 
   // find a race in users wpm range and status open
-  const [race, findRaceError] = await catchError(
-    prisma.race.findFirst({
-      where: {
-        status: "open",
-        avgWpm: {
-          lt: userData.avgWpmAllTime + WPM_THRESHOLD,
-          gt: userData.avgWpmAllTime - WPM_THRESHOLD,
-        },
-      },
-      include: {
-        users: true,
-      },
-    }),
+  const { race, error: findRaceError } = await findRaceBasedOnUserAvgWpm(
+    userData.stats.avgWpmAllTime,
   );
 
   if (findRaceError) {
-    return { error: findRaceError.message, race: null };
+    return { error: findRaceError, race: null };
   }
 
-  // if race found, and there is less than 10 users in there, add user to race
+  // if race found, and there is less than 10 users in there, check if the user is already in the race, if not join it if yes open a new one
   if (race && race.users.length < 10) {
     const userAlreadyInRace = race.users.some((u) => u.id === userData.id);
 
-    // TODO: remove user from the race and join a new one
+    // if user is already in the race, open a new one
     if (userAlreadyInRace) {
+      const { race, error: openRaceError } = await openNewRace(userData);
+
+      if (openRaceError) {
+        return { error: openRaceError, race: null };
+      }
+
+      if (!race) {
+        return { error: "Unexpected error opening race. Race not found", race: null };
+      }
+
       return { error: null, race };
     }
 
-    // Calculate new avgWpm after adding the new user
+    // user not in the race yet, calculate new avgWpm for the race with the new user
     const totalUsersWpm =
-      race.users.reduce((acc, curr) => acc + curr.avgWpmLast10Races, 0) + userData.avgWpmAllTime;
+      race.users.reduce((acc, curr) => acc + curr.stats.avgWpmLast10Races, 0) +
+      userData.stats.avgWpmAllTime;
+
     const newAvgWpm = totalUsersWpm / (race.users.length + 1);
 
     // join the race and update the avgWpm for the race
@@ -89,46 +89,17 @@ export async function findRace(): Promise<Response> {
     return { error: null, race };
   }
 
-  // if no race found, create a new one
+  // if no race found, open a new one
   if (!race) {
-    const [race, createRaceError] = await catchError(
-      prisma.race.create({
-        data: {
-          avgWpm: userData.avgWpmAllTime,
-          users: {
-            connect: {
-              id: userData.id,
-            },
-          },
-          text: `Empty out your pockets, I need all that I get the millions, then I fall back Niggas chameleons, they'll change for some changeDays ain't the same, niggas switch for the fameLouis Vuitton, I'm in my bagGet high, then my memory gone, I've been hurtin'I rock like electric guitars, I be ragin'Countin' big knots, look like yellow pages`,
-        },
-      }),
-    );
+    const { race, error: openRaceError } = await openNewRace(userData);
 
-    if (createRaceError) {
-      return { error: createRaceError.message, race: null };
+    if (openRaceError) {
+      return { error: openRaceError, race: null };
     }
 
     if (!race) {
-      return { error: "Unexpected error creating race. Race not found", race: null };
+      return { error: "Unexpected error opening race. Race not found", race: null };
     }
-
-    setTimeout(async () => {
-      const [, updateRaceStatusError] = await catchError(
-        prisma.race.update({
-          where: {
-            id: race.id,
-          },
-          data: {
-            status: "closed",
-          },
-        }),
-      );
-
-      if (updateRaceStatusError) {
-        return { error: updateRaceStatusError.message, race: null };
-      }
-    }, 20000);
 
     return { error: null, race };
   }

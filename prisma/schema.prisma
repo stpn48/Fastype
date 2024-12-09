@@ -20,18 +20,27 @@ enum RaceStatus {
 
 // basic data like name, email, avatar are in clerk, here is the stats for this user
 model User {
-  id                String          @id @default(uuid())
-  clerkId           String          @unique
-  raceHistory       CompletedRace[]
-  avgWpmLast10Races Int             @default(0)
-  avgWpmAllTime     Int             @default(0)
-  lastRaceWpm       Int             @default(0)
-  bestRaceWpm       Int             @default(0)
-  country           String          @default("unknown")
-  raceId            String?
-  Race              Race?           @relation(fields: [raceId], references: [id])
-  raceProgress      Int             @default(0)
-  imageUrl          String?
+  id           String          @id @default(uuid())
+  clerkId      String          @unique
+  firstName    String
+  imageUrl     String?
+  username     String
+  country      String          @default("unknown")
+  stats        Stats           @relation(fields: [statsId], references: [id])
+  statsId      String
+  Race         Race?           @relation(fields: [raceId], references: [id])
+  raceId       String?
+  raceProgress Int             @default(0)
+  raceHistory  CompletedRace[]
+}
+
+model Stats {
+  id                String @id @default(uuid())
+  avgWpmLast10Races Int    @default(0)
+  avgWpmAllTime     Int    @default(0)
+  lastRaceWpm       Int    @default(0)
+  bestRaceWpm       Int    @default(0)
+  User              User[]
 }
 
 model Race {

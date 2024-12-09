@@ -2,6 +2,7 @@
 
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
+import { getUserData } from "@/services/race";
 import { currentUser } from "@clerk/nextjs/server";
 import { Race } from "@prisma/client";
 
@@ -20,24 +21,13 @@ export async function findRace(): Promise<Response> {
     return { error: "Unauthenticated", race: null };
   }
 
-  // get user data from db
-  const [userData, userDataError] = await catchError(
-    prisma.user.findFirst({
-      where: {
-        clerkId: user.id,
-      },
-      select: {
-        avgWpmAllTime: true,
-        id: true,
-      },
-    }),
-  );
+  const { error: userDataError, userData } = await getUserData(user.id);
 
   if (userDataError) {
-    return { error: userDataError.message, race: null };
+    return { error: userDataError, race: null };
   }
 
-  if (userData === null) {
+  if (!userData) {
     return { error: "User not found", race: null };
   }
 
@@ -65,6 +55,7 @@ export async function findRace(): Promise<Response> {
   if (race && race.users.length < 10) {
     const userAlreadyInRace = race.users.some((u) => u.id === userData.id);
 
+    // TODO: remove user from the race and join a new one
     if (userAlreadyInRace) {
       return { error: null, race };
     }
@@ -117,6 +108,27 @@ export async function findRace(): Promise<Response> {
     if (createRaceError) {
       return { error: createRaceError.message, race: null };
     }
+
+    if (!race) {
+      return { error: "Unexpected error creating race. Race not found", race: null };
+    }
+
+    setTimeout(async () => {
+      const [, updateRaceStatusError] = await catchError(
+        prisma.race.update({
+          where: {
+            id: race.id,
+          },
+          data: {
+            status: "closed",
+          },
+        }),
+      );
+
+      if (updateRaceStatusError) {
+        return { error: updateRaceStatusError.message, race: null };
+      }
+    }, 20000);
 
     return { error: null, race };
   }

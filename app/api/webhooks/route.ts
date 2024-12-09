@@ -49,16 +49,38 @@ export async function POST(req: Request) {
   // Do something with payload
   // For this guide, log payload to console
   const eventType = evt.type;
+  const userData = evt.data;
 
   if (eventType === "user.created") {
-    const { id } = evt.data;
-
     // create user in db
     await prisma.user.create({
-      data: {
-        clerkId: id,
+      data: userData,
+    });
+
+    return;
+  }
+
+  if (eventType === "user.deleted") {
+    // delete user from db
+    await prisma.user.delete({
+      where: {
+        clerkId: userData.id,
       },
     });
+
+    return;
+  }
+
+  if (eventType === "user.updated") {
+    // update user in db
+    await prisma.user.update({
+      where: {
+        clerkId: userData.id,
+      },
+      data: userData,
+    });
+
+    return;
   }
 
   return new Response("Webhook received", { status: 200 });

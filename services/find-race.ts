@@ -57,6 +57,17 @@ export async function findRaceBasedOnUserAvgWpm(userAvgWpmAllTime: number) {
 }
 
 export async function openNewRace(userData: User & { stats: Stats }) {
+  if (userData.raceId) {
+    const { error: disconnectUserError } = await disconnectUserFromRace(
+      userData.id,
+      userData.raceId,
+    );
+
+    if (disconnectUserError) {
+      return { error: disconnectUserError, race: null };
+    }
+  }
+
   const [race, createRaceError] = await catchError(
     prisma.race.create({
       data: {
@@ -97,4 +108,27 @@ export async function openNewRace(userData: User & { stats: Stats }) {
   }, 20000);
 
   return { error: null, race };
+}
+
+export async function disconnectUserFromRace(userId: string, raceId: string) {
+  const [, disconnectUserError] = await catchError(
+    prisma.race.update({
+      where: {
+        id: raceId,
+      },
+      data: {
+        users: {
+          disconnect: {
+            id: userId,
+          },
+        },
+      },
+    }),
+  );
+
+  if (disconnectUserError) {
+    return { error: disconnectUserError.message };
+  }
+
+  return { error: null };
 }

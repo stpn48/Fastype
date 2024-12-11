@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -19,17 +20,22 @@ export function FindRaceButton({}: Props) {
     setIsFindingRace(false);
 
     if (error) {
-      console.error(error);
+      toast.error(error);
     }
 
     if (race) {
+      toast.success("Race found");
       router.push(`/race/${race.id}`);
     }
   }, [router]);
 
   return (
-    <Button disabled={isFindingRace} onClick={handleClick} className="w-full h-10 z-10 text-base flex gap-2">
-      {isFindingRace && <Loader2 className="w-4 h-4 animate-spin" />}
+    <Button
+      disabled={isFindingRace}
+      onClick={handleClick}
+      className="z-10 flex h-10 w-full gap-2 text-base"
+    >
+      {isFindingRace && <Loader2 className="h-4 w-4 animate-spin" />}
       <p>Find Race</p>
     </Button>
   );

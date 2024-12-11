@@ -22,7 +22,7 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
   return (
     <div className="flex items-center justify-center">
       <section className="flex w-full max-w-4xl grid-cols-1 grid-rows-2 flex-col gap-10">
-        <RaceTrack users={raceDetails.users} />
+        <RaceTrack initialRaceUsers={raceDetails.users} raceId={paramsResolved.id} />
         <TypingField text={raceDetails.text} />
       </section>
     </div>

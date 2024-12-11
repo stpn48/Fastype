@@ -1,25 +1,18 @@
-import { clerkClient } from "@clerk/nextjs/server";
 import { AvatarProgress } from "./avatar-progress";
+import { RaceUser } from "./race-track";
 
 type Props = {
-  userClerkId: string;
+  raceUser: RaceUser;
 };
 
-export async function UserTrack({ userClerkId }: Props) {
-  const clerk = await clerkClient();
-  const clerkUser = await clerk.users.getUser(userClerkId);
-
-  if (!clerkUser) {
-    return null;
-  }
-
+export function UserTrack({ raceUser }: Props) {
   return (
-    <div className="relative flex h-[50px] w-full items-center border-y border-border first:border-t-0 last:border-b-0">
+    <div className="relative flex h-[50px] w-full items-center border-b border-border last:border-b-0">
       <AvatarProgress
-        firstName={clerkUser.firstName}
-        lastName={clerkUser.lastName}
-        imageUrl={clerkUser.imageUrl}
-        clerkId={userClerkId}
+        firstName={raceUser.firstName ?? "U"}
+        lastName={raceUser.lastName ?? "N"}
+        imageUrl={raceUser.imageUrl ?? ""}
+        clerkId={raceUser.clerkId}
       />
     </div>
   );

@@ -27,7 +27,8 @@ export function useHandleUserProgress(text: string) {
   };
 
   useEffect(() => {
-    const totalChars = text.length;
+    const totalChars = text.replace(/\s+/g, "").length;
+
     const userChars = userWords.join("").length;
     const userProgress = (userChars / totalChars) * 100;
 

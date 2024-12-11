@@ -21,8 +21,6 @@ export function Caret({ currCharIndex, currWordIndex }: Props) {
       throw new Error("caretRef not found");
     }
 
-    console.log("currChar", currChar);
-
     caretRef.current.style.left = `${currChar.offsetLeft}px`;
     caretRef.current.style.top = `${currChar.offsetTop}px`;
   }, [currCharIndex, currWordIndex]);

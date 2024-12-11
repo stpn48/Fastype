@@ -10,14 +10,15 @@
 [x] - Home page: find race section, practice alone section, create race section (play with friends)
 [x] - implement find race
 [x] - Prep prisma schema
-[] - leave user from race when they leave the page
-[] - leave user from the race after the race ends
+[] - Implement text generating
+[] - leave user from race when they leave the page  
+[] - leave user from the race after the race ends (race ends in 1 min 30 sec)
 [] - reset race progress to 0 when race is closed
-[] - close race after 10 sec of creating the race
-[] - fix the bug where hte user profile is a little bit off when he start typing
+[x] - 0 sec of creating the race
+[x] - fix the bug where hte user profile is a little bit off when he start typing
 [] - implement race track
 [] - implement typing field
-[] - sync typing field progress with progress for the user in the db
+[x] - sync typing field progress with progress for the user in the db
 [] - implement stats
 [] - add theme toggle to footer
 [] - add toast with sonner

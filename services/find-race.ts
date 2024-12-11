@@ -87,7 +87,7 @@ export async function openNewRace(userData: User & { stats: Stats }) {
   }
 
   if (!race) {
-    return { error: "Unexpected error creating race. Race not found", race: null };
+    return { error: "Unexpected error creating race. Race was not created", race: null };
   }
 
   setTimeout(async () => {
@@ -105,7 +105,7 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     if (updateRaceStatusError) {
       return { error: updateRaceStatusError.message, race: null };
     }
-  }, 20000);
+  }, 15000);
 
   return { error: null, race };
 }

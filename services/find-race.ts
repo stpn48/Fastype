@@ -111,7 +111,7 @@ export async function openNewRace(userData: User & { stats: Stats }) {
 }
 
 export async function disconnectUserFromRace(userId: string, raceId: string) {
-  const [, disconnectUserError] = await catchError(
+  const [, disconnectUserFromRaceError] = await catchError(
     prisma.race.update({
       where: {
         id: raceId,
@@ -126,8 +126,24 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
     }),
   );
 
-  if (disconnectUserError) {
-    return { error: disconnectUserError.message };
+  const [, resetUserRaceDetailsError] = await catchError(
+    prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        raceProgress: 0,
+        raceId: null,
+      },
+    }),
+  );
+
+  if (resetUserRaceDetailsError) {
+    return { error: resetUserRaceDetailsError.message };
+  }
+
+  if (disconnectUserFromRaceError) {
+    return { error: disconnectUserFromRaceError.message };
   }
 
   return { error: null };

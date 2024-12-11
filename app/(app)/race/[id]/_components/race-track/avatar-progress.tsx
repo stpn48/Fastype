@@ -1,44 +1,52 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { createClient } from "@/lib/supabase/client";
+import { User as ClerkUserType } from "@clerk/backend";
 import { User } from "@prisma/client";
-import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
+import { createClient, RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 
 type Props = {
-  firstName: string;
-  lastName: string;
-  imageUrl: string;
+  clerkUser: ClerkUserType;
 };
 
-export function AvatarProgress({ firstName, lastName, imageUrl }: Props) {
+export function AvatarProgress({ clerkUser }: Props) {
   const [raceProgress, setRaceProgress] = useState(0);
 
-  const supabase = createClient();
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
 
   useEffect(() => {
     const channel = supabase
-      .channel("user")
+      .channel("user-progress")
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "User" },
-        (payload: RealtimePostgresUpdatePayload<User>) => setRaceProgress(payload.new.raceProgress),
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "User",
+          filter: "clerkId=eq.clerk_user_id",
+        },
+        (payload: RealtimePostgresUpdatePayload<User>) => {
+          setRaceProgress(payload.new.raceProgress);
+        },
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [supabase]);
 
   return (
-    <div className="flex min-w-fit justify-end px-4" style={{ width: raceProgress + "%" }}>
-      <Avatar className="size-8">
-        <AvatarImage src={imageUrl} />
+    <div className="flex min-w-fit justify-end px-4" style={{ width: `${raceProgress}%` }}>
+      <Avatar className="h-8 w-8">
+        <AvatarImage src={clerkUser.imageUrl} />
         <AvatarFallback>
-          {firstName.charAt(0) ?? "U"}
-          {lastName.charAt(0) ?? "N"}
+          {clerkUser.firstName?.charAt(0) ?? "U"}
+          {clerkUser.lastName?.charAt(0) ?? "N"}
         </AvatarFallback>
       </Avatar>
     </div>

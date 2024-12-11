@@ -15,11 +15,7 @@ export async function UserTrack({ userClerkId }: Props) {
 
   return (
     <div className="relative flex h-[50px] w-full items-center border-y border-border first:border-t-0 last:border-b-0">
-      <AvatarProgress
-        firstName={clerkUser.firstName || "U"}
-        lastName={clerkUser.lastName || "N"}
-        imageUrl={clerkUser.imageUrl}
-      />
+      <AvatarProgress clerkUser={clerkUser} />
     </div>
   );
 }

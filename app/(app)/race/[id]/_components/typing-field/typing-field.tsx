@@ -1,6 +1,8 @@
 "use client";
 
+import { useRace } from "@/hooks/zustand/use-race";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { cn } from "@/lib/utils";
 import { memo, useCallback, useEffect } from "react";
 import { useHandleUserProgress } from "../../hooks/use-handle-user-progress";
 import { Caret } from "./caret";
@@ -20,9 +22,12 @@ export function TypingField({ text }: Props) {
     setCurrCharIndex,
     userWords,
     setUserWords,
+    resetTypingFieldStore,
   } = useTypingFieldStore();
 
   useHandleUserProgress(text);
+
+  const { canType } = useRace();
 
   // TODO: move this into hook
   const handleKeydown = useCallback(
@@ -78,15 +83,22 @@ export function TypingField({ text }: Props) {
   );
 
   useEffect(() => {
+    if (!canType) return;
     window.addEventListener("keydown", handleKeydown);
 
     return () => {
       window.removeEventListener("keydown", handleKeydown);
+      resetTypingFieldStore();
     };
-  }, [handleKeydown]);
+  }, [handleKeydown, canType]);
 
   return (
-    <div className="relative flex w-full flex-wrap rounded-lg border border-border p-6 font-geist-mono text-xl text-muted-foreground">
+    <div
+      className={cn(
+        "relative flex w-full flex-wrap rounded-lg border border-border p-6 font-geist-mono text-xl text-muted-foreground",
+        !canType && "cursor-not-allowed opacity-30",
+      )}
+    >
       <Caret currCharIndex={currCharIndex} currWordIndex={currWordIndex} />
 
       {text.split(" ").map((word, wordIndex) => (

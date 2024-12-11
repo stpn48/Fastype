@@ -15,7 +15,7 @@ export function Char({ char, userChar, isActive }: Props) {
         userChar === "overflow-letter" && "text-red-800",
         userChar === char && "text-primary-foreground",
         userChar !== char && "text-red-600",
-        userChar === undefined && "text-muted-foreground", // TODO: Adjust colors
+        userChar === undefined && "text-muted-foreground/40", // TODO: Adjust colors
       )}
     >
       {char}

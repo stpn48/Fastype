@@ -27,9 +27,9 @@ export async function getUserData(clerkId: string) {
   return { error: null, userData };
 }
 
-const WPM_THRESHOLD = 30;
-
 export async function findRaceBasedOnUserAvgWpm(userAvgWpmAllTime: number) {
+  const WPM_THRESHOLD = 30;
+
   const [race, findRaceError] = await catchError(
     prisma.race.findFirst({
       where: {
@@ -57,6 +57,9 @@ export async function findRaceBasedOnUserAvgWpm(userAvgWpmAllTime: number) {
 }
 
 export async function openNewRace(userData: User & { stats: Stats }) {
+  const WAITING_FOR_PLAYERS_TIME = 15 * 1000; // 15 secs
+  const MAX_RACE_DURATION = 60 * 1000 * 1.5; // 1.5 mins
+
   if (userData.raceId) {
     const { error: disconnectUserError } = await disconnectUserFromRace(
       userData.id,
@@ -90,6 +93,7 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     return { error: "Unexpected error creating race. Race was not created", race: null };
   }
 
+  // close race
   setTimeout(async () => {
     const [, updateRaceStatusError] = await catchError(
       prisma.race.update({
@@ -105,7 +109,25 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     if (updateRaceStatusError) {
       return { error: updateRaceStatusError.message, race: null };
     }
-  }, 15000);
+  }, WAITING_FOR_PLAYERS_TIME);
+
+  // finish race
+  setTimeout(async () => {
+    const [, updateRaceStatusError] = await catchError(
+      prisma.race.update({
+        where: {
+          id: race.id,
+        },
+        data: {
+          status: "completed",
+        },
+      }),
+    );
+
+    if (updateRaceStatusError) {
+      return { error: updateRaceStatusError.message, race: null };
+    }
+  }, MAX_RACE_DURATION + WAITING_FOR_PLAYERS_TIME);
 
   return { error: null, race };
 }

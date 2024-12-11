@@ -16,6 +16,7 @@ datasource db {
 enum RaceStatus {
   open
   closed
+  completed
 }
 
 // basic data like name, email, avatar are in clerk, here is the stats for this user

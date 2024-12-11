@@ -84,13 +84,20 @@ export function TypingField({ text }: Props) {
 
   useEffect(() => {
     if (!canType) return;
+
     window.addEventListener("keydown", handleKeydown);
 
     return () => {
       window.removeEventListener("keydown", handleKeydown);
-      resetTypingFieldStore();
     };
   }, [handleKeydown, canType]);
+
+  // reset typing field store on unmount
+  useEffect(() => {
+    return () => {
+      resetTypingFieldStore();
+    };
+  }, [resetTypingFieldStore]);
 
   return (
     <div

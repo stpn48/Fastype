@@ -1,5 +1,7 @@
 import { getRaceDetails, getUser } from "@/server/queries";
 import { redirect } from "next/navigation";
+import { RaceDisconnectHandler } from "./_components/race-disconnect-handler";
+import { Countdown } from "./_components/race-track/countdown";
 import { RaceTrack } from "./_components/race-track/race-track";
 import { TypingField } from "./_components/typing-field/typing-field";
 
@@ -22,13 +24,11 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
   return (
     <div className="flex items-center justify-center">
       <section className="flex w-full max-w-4xl grid-cols-1 grid-rows-2 flex-col gap-10">
-        <RaceTrack
-          initialRaceUsers={raceDetails.users}
-          raceStatus={raceDetails.status}
-          raceId={paramsResolved.id}
-        />
-        <TypingField text={raceDetails.text} />
+        <RaceTrack initialRaceUsers={raceDetails.users} raceId={paramsResolved.id} />
+        <TypingField text={raceDetails.text} userId={user.id} raceId={paramsResolved.id} />
+        <Countdown />
       </section>
+      <RaceDisconnectHandler />
     </div>
   );
 }

@@ -24,7 +24,7 @@ export async function getUser() {
     return null;
   }
 
-  return { ...clerkUser, ...userData };
+  return { ...userData };
 }
 
 export async function getRaceDetails(raceId: string) {

@@ -1,54 +1,59 @@
-import { updateUserProgress } from "@/app/actions/update-user-progress";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { useEffect, useRef } from "react";
+import { createClient, RealtimeChannel } from "@supabase/supabase-js";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
-export function useHandleUserProgress(text: string) {
+export function useHandleUserProgress(text: string, userId: string, raceId: string) {
   const { userWords } = useTypingFieldStore();
 
-  // Ref to store the latest progress
-  const progressBuffer = useRef<number | null>(null);
+  const channel = useRef<RealtimeChannel | null>(null);
+  const [channelSubscribed, setChannelSubscribed] = useState(false);
 
-  // Ref to track the interval
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  const sendBatchedUpdate = async () => {
-    if (progressBuffer.current !== null) {
-      const { error } = await updateUserProgress(progressBuffer.current);
-
-      if (error) {
-        console.error("Error updating user progress:", error);
-      } else {
-        console.log("User progress updated (batched):", progressBuffer.current);
-      }
-
-      // Clear the buffer after sending
-      progressBuffer.current = null;
-    }
-  };
-
+  // subscribe on mount
   useEffect(() => {
-    const totalChars = text.replace(/\s+/g, "").length;
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
 
+    // subscribe to this race's channel
+    channel.current = supabase.channel(`race-${raceId}`, {
+      config: {
+        broadcast: { self: true },
+      },
+    });
+
+    // subscribe to channel
+    channel.current.subscribe((status) => {
+      if (status === "SUBSCRIBED" && !channelSubscribed) {
+        setChannelSubscribed(true);
+      }
+    });
+
+    return () => {
+      if (!channel.current) return;
+
+      supabase.removeChannel(channel.current);
+    };
+  }, [userId]);
+
+  // send progress payload every time userWords change (user types)
+  useEffect(() => {
+    if (!channelSubscribed || !channel.current) return;
+
+    const totalChars = text.replace(/\s+/g, "").length;
     const userChars = userWords.join("").length;
     const userProgress = (userChars / totalChars) * 100;
 
-    // Store the latest progress in the buffer
-    progressBuffer.current = userProgress;
-  }, [userWords, text]);
-
-  useEffect(() => {
-    // Set up a fixed interval to send updates every 1s
-    intervalRef.current = setInterval(() => {
-      sendBatchedUpdate();
-    }, 1000);
-
-    // Cleanup the interval on unmount
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []);
-
-  return null;
+    channel.current
+      .send({
+        type: "broadcast",
+        event: `user-progress-update`,
+        payload: {
+          userId,
+          progress: userProgress,
+        },
+      })
+      .catch((error) => toast.error("Error sending progress update:", error));
+  }, [userWords, channelSubscribed, userId]);
 }

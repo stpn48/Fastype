@@ -11,7 +11,7 @@
 [x] - implement find race
 [x] - Prep prisma schema
 [] - Implement text generating
-[] - leave user from race when they leave the page  
+[] - leave user from race when they leave the page XX
 [] - leave user from the race after the race ends (race ends in 1 min 30 sec)
 [] - reset race progress to 0 when race is closed
 [x] - 0 sec of creating the race

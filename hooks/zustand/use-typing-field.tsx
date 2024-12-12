@@ -3,10 +3,15 @@ import { create } from "zustand";
 type TypingFieldStore = {
   currWordIndex: number;
   setCurrWordIndex: (index: number | ((prev: number) => number)) => void;
+
   currCharIndex: number;
   setCurrCharIndex: (index: number | ((prev: number) => number)) => void;
+
   userWords: string[];
   setUserWords: (words: string[] | ((prev: string[]) => string[])) => void;
+
+  canType: boolean;
+  setCanType: (canType: boolean) => void;
 
   resetTypingFieldStore: () => void;
 };
@@ -28,5 +33,9 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
   setUserWords: (words) =>
     set((state) => ({ userWords: typeof words === "function" ? words(state.userWords) : words })),
 
-  resetTypingFieldStore: () => set({ currWordIndex: 0, currCharIndex: 0, userWords: [""] }),
+  canType: false,
+  setCanType: (canType) => set({ canType }),
+
+  resetTypingFieldStore: () =>
+    set({ currWordIndex: 0, currCharIndex: 0, userWords: [""], canType: false }),
 }));

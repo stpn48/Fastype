@@ -28,7 +28,7 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
         <TypingField text={raceDetails.text} userId={user.id} raceId={paramsResolved.id} />
         <Countdown />
       </section>
-      <RaceDisconnectHandler />
+      <RaceDisconnectHandler userId={user.id} raceId={paramsResolved.id} />
     </div>
   );
 }

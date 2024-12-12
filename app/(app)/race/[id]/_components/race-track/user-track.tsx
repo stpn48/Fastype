@@ -28,6 +28,8 @@ export function UserTrack({ raceUser, raceId }: Props) {
       .on("broadcast", { event: "user-progress-update" }, (payload) => {
         const { progress, userId } = payload.payload;
 
+        console.log("payload received", payload);
+
         if (userId === raceUser.id) {
           setRaceProgress(progress);
         }
@@ -41,7 +43,10 @@ export function UserTrack({ raceUser, raceId }: Props) {
 
   return (
     <div className="relative flex h-[50px] w-full items-center border-b border-border last:border-b-0">
-      <div className="flex min-w-fit justify-end px-4" style={{ width: `${raceProgress}%` }}>
+      <div
+        className="flex min-w-fit justify-end px-4 transition-all"
+        style={{ width: `${raceProgress}%` }}
+      >
         <Avatar className="h-8 w-8">
           <AvatarImage src={raceUser.imageUrl ?? ""} />
           <AvatarFallback>

@@ -33,7 +33,7 @@ export async function findRaceBasedOnUserAvgWpm(userAvgWpmAllTime: number) {
   const [race, findRaceError] = await catchError(
     prisma.race.findFirst({
       where: {
-        status: "open",
+        status: "waiting",
         avgWpm: {
           lt: userAvgWpmAllTime + WPM_THRESHOLD,
           gt: userAvgWpmAllTime - WPM_THRESHOLD,
@@ -154,7 +154,6 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
         id: userId,
       },
       data: {
-        raceProgress: 0,
         raceId: null,
       },
     }),

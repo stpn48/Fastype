@@ -14,26 +14,25 @@ datasource db {
 }
 
 enum RaceStatus {
-  open
+  waiting
   closed
   completed
 }
 
 // basic data like name, email, avatar are in clerk, here is the stats for this user
 model User {
-  id           String          @id @default(uuid())
-  clerkId      String          @unique
-  firstName    String
-  lastName     String
-  imageUrl     String?
-  username     String
-  country      String          @default("unknown")
-  stats        Stats           @relation(fields: [statsId], references: [id])
-  statsId      String
-  Race         Race?           @relation(fields: [raceId], references: [id])
-  raceId       String?
-  raceProgress Int             @default(0)
-  raceHistory  CompletedRace[]
+  id          String          @id @default(uuid())
+  clerkId     String          @unique
+  firstName   String
+  lastName    String
+  imageUrl    String?
+  username    String
+  country     String          @default("unknown")
+  stats       Stats           @relation(fields: [statsId], references: [id])
+  statsId     String
+  Race        Race?           @relation(fields: [raceId], references: [id])
+  raceId      String?
+  raceHistory CompletedRace[]
 }
 
 model Stats {
@@ -49,7 +48,7 @@ model Race {
   id            String          @id @default(uuid())
   users         User[]
   avgWpm        Int
-  status        RaceStatus      @default(open)
+  status        RaceStatus      @default(waiting)
   createdAt     DateTime        @default(now())
   text          String
   CompletedRace CompletedRace[]

@@ -1,25 +1,32 @@
 "use client";
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { createClient } from "@supabase/supabase-js";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 export function Countdown() {
-  const [countdown, setCountdown] = useState(20);
+  const [countdown, setCountdown] = useState<number | null>(null);
 
   const { setCanType } = useTypingFieldStore();
 
   const intervalId = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
+    if (countdown === null) return;
+
     intervalId.current = setInterval(() => {
-      setCountdown((prevCountdown) => prevCountdown - 1);
+      setCountdown((prevCountdown) => {
+        if (!prevCountdown) return prevCountdown;
+
+        return prevCountdown - 1;
+      });
     }, 1000);
 
     return () => {
       clearInterval(intervalId.current);
     };
-  }, []);
+  }, [countdown]);
 
   useEffect(() => {
     if (countdown === 0) {
@@ -27,6 +34,28 @@ export function Countdown() {
       setCanType(true);
     }
   }, [countdown]);
+
+  useEffect(() => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
+
+    const channel = supabase
+      .channel("race-countdown")
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "Race" }, (payload) => {
+        if (payload.new.status === "closed") {
+          setCountdown(5);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  if (countdown === null) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 z-20 flex h-screen w-screen items-center justify-center">

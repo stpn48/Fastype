@@ -15,21 +15,15 @@ export function RaceDisconnectHandler({ userId, raceId }: Props) {
   const router = useRouter();
 
   useEffect(() => {
-    const handleBeforeUnload = async () => {
-      await disconnectUserFromRace(userId, raceId);
-      resetTypingFieldStore();
-    };
-
     const cleanup = () => {
       disconnectUserFromRace(userId, raceId)
         .then(() => resetTypingFieldStore())
         .catch((err) => console.error("Error during disconnect:", err));
     };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
       cleanup();
+      router.push("/home");
     };
   }, [userId, raceId, resetTypingFieldStore]);
 

@@ -13,8 +13,6 @@ import { SignoutItem } from "./signout-item";
 export async function UserDropdown() {
   const user = await currentUser();
 
-  console.log("user:", user);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>

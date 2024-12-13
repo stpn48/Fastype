@@ -1,6 +1,5 @@
 import { getRaceDetails, getUser } from "@/server/queries";
 import { redirect } from "next/navigation";
-import { RaceDisconnectHandler } from "./_components/race-disconnect-handler";
 import { Countdown } from "./_components/race-track/countdown";
 import { RaceTrack } from "./_components/race-track/race-track";
 import { TypingField } from "./_components/typing-field/typing-field";

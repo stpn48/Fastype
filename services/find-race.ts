@@ -1,3 +1,4 @@
+import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race";
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { Stats, User } from "@prisma/client";
@@ -60,6 +61,7 @@ export async function openNewRace(userData: User & { stats: Stats }) {
   const WAITING_FOR_PLAYERS_TIME = 15 * 1000; // 15 secs
   const MAX_RACE_DURATION = 60 * 1000 * 1.5; // 1.5 mins
 
+  // if user is in a race disconnect him and continue
   if (userData.raceId) {
     const { error: disconnectUserError } = await disconnectUserFromRace(
       userData.id,
@@ -71,6 +73,7 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     }
   }
 
+  // create the race TODO: generate a random text for the race here
   const [race, createRaceError] = await catchError(
     prisma.race.create({
       data: {
@@ -93,8 +96,9 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     return { error: "Unexpected error creating race. Race was not created", race: null };
   }
 
-  // close race
+  // close race after 15 sec
   setTimeout(async () => {
+    // close race
     const [, updateRaceStatusError] = await catchError(
       prisma.race.update({
         where: {
@@ -111,7 +115,7 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     }
   }, WAITING_FOR_PLAYERS_TIME);
 
-  // finish race
+  // finish race after some time
   setTimeout(async () => {
     const [, updateRaceStatusError] = await catchError(
       prisma.race.update({
@@ -127,45 +131,23 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     if (updateRaceStatusError) {
       return { error: updateRaceStatusError.message, race: null };
     }
+
+    // disconnect all users from the race
+    const [, raceUsersError] = await catchError(
+      prisma.user.updateMany({
+        where: {
+          raceId: race.id,
+        },
+        data: {
+          raceId: null,
+        },
+      }),
+    );
+
+    if (raceUsersError) {
+      return { error: raceUsersError.message, race: null };
+    }
   }, MAX_RACE_DURATION + WAITING_FOR_PLAYERS_TIME);
 
   return { error: null, race };
-}
-
-export async function disconnectUserFromRace(userId: string, raceId: string) {
-  const [, disconnectUserFromRaceError] = await catchError(
-    prisma.race.update({
-      where: {
-        id: raceId,
-      },
-      data: {
-        users: {
-          disconnect: {
-            id: userId,
-          },
-        },
-      },
-    }),
-  );
-
-  const [, resetUserRaceDetailsError] = await catchError(
-    prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        raceId: null,
-      },
-    }),
-  );
-
-  if (resetUserRaceDetailsError) {
-    return { error: resetUserRaceDetailsError.message };
-  }
-
-  if (disconnectUserFromRaceError) {
-    return { error: disconnectUserFromRaceError.message };
-  }
-
-  return { error: null };
 }

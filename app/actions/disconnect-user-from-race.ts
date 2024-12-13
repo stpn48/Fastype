@@ -19,6 +19,10 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
     }),
   );
 
+  if (disconnectUserFromRaceError) {
+    return { error: disconnectUserFromRaceError.message };
+  }
+
   const [, resetUserRaceDetailsError] = await catchError(
     prisma.user.update({
       where: {
@@ -32,10 +36,6 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
 
   if (resetUserRaceDetailsError) {
     return { error: resetUserRaceDetailsError.message };
-  }
-
-  if (disconnectUserFromRaceError) {
-    return { error: disconnectUserFromRaceError.message };
   }
 
   return { error: null };

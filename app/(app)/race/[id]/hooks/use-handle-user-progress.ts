@@ -1,4 +1,6 @@
+import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { getUser } from "@/server/queries";
 import { createClient, RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -35,7 +37,7 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
 
       supabase.removeChannel(channel.current);
     };
-  }, [userId]);
+  }, [userId, raceId]);
 
   // send progress payload every time userWords change (user types)
   useEffect(() => {

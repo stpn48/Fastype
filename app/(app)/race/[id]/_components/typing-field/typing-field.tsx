@@ -21,6 +21,7 @@ export function TypingField({ text, userId, raceId }: Props) {
   const { currWordIndex, currCharIndex, userWords, canType } = useTypingFieldStore();
   useHandleUserProgress(text, userId, raceId);
   useHandleKeydown(text);
+
   useDisconnectOnUnload(userId, raceId);
 
   return (

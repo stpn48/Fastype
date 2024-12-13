@@ -26,8 +26,6 @@ export function useRaceUsers(raceId: string, initialRaceUsers: RaceUser[]) {
       return;
     }
 
-    //TODO: Remove this toast, for testing now
-    toast.success("Successfully got race users");
     setRaceUsers(raceUsers);
   }, []);
 

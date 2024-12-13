@@ -16,6 +16,8 @@ export async function getUser() {
       },
       include: {
         Race: true,
+        stats: true,
+        raceHistory: true,
       },
     }),
   );

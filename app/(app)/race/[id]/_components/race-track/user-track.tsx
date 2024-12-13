@@ -1,9 +1,8 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { createClient } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { RaceUser } from "./use-race-users";
+import { useRaceProgress } from "./hooks/use-race-progress";
+import { RaceUser } from "./hooks/use-race-users";
 
 type Props = {
   raceUser: RaceUser;
@@ -11,35 +10,7 @@ type Props = {
 };
 
 export function UserTrack({ raceUser, raceId }: Props) {
-  const [raceProgress, setRaceProgress] = useState(0);
-
-  useEffect(() => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
-    const channel = supabase.channel(`race-${raceId}`, {
-      config: {
-        broadcast: { self: true },
-      },
-    });
-
-    channel
-      .on("broadcast", { event: "user-progress-update" }, (payload) => {
-        const { progress, userId } = payload.payload;
-
-        console.log("payload received", payload);
-
-        if (userId === raceUser.id) {
-          setRaceProgress(progress);
-        }
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [raceUser.id, raceId]);
+  const { raceProgress } = useRaceProgress(raceId, raceUser.id);
 
   return (
     <div className="relative flex h-[50px] w-full items-center border-b border-border last:border-b-0">

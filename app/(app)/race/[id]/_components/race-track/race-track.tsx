@@ -1,6 +1,6 @@
 "use client";
 
-import { RaceUser, useRaceUsers } from "./use-race-users";
+import { RaceUser, useRaceUsers } from "./hooks/use-race-users";
 import { UserTrack } from "./user-track";
 
 type Props = {

@@ -1,6 +1,4 @@
-import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { getUser } from "@/server/queries";
 import { createClient, RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -43,7 +41,14 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
   useEffect(() => {
     if (!channelSubscribed || !channel.current) return;
 
-    const totalChars = text.replace(/\s+/g, "").length;
+    const textWithoutSpaces = text.replace(/\s+/g, "");
+
+    // don't send progress if user has mistake
+    if (userWords.join("") !== textWithoutSpaces.slice(0, userWords.join("").length)) {
+      return;
+    }
+
+    const totalChars = textWithoutSpaces.length;
     const userChars = userWords.join("").length;
     const userProgress = (userChars / totalChars) * 100;
 

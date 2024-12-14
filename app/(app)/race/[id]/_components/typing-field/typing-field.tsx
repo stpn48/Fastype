@@ -38,9 +38,9 @@ export function TypingField({ text, userId, raceId }: Props) {
 
       {text.split(" ").map((word, wordIndex) => (
         <MemoWord
+          key={wordIndex}
           wordIndex={wordIndex}
           isBehind={wordIndex < currWordIndex}
-          key={wordIndex}
           word={word}
           userWord={wordIndex <= currWordIndex ? userWords[wordIndex] : null}
         />

@@ -16,15 +16,16 @@ export function FindRaceButton({}: Props) {
 
   const handleClick = useCallback(async () => {
     setIsFindingRace(true);
+    toast.loading("Searching for a race...");
     const { error, race } = await findRace();
     setIsFindingRace(false);
+    toast.dismiss();
 
     if (error) {
       toast.error(error);
     }
 
     if (race) {
-      toast.success("Race found");
       router.push(`/race/${race.id}`);
     }
   }, [router]);

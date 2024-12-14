@@ -1,6 +1,5 @@
 "use client";
 
-import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
 import { memo } from "react";
 import { Char } from "./char";
@@ -36,7 +35,7 @@ export function Word({ word, userWord, isBehind, wordIndex }: Props) {
       {/* user words length is bigger than the word length, show overflow letters */}
       {userWord && userWord.length > word.length && (
         <>
-          {userWord!
+          {userWord
             .slice(word.length, word.length + 20)
             .split("")
             .map((char, overflowCharIndex) => (

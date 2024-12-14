@@ -15,6 +15,7 @@ export function useHandleKeydown(text: string) {
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key.length === 1 && e.code !== "Space") {
+        console.log(e.key);
         setUserWords((prev) => {
           const newUserWords = [...prev];
           newUserWords[currWordIndex] += e.key;
@@ -39,11 +40,12 @@ export function useHandleKeydown(text: string) {
 
         if (currCharIndex === 0 && currWordIndex > 0) {
           const prevRealWord = text.split(" ")[currWordIndex - 1];
+          const prevUserWord = userWords[currWordIndex - 1];
 
-          if (userWords[currWordIndex - 1] !== prevRealWord) {
+          if (prevUserWord !== prevRealWord) {
             setUserWords((prev) => prev.slice(0, -1));
             setCurrWordIndex((prev) => prev - 1);
-            setCurrCharIndex(prevRealWord.length);
+            setCurrCharIndex(prevUserWord.length);
           }
 
           return;

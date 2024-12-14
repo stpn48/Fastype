@@ -1,7 +1,9 @@
 import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race";
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
-import { Stats, User } from "@prisma/client";
+import { RaceText, Stats, User } from "@prisma/client";
+import { raw } from "@prisma/client/runtime/library";
+import { random } from "lodash";
 import "server-only";
 
 export async function getUserData(clerkId: string) {
@@ -73,6 +75,17 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     }
   }
 
+  const [raceTextCell, randomTextError] = await catchError(
+    prisma.$queryRaw`SELECT * FROM "RaceText" ORDER BY RANDOM() LIMIT 1`,
+  );
+
+  if (randomTextError) {
+    return { error: randomTextError.message, race: null };
+  }
+
+  const raceTextCellType = raceTextCell as RaceText[];
+  const raceText = raceTextCellType[0].text;
+
   // create the race TODO: generate a random text for the race here
   const [race, createRaceError] = await catchError(
     prisma.race.create({
@@ -86,7 +99,7 @@ export async function openNewRace(userData: User & { stats: Stats }) {
             id: userData.id,
           },
         },
-        text: "hello vro hello vro hello vro hello vro",
+        text: raceText,
       },
     }),
   );

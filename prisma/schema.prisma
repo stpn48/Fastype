@@ -54,6 +54,12 @@ model Race {
   CompletedRace CompletedRace[]
 }
 
+model RaceText {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  text      String
+}
+
 model CompletedRace {
   id     String  @id @default(uuid())
   race   Race    @relation(fields: [raceId], references: [id])

@@ -1,7 +1,7 @@
 ## TASKS
 
-[] - implement stats
-[] - Don't increase progress after making mistake
+[x] - implement stats
+[x] - Don't increase progress after making mistake
 [] - Implement text generating
 [] - add theme toggle to footer
 [] - Profile Page:

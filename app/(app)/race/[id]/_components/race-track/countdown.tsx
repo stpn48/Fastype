@@ -4,6 +4,7 @@ import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { createClient } from "@supabase/supabase-js";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export function Countdown() {
   const [countdown, setCountdown] = useState<number | null>(null);
@@ -36,6 +37,8 @@ export function Countdown() {
   }, [countdown]);
 
   useEffect(() => {
+    toast.loading("Waiting for players...");
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -45,6 +48,7 @@ export function Countdown() {
       .channel("race-countdown")
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "Race" }, (payload) => {
         if (payload.new.status === "closed") {
+          toast.dismiss();
           setCountdown(5);
         }
       })

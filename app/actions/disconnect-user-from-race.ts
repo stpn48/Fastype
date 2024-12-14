@@ -23,20 +23,20 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
     return { error: disconnectUserFromRaceError.message };
   }
 
-  const [, resetUserRaceDetailsError] = await catchError(
-    prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        raceId: null,
-      },
-    }),
-  );
+  // const [, resetUserRaceDetailsError] = await catchError(
+  //   prisma.user.update({
+  //     where: {
+  //       id: userId,
+  //     },
+  //     data: {
+  //       raceId: null,
+  //     },
+  //   }),
+  // );
 
-  if (resetUserRaceDetailsError) {
-    return { error: resetUserRaceDetailsError.message };
-  }
+  // if (resetUserRaceDetailsError) {
+  //   return { error: resetUserRaceDetailsError.message };
+  // }
 
   return { error: null };
 }

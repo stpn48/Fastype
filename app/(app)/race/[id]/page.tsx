@@ -17,7 +17,7 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
   const raceDetails = await getRaceDetails(paramsResolved.id);
 
   if (!raceDetails) {
-    return null;
+    redirect("/home");
   }
 
   return (

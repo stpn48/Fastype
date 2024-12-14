@@ -6,7 +6,7 @@ import { getUser } from "@/server/queries";
 import { CompletedRace, Stats, User } from "@prisma/client";
 import { disconnectUserFromRace } from "./disconnect-user-from-race";
 
-export async function handleRaceFinish(userId: string, raceCompleteTimeMs: number, raceId: string) {
+export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: string) {
   const user = await getUser();
 
   if (!user) {
@@ -26,11 +26,14 @@ export async function handleRaceFinish(userId: string, raceCompleteTimeMs: numbe
   }
 
   const words = race.text.split(" ").length;
-  const timeTypedSec = (raceCompleteTimeMs - race.createdAt.getTime()) / 1000;
-  const wpm = Math.round(words / timeTypedSec);
+  console.log("words", words);
+  const timeTypedSec = (raceCompleteTimeMs - (race.createdAt.getTime() + 20000)) / 1000;
+  console.log("timeTypedSec", timeTypedSec);
+  const wpm = Math.round((words / timeTypedSec) * 60);
+  console.log("wpm", wpm);
 
   // add race to user race history
-  const { error: addRaceToUserHistoryError } = await addRaceToUserHistory(userId, raceId, wpm);
+  const { error: addRaceToUserHistoryError } = await addRaceToUserHistory(user.id, raceId, wpm);
 
   if (addRaceToUserHistoryError) {
     return { error: addRaceToUserHistoryError };
@@ -44,7 +47,7 @@ export async function handleRaceFinish(userId: string, raceCompleteTimeMs: numbe
   }
 
   // dc from race
-  const { error: disconnectUserFromRaceError } = await disconnectUserFromRace(userId, raceId);
+  const { error: disconnectUserFromRaceError } = await disconnectUserFromRace(user.id, raceId);
 
   if (disconnectUserFromRaceError) {
     return { error: disconnectUserFromRaceError };
@@ -83,10 +86,10 @@ async function updateUserStats(
 ) {
   // Calculate average WPM
   const totalUserWpm = user.raceHistory.reduce((sum, race) => sum + race.wpm, 0) + wpm;
-  const newAverageWpm = Math.round(totalUserWpm / user.raceHistory.length);
+  const newAverageWpm = Math.round(totalUserWpm / (user.raceHistory.length + 1));
 
-  // last 10 races wpm
-  const last10Races = [...user.raceHistory.slice(-9), { wpm }];
+  // Last 10 races WPM
+  const last10Races = [...user.raceHistory.slice(-9), { wpm }]; // Include the latest race
   const totalLast10RacesWpm = last10Races.reduce((sum, race) => sum + race.wpm, 0);
   const newLast10RacesAvgWpm = Math.round(totalLast10RacesWpm / last10Races.length);
 

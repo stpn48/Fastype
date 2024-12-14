@@ -76,6 +76,9 @@ export async function openNewRace(userData: User & { stats: Stats }) {
   // create the race TODO: generate a random text for the race here
   const [race, createRaceError] = await catchError(
     prisma.race.create({
+      include: {
+        users: true,
+      },
       data: {
         avgWpm: userData.stats.avgWpmAllTime,
         users: {
@@ -83,7 +86,7 @@ export async function openNewRace(userData: User & { stats: Stats }) {
             id: userData.id,
           },
         },
-        text: `Empty out your pockets, I need all that I get the millions, then I fall back Niggas chameleons, they'll change for some changeDays ain't the same, niggas switch for the fameLouis Vuitton, I'm in my bagGet high, then my memory gone, I've been hurtin'I rock like electric guitars, I be ragin'Countin' big knots, look like yellow pages`,
+        text: "hello vro hello vro hello vro hello vro",
       },
     }),
   );
@@ -132,21 +135,10 @@ export async function openNewRace(userData: User & { stats: Stats }) {
       return { error: updateRaceStatusError.message, race: null };
     }
 
-    // disconnect all users from the race
-    const [, raceUsersError] = await catchError(
-      prisma.user.updateMany({
-        where: {
-          raceId: race.id,
-        },
-        data: {
-          raceId: null,
-        },
-      }),
-    );
-
-    if (raceUsersError) {
-      return { error: raceUsersError.message, race: null };
-    }
+    // disconnect all users from the race and reset raceId
+    race.users.forEach(async (user) => {
+      await disconnectUserFromRace(user.id, race.id);
+    });
   }, MAX_RACE_DURATION + WAITING_FOR_PLAYERS_TIME);
 
   return { error: null, race };

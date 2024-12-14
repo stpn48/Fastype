@@ -13,6 +13,9 @@ type TypingFieldStore = {
   canType: boolean;
   setCanType: (canType: boolean) => void;
 
+  hasMistake: boolean;
+  setHasMistake: (hasMistake: boolean) => void;
+
   resetTypingFieldStore: () => void;
 };
 
@@ -36,6 +39,9 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
   canType: false,
   setCanType: (canType) => set({ canType }),
 
+  hasMistake: false,
+  setHasMistake: (hasMistake) => set({ hasMistake }),
+
   resetTypingFieldStore: () =>
-    set({ currWordIndex: 0, currCharIndex: 0, userWords: [""], canType: false }),
+    set({ currWordIndex: 0, currCharIndex: 0, userWords: [""], canType: false, hasMistake: false }),
 }));

@@ -8,23 +8,28 @@ import { Char } from "./char";
 type Props = {
   word: string;
   userWord: string | null;
+  isBehind: boolean;
   wordIndex: number;
-  isActive: boolean;
 };
 
 const MemoChar = memo(Char);
 
-export function Word({ word, userWord, wordIndex, isActive }: Props) {
-  const { currCharIndex } = useTypingFieldStore();
+export function Word({ word, userWord, isBehind, wordIndex }: Props) {
+  const hasMistake = isBehind && userWord !== word;
 
   return (
-    <span className="h-fit">
+    <span
+      className={cn(
+        "h-fit",
+        `word-${wordIndex}`,
+        hasMistake && "underline decoration-destructive decoration-2 underline-offset-4",
+      )}
+    >
       {word.split("").map((char, charIndex) => (
         <MemoChar
           key={charIndex}
           char={char}
           userChar={userWord ? userWord[charIndex] : undefined}
-          isActive={isActive && charIndex === currCharIndex}
         />
       ))}
 
@@ -32,20 +37,13 @@ export function Word({ word, userWord, wordIndex, isActive }: Props) {
       {userWord && userWord.length > word.length && (
         <>
           {userWord!
-            .slice(word.length)
+            .slice(word.length, word.length + 20)
             .split("")
             .map((char, overflowCharIndex) => (
-              <Char
-                char={char}
-                userChar={"overflow-letter"}
-                key={overflowCharIndex}
-                isActive={isActive && overflowCharIndex === currCharIndex}
-              />
+              <Char char={char} userChar={"overflow-letter"} key={overflowCharIndex} />
             ))}
         </>
       )}
-
-      <span className={cn("", isActive && currCharIndex >= word.length && "active")}>&nbsp;</span>
     </span>
   );
 }

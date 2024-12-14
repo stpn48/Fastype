@@ -1,24 +1,38 @@
 "use client";
 
+import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useEffect, useRef } from "react";
 
-type Props = {
-  currWordIndex: number;
-  currCharIndex: number;
-};
-
-export function Caret({ currCharIndex, currWordIndex }: Props) {
-  const caretRef = useRef<HTMLDivElement>(null);
+export function Caret() {
+  const caretRef = useRef<HTMLDivElement | null>(null);
+  const { currWordIndex, currCharIndex } = useTypingFieldStore();
 
   useEffect(() => {
-    const currChar: HTMLSpanElement | null = document.querySelector(".active");
+    const activeWord: HTMLSpanElement | null = document.querySelector(`.word-${currWordIndex}`);
 
-    if (!currChar) {
+    if (!activeWord || !caretRef.current) {
       return;
     }
 
-    if (!caretRef.current) {
-      throw new Error("caretRef not found");
+    const wordChars: NodeListOf<HTMLSpanElement> = activeWord.querySelectorAll(".char");
+
+    if (!wordChars.length) {
+      return;
+    }
+
+    const currChar = wordChars[currCharIndex];
+
+    if (!currChar) {
+      const prevChar = wordChars[currCharIndex - 1];
+
+      if (!prevChar) {
+        return;
+      }
+
+      caretRef.current.style.left = `${prevChar.offsetLeft + prevChar.offsetWidth}px`;
+      caretRef.current.style.top = `${prevChar.offsetTop}px`;
+
+      return;
     }
 
     caretRef.current.style.left = `${currChar.offsetLeft}px`;

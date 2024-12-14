@@ -18,7 +18,8 @@ type Props = {
 const MemoWord = memo(Word);
 
 export function TypingField({ text, userId, raceId }: Props) {
-  const { currWordIndex, currCharIndex, userWords, canType } = useTypingFieldStore();
+  const { currWordIndex, userWords, canType, hasMistake } = useTypingFieldStore();
+
   useHandleUserProgress(text, userId, raceId);
 
   useHandleKeydown(text);
@@ -28,18 +29,19 @@ export function TypingField({ text, userId, raceId }: Props) {
   return (
     <div
       className={cn(
-        "relative flex w-full flex-wrap rounded-lg border border-border p-6 font-geist-mono text-xl text-muted-foreground",
+        "relative flex w-full flex-wrap gap-2 rounded-lg border border-border p-6 font-geist-mono text-xl text-muted-foreground",
         !canType && "cursor-not-allowed opacity-30",
+        hasMistake && "border-red-500",
       )}
     >
-      <Caret currCharIndex={currCharIndex} currWordIndex={currWordIndex} />
+      <Caret />
 
       {text.split(" ").map((word, wordIndex) => (
         <MemoWord
-          key={wordIndex}
-          isActive={wordIndex === currWordIndex}
-          word={word}
           wordIndex={wordIndex}
+          isBehind={wordIndex < currWordIndex}
+          key={wordIndex}
+          word={word}
           userWord={wordIndex <= currWordIndex ? userWords[wordIndex] : null}
         />
       ))}

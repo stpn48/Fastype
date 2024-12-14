@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 export function useHandleUserProgress(text: string, userId: string, raceId: string) {
-  const { userWords } = useTypingFieldStore();
+  const { userWords, setHasMistake } = useTypingFieldStore();
 
   const channel = useRef<RealtimeChannel | null>(null);
   const [channelSubscribed, setChannelSubscribed] = useState(false);
@@ -45,12 +45,14 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
 
     // don't send progress if user has mistake
     if (userWords.join("") !== textWithoutSpaces.slice(0, userWords.join("").length)) {
+      setHasMistake(true);
       return;
     }
 
     const totalChars = textWithoutSpaces.length;
     const userChars = userWords.join("").length;
     const userProgress = (userChars / totalChars) * 100;
+    setHasMistake(false);
 
     channel.current
       .send({

@@ -3,15 +3,13 @@ import { cn } from "@/lib/utils";
 type Props = {
   char: string;
   userChar: string | undefined;
-  isActive: boolean;
 };
 
-export function Char({ char, userChar, isActive }: Props) {
+export function Char({ char, userChar }: Props) {
   return (
     <span
       className={cn(
-        "",
-        isActive && "active",
+        "char",
         userChar === "overflow-letter" && "text-red-800",
         userChar === char && "text-primary-foreground",
         userChar !== char && "text-red-600",

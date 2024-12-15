@@ -57,6 +57,33 @@
     --chart-4: 229 14% 11%;
     --chart-5: 229 103% 62%;
   }
+
+  .dark-forest {
+    --background: 117 54% 1%;
+    --foreground: 117 11% 97%;
+    --muted: 117 31% 5%;
+    --muted-foreground: 117 2% 68%;
+    --popover: 117 54% 2%;
+    --popover-foreground: 117 11% 98%;
+    --card: 117 54% 2%;
+    --card-foreground: 117 11% 98%;
+    --border: 117 10% 10%;
+    --input: 117 10% 10%;
+    --primary: 117 3% 33%;
+    --primary-foreground: 117 3% 93%;
+    --secondary: 117 16% 13%;
+    --secondary-foreground: 117 16% 73%;
+    --accent: 117 16% 13%;
+    --accent-foreground: 117 16% 73%;
+    --destructive: 5 87% 54%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 117 3% 33%;
+    --chart-1: 117 3% 33%;
+    --chart-2: 117 16% 13%;
+    --chart-3: 117 16% 13%;
+    --chart-4: 117 16% 16%;
+    --chart-5: 117 6% 33%;
+  }
 }
 
 @layer base {

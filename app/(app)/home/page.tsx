@@ -4,11 +4,11 @@ import { PracticeAloneSection } from "./_components/practice-alone-section";
 
 export default function HomePage() {
   return (
-    <div className="bg-background h-full w-full min-h-[75vh] flex flex-col items-center justify-center">
-      <section className="grid gap-10 w-full max-w-4xl">
+    <div className="mt-20 flex h-full w-full flex-col items-center bg-background">
+      <section className="grid w-full max-w-4xl gap-10">
         <FindRaceSection />
 
-        <div className="grid gap-10 grid-cols-1 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
           <PracticeAloneSection />
           <PlayWithFriendsSection />
         </div>

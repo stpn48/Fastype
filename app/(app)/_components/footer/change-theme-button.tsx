@@ -8,9 +8,7 @@ export function ChangeThemeButton() {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <button className="group">
-            <Palette className="size-5 text-muted-foreground group-hover:text-foreground" />
-          </button>
+          <Palette className="size-5 text-muted-foreground group-hover:text-foreground" />
         </TooltipTrigger>
         <TooltipContent>
           <p>Change Theme</p>

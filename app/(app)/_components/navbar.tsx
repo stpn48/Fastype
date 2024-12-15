@@ -4,7 +4,7 @@ import { UserDropdown } from "./user-dropdown/user-dropdown";
 
 export async function Navbar() {
   return (
-    <div className="h-[56px] fixed w-full flex items-center px-4 inset-0 backdrop-blur-sm bg-background/80 border-b border-border">
+    <div className="fixed inset-0 z-50 flex h-[56px] w-full items-center border-b border-border bg-background/80 px-4 backdrop-blur-sm">
       <div className="flex-1" />
 
       <SignedOut>

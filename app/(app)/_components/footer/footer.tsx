@@ -1,4 +1,4 @@
-import { ChangeThemeButton } from "./change-theme-button";
+import { ChangeThemeDialog } from "./change-theme-dialog";
 
 export default function Footer() {
   return (
@@ -11,8 +11,9 @@ export default function Footer() {
         <p className="cursor-pointer text-muted-foreground hover:text-foreground">Contact</p>
         <p className="cursor-pointer text-muted-foreground hover:text-foreground">Contribute</p>
       </section>
+
       <section>
-        <ChangeThemeButton />
+        <ChangeThemeDialog />
       </section>
     </div>
   );

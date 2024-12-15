@@ -19,6 +19,12 @@ const themeColorsMap = {
     primary: "--primary",
     secondary: "--secondary",
   },
+  rose: {
+    background: "--background",
+    foreground: "--foreground",
+    primary: "--primary",
+    secondary: "--secondary",
+  },
 };
 
 export function useThemeColorsFor(theme: keyof typeof themeColorsMap) {

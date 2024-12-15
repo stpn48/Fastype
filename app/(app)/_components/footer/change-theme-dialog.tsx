@@ -22,6 +22,7 @@ export function ChangeThemeDialog() {
           <ThemeButton themeName="dark" />
           <ThemeButton themeName="light" />
           <ThemeButton themeName="dark-forest" />
+          <ThemeButton themeName="rose" />
         </div>
       </DialogContent>
     </Dialog>

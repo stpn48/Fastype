@@ -2,8 +2,8 @@
 
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
-import { findRaceBasedOnUserAvgWpm, getUserData, openNewRace } from "@/services/find-race";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/server/queries";
+import { findRaceBasedOnUserAvgWpm, openNewRace } from "@/services/services";
 import { Race } from "@prisma/client";
 
 type Response = {
@@ -12,28 +12,28 @@ type Response = {
 };
 
 export async function findRace(): Promise<Response> {
-  // get clerk user
-  const user = await currentUser();
+  const user = await getUser();
 
   if (!user) {
     return { error: "Unauthenticated", race: null };
   }
+  // user is in a race, disconnect him and continue
+  if (user.raceId) {
+    const { race, error: openRaceError } = await openNewRace(user);
 
-  // get user data from the db
-  const { error: userDataError, userData } = await getUserData(user.id);
+    if (openRaceError) {
+      return { error: openRaceError, race: null };
+    }
 
-  if (userDataError) {
-    return { error: userDataError, race: null };
+    if (!race) {
+      return { error: "Unexpected error opening race. Race not found", race: null };
+    }
+
+    return { error: null, race };
   }
 
-  if (!userData) {
-    return { error: "User not found", race: null };
-  }
-
-  // find a race in users wpm range and status open
-  const { race, error: findRaceError } = await findRaceBasedOnUserAvgWpm(
-    userData.stats.avgWpmAllTime,
-  );
+  // fif user not in a race,ind a race in users wpm range and status open
+  const { race, error: findRaceError } = await findRaceBasedOnUserAvgWpm(user.stats.avgWpmAllTime);
 
   if (findRaceError) {
     return { error: findRaceError, race: null };
@@ -41,27 +41,9 @@ export async function findRace(): Promise<Response> {
 
   // if race found, and there is less than 10 users in there, check if the user is already in the race, if not join it if yes open a new one
   if (race && race.users.length < 10) {
-    const userAlreadyInRace = race.users.some((u) => u.id === userData.id);
-
-    // if user is already in the race, open a new one
-    if (userAlreadyInRace) {
-      const { race, error: openRaceError } = await openNewRace(userData);
-
-      if (openRaceError) {
-        return { error: openRaceError, race: null };
-      }
-
-      if (!race) {
-        return { error: "Unexpected error opening race. Race not found", race: null };
-      }
-
-      return { error: null, race };
-    }
-
-    // user not in the race yet, calculate new avgWpm for the race with the new user
     const totalUsersWpm =
       race.users.reduce((acc, curr) => acc + curr.stats.avgWpmLast10Races, 0) +
-      userData.stats.avgWpmAllTime;
+      user.stats.avgWpmAllTime;
 
     const newAvgWpm = totalUsersWpm / (race.users.length + 1);
 
@@ -75,7 +57,7 @@ export async function findRace(): Promise<Response> {
           avgWpm: newAvgWpm,
           users: {
             connect: {
-              id: userData.id,
+              id: user.id,
             },
           },
         },
@@ -91,7 +73,7 @@ export async function findRace(): Promise<Response> {
 
   // if no race found, open a new one
   if (!race) {
-    const { race, error: openRaceError } = await openNewRace(userData);
+    const { race, error: openRaceError } = await openNewRace(user);
 
     if (openRaceError) {
       return { error: openRaceError, race: null };

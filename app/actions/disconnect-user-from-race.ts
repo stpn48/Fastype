@@ -4,6 +4,8 @@ import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 
 export async function disconnectUserFromRace(userId: string, raceId: string) {
+  //TODO: more security
+
   const [, disconnectUserFromRaceError] = await catchError(
     prisma.race.update({
       where: {

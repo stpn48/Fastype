@@ -1,6 +1,6 @@
-import { FindRaceSection } from "./_components/find-race-section";
+import { FindRaceSection } from "./_components/find-race-section/find-race-section";
 import { PlayWithFriendsSection } from "./_components/play-with-friends-section";
-import { PracticeAloneSection } from "./_components/practice-alone-section";
+import { PracticeAloneSection } from "./_components/play-alone-sectioin/practice-alone-section";
 
 export default function HomePage() {
   return (

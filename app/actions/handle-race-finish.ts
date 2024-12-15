@@ -3,10 +3,14 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
-import { CompletedRace, Stats, User } from "@prisma/client";
+import { CompletedRace, RaceType, Stats, User } from "@prisma/client";
 import { disconnectUserFromRace } from "./disconnect-user-from-race";
 
-export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: string) {
+export async function handleRaceFinish(
+  raceCompleteTimeMs: number,
+  raceId: string,
+  raceType: RaceType,
+) {
   const user = await getUser();
 
   if (!user) {
@@ -27,7 +31,14 @@ export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: strin
 
   const words = race.text.split(" ").length;
   console.log("words", words);
-  const timeTypedSec = (raceCompleteTimeMs - (race.createdAt.getTime() + 20000)) / 1000;
+  let timeTypedSec = (raceCompleteTimeMs - race.createdAt.getTime()) / 1000;
+
+  if (raceType === "public") {
+    timeTypedSec -= 20; // remove 15 sec for waiting for players + countdown 5 sec
+  } else if (raceType === "solo") {
+    timeTypedSec -= 3; // remove 3 sec for countdown
+  }
+
   console.log("timeTypedSec", timeTypedSec);
   const wpm = Math.round((words / timeTypedSec) * 60);
   console.log("wpm", wpm);

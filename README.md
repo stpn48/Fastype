@@ -3,9 +3,11 @@
 [x] - implement stats
 [x] - Don't increase progress after making mistake
 [x] - Implement text generating
-[] - Footer
+[x] - Footer
+[] - search for users
 [] - add theme toggle to footer
-[] - Profile Page:
+[x] - Profile Page:
+[] - progress chart to profile page (y axis: WPM, x axis: race number)
 [] - create logo
 
 ## GOALS

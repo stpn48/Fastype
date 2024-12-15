@@ -54,6 +54,7 @@ export function useHandleKeydown(text: string) {
       }
 
       if (e.code === "Space") {
+        e.preventDefault();
         const realWord = text.split(" ")[currWordIndex];
         if (currCharIndex >= realWord.length) {
           setUserWords((prev) => [...prev, ""]);

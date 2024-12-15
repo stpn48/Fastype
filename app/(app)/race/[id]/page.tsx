@@ -25,7 +25,7 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
       <section className="flex w-full max-w-4xl grid-cols-1 grid-rows-2 flex-col gap-10">
         <RaceTrack initialRaceUsers={raceDetails.users} raceId={paramsResolved.id} />
         <TypingField text={raceDetails.text} userId={user.id} raceId={paramsResolved.id} />
-        <Countdown />
+        <Countdown raceType={raceDetails.type} />
       </section>
     </div>
   );

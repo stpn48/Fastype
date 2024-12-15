@@ -1,12 +1,17 @@
 "use client";
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { createClient } from "@supabase/supabase-js";
+import { RaceType } from "@prisma/client";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-export function Countdown() {
+type Props = {
+  raceType: RaceType;
+};
+
+export function Countdown({ raceType }: Props) {
   const [countdown, setCountdown] = useState<number | null>(null);
 
   const { setCanType } = useTypingFieldStore();
@@ -37,27 +42,31 @@ export function Countdown() {
   }, [countdown]);
 
   useEffect(() => {
-    toast.loading("Waiting for players...");
+    // solo race start countdown instantly
+    if (raceType === "solo") {
+      setCountdown(3);
+      return;
+    }
 
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
+    // public races wait for race status to change to closed, 15 sec (waiting for players)
+    if (raceType === "public") {
+      toast.loading("Waiting for players...");
 
-    const channel = supabase
-      .channel("race-countdown")
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "Race" }, (payload) => {
-        if (payload.new.status === "closed") {
-          toast.dismiss();
-          setCountdown(5);
-        }
-      })
-      .subscribe();
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      );
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
+      const channel = listedForRaceUpdates(supabase, () => {
+        toast.dismiss();
+        setCountdown(5);
+      });
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [raceType]);
 
   if (countdown === null) return null;
 
@@ -74,4 +83,20 @@ export function Countdown() {
       </motion.span>
     </div>
   );
+}
+
+function listedForRaceUpdates(
+  supabase: SupabaseClient<any, "public", any>,
+  onRaceClose: () => void,
+) {
+  const channel = supabase
+    .channel("race-countdown")
+    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "Race" }, (payload) => {
+      if (payload.new.status === "closed") {
+        onRaceClose();
+      }
+    })
+    .subscribe();
+
+  return channel;
 }

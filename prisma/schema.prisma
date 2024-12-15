@@ -19,6 +19,12 @@ enum RaceStatus {
   completed
 }
 
+enum RaceType {
+  public
+  private
+  solo
+}
+
 // basic data like name, email, avatar are in clerk, here is the stats for this user
 model User {
   id          String          @id @default(uuid())
@@ -28,9 +34,9 @@ model User {
   imageUrl    String?
   username    String
   country     String          @default("unknown")
-  stats       Stats           @relation(fields: [statsId], references: [id])
+  stats       Stats           @relation(fields: [statsId], references: [id], onDelete: Cascade)
   statsId     String
-  Race        Race?           @relation(fields: [raceId], references: [id])
+  Race        Race?           @relation(fields: [raceId], references: [id], onDelete: Cascade)
   raceId      String?
   raceHistory CompletedRace[]
 }
@@ -48,6 +54,7 @@ model Race {
   id            String          @id @default(uuid())
   users         User[]
   avgWpm        Int
+  type          RaceType        @default(public)
   status        RaceStatus      @default(waiting)
   createdAt     DateTime        @default(now())
   text          String
@@ -62,9 +69,9 @@ model RaceText {
 
 model CompletedRace {
   id     String  @id @default(uuid())
-  race   Race    @relation(fields: [raceId], references: [id])
+  race   Race    @relation(fields: [raceId], references: [id], onDelete: Cascade)
   raceId String
   wpm    Int
-  User   User?   @relation(fields: [userId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 }

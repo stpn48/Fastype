@@ -1,25 +1,21 @@
 "use client";
 
-import { findRace } from "@/app/actions/find-race";
+import { openPracticeRace } from "@/app/actions/open-practice-race";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
-type Props = {};
-
-export function FindRaceButton({}: Props) {
-  const [isFindingRace, setIsFindingRace] = useState(false);
+export function PlayAloneButton() {
+  const [isOpeningRace, setIsOpeningRace] = useState(false);
 
   const router = useRouter();
 
   const handleClick = useCallback(async () => {
-    setIsFindingRace(true);
-    toast.loading("Searching for a race...");
-    const { error, race } = await findRace();
-    setIsFindingRace(false);
-    toast.dismiss();
+    setIsOpeningRace(true);
+    const { error, race } = await openPracticeRace();
+    setIsOpeningRace(false);
 
     if (error) {
       toast.error(error);
@@ -28,16 +24,16 @@ export function FindRaceButton({}: Props) {
     if (race) {
       router.push(`/race/${race.id}`);
     }
-  }, [router]);
+  }, []);
 
   return (
     <Button
-      disabled={isFindingRace}
       onClick={handleClick}
+      disabled={isOpeningRace}
       className="z-10 flex h-10 w-full gap-2 text-base"
     >
-      {isFindingRace && <Loader2 className="h-4 w-4 animate-spin" />}
-      <p>Find Race</p>
+      {isOpeningRace && <Loader2 className="h-4 w-4 animate-spin" />}
+      <p>Practice</p>
     </Button>
   );
 }

@@ -2,33 +2,9 @@ import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race"
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { RaceText, Stats, User } from "@prisma/client";
-import { raw } from "@prisma/client/runtime/library";
-import { random } from "lodash";
 import "server-only";
 
-export async function getUserData(clerkId: string) {
-  // get user data from db
-  const [userData, userDataError] = await catchError(
-    prisma.user.findFirst({
-      where: {
-        clerkId: clerkId,
-      },
-      include: {
-        stats: true,
-      },
-    }),
-  );
-
-  if (userDataError) {
-    return { error: userDataError.message, userData: null };
-  }
-
-  if (userData === null) {
-    return { error: "User not found", userData: null };
-  }
-
-  return { error: null, userData };
-}
+// service functions are utils for server actions. They should only be used in server actions !!!
 
 export async function findRaceBasedOnUserAvgWpm(userAvgWpmAllTime: number) {
   const WPM_THRESHOLD = 30;
@@ -75,16 +51,12 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     }
   }
 
-  const [raceTextCell, randomTextError] = await catchError(
-    prisma.$queryRaw`SELECT * FROM "RaceText" ORDER BY RANDOM() LIMIT 1`,
-  );
+  // generate a random text for the race
+  const raceText = await generateRaceText();
 
-  if (randomTextError) {
-    return { error: randomTextError.message, race: null };
+  if (!raceText) {
+    return { error: "Unexpected error generating race text", race: null };
   }
-
-  const raceTextCellType = raceTextCell as RaceText[];
-  const raceText = raceTextCellType[0].text;
 
   // create the race TODO: generate a random text for the race here
   const [race, createRaceError] = await catchError(
@@ -112,9 +84,8 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     return { error: "Unexpected error creating race. Race was not created", race: null };
   }
 
-  // close race after 15 sec
+  // close race after 15 sec (waiting for players)
   setTimeout(async () => {
-    // close race
     const [, updateRaceStatusError] = await catchError(
       prisma.race.update({
         where: {
@@ -155,4 +126,19 @@ export async function openNewRace(userData: User & { stats: Stats }) {
   }, MAX_RACE_DURATION + WAITING_FOR_PLAYERS_TIME);
 
   return { error: null, race };
+}
+
+export async function generateRaceText() {
+  const [raceTextCell, randomTextError] = await catchError(
+    prisma.$queryRaw`SELECT * FROM "RaceText" ORDER BY RANDOM() LIMIT 1`,
+  );
+
+  if (randomTextError) {
+    return null;
+  }
+
+  const raceTextCellType = raceTextCell as RaceText[];
+  const raceText = raceTextCellType[0].text;
+
+  return raceText;
 }

@@ -10,7 +10,7 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
 
   const paramsResolved = await params;
 
-  if (!user || user.Race?.id !== paramsResolved.id) {
+  if (!user || user.raceId !== paramsResolved.id) {
     redirect("/home");
   }
 

@@ -47,3 +47,22 @@ export async function getRaceDetails(raceId: string) {
 
   return raceDetails;
 }
+
+export async function getUserDetails(userId: string) {
+  const [userDetails, error] = await catchError(
+    prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        stats: true,
+      },
+    }),
+  );
+
+  if (error) {
+    return null;
+  }
+
+  return userDetails;
+}

@@ -15,7 +15,6 @@ export function useHandleKeydown(text: string) {
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key.length === 1 && e.code !== "Space") {
-        console.log(e.key);
         setUserWords((prev) => {
           const newUserWords = [...prev];
           newUserWords[currWordIndex] += e.key;

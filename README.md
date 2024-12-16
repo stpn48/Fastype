@@ -1,14 +1,9 @@
 ## TASKS
 
-[x] - implement stats
-[x] - Don't increase progress after making mistake
-[x] - Implement text generating
-[x] - Footer
-[] - search for users
-[] - add theme toggle to footer
-[x] - Profile Page:
+[] - play with friends
 [] - progress chart to profile page (y axis: WPM, x axis: race number)
-[x] - create logo
+[] - activity chart
+[] - profile settings, change username, change avatar, email, change password
 
 ## GOALS
 

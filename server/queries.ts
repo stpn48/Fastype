@@ -36,7 +36,16 @@ export async function getRaceDetails(raceId: string) {
         id: raceId,
       },
       include: {
-        users: true,
+        users: {
+          select: {
+            id: true,
+            clerkId: true,
+            username: true,
+            imageUrl: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
       },
     }),
   );

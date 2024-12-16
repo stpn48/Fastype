@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { SearchUsersDialog } from "./search-users-dialog";
 import { UserDropdown } from "./user-dropdown/user-dropdown";
 
 export async function Navbar() {
@@ -16,8 +17,13 @@ export async function Navbar() {
           <SignInButton />
         </Button>
       </SignedOut>
+
       <SignedIn>
-        <UserDropdown />
+        <div className="flex items-center gap-4">
+          <SearchUsersDialog />
+
+          <UserDropdown />
+        </div>
       </SignedIn>
     </div>
   );

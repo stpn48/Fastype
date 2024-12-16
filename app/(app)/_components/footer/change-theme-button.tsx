@@ -7,7 +7,7 @@ export function ChangeThemeButton() {
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           <Palette className="size-5 text-muted-foreground group-hover:text-foreground" />
         </TooltipTrigger>
         <TooltipContent>

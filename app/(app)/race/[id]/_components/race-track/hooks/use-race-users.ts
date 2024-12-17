@@ -47,41 +47,44 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
           filter: `id=eq.${raceDetails.id}`,
         },
         async (payload: RealtimePostgresChangesPayload<Race>) => {
+          console.log("race payload", payload);
           const newRace = payload.new as RaceUser;
           await getRaceParticipants(newRace.id);
         },
       )
       .subscribe();
 
+    const handleJoinUser = async () => {
+      if (raceDetails.type === "private" && raceUsers.some((user) => user.id !== userId)) {
+        await joinUser(raceDetails.id);
+        await getRaceParticipants(raceDetails.id); // Ensure the users are refreshed after joining
+      }
+    };
+
+    handleJoinUser();
+
     return () => {
       supabase.removeChannel(channel);
     };
   }, [raceDetails]);
 
-  // if user gets to the race page, that means ge got a link or guessed the raceId (never gonna happen) join the user to this race
-  useEffect(() => {
-    async function joinUser() {
-      toast.loading("Joining user to race...");
-
-      const { race, error } = await joinUserToRace(raceDetails.id);
-      toast.dismiss();
-      toast.success("Joined user to race");
-
-      if (error) {
-        toast.error("error joining user to this race " + error);
-        return;
-      }
-
-      if (!race || !race.users) {
-        toast.error("Unexpected error joining user to the race, try again");
-        return;
-      }
-    }
-
-    if (raceDetails.type === "private" && raceUsers.some((user) => user.id !== userId)) {
-      joinUser();
-    }
-  }, [raceDetails, raceUsers]);
-
   return { raceUsers };
+}
+
+async function joinUser(raceId: string) {
+  toast.loading("Joining user to race...");
+
+  const { race, error } = await joinUserToRace(raceId);
+  toast.dismiss();
+  toast.success("Joined user to race");
+
+  if (error) {
+    toast.error("error joining user to this race " + error);
+    return;
+  }
+
+  if (!race || !race.users) {
+    toast.error("Unexpected error joining user to the race, try again");
+    return;
+  }
 }

@@ -17,6 +17,7 @@ export async function joinUserToRace(raceId: string) {
         id: raceId,
       },
       data: {
+        avgWpm: 0,
         users: {
           connect: {
             id: user.id,

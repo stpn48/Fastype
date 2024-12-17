@@ -18,6 +18,27 @@ export async function openPrivateRace() {
     return { error: "Unexpected error generating race text", race: null };
   }
 
+  if (user.raceId) {
+    const [, disconnectUserError] = await catchError(
+      prisma.race.update({
+        where: {
+          id: user.raceId,
+        },
+        data: {
+          users: {
+            disconnect: {
+              id: user.id,
+            },
+          },
+        },
+      }),
+    );
+
+    if (disconnectUserError) {
+      return { error: disconnectUserError.message, race: null };
+    }
+  }
+
   const [race, error] = await catchError(
     prisma.race.create({
       data: {

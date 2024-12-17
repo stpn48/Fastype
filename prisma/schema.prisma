@@ -34,9 +34,9 @@ model User {
   imageUrl    String?
   username    String
   country     String          @default("unknown")
-  stats       Stats           @relation(fields: [statsId], references: [id], onDelete: Cascade)
-  statsId     String
-  Race        Race?           @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  stats       Stats?
+  statsId     String          @unique
+  Race        Race?           @relation(fields: [raceId], references: [id])
   raceId      String?
   raceHistory CompletedRace[]
 }
@@ -47,19 +47,19 @@ model Stats {
   avgWpmAllTime     Int    @default(0)
   lastRaceWpm       Int    @default(0)
   bestRaceWpm       Int    @default(0)
-  User              User[]
+  User              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String @unique
 }
 
 model Race {
-  id            String          @id @default(uuid())
-  users         User[]
-  avgWpm        Int
-  authorId      String?
-  type          RaceType        @default(public)
-  status        RaceStatus      @default(waiting)
-  createdAt     DateTime        @default(now())
-  text          String
-  CompletedRace CompletedRace[]
+  id        String     @id @default(uuid())
+  users     User[]
+  avgWpm    Int
+  authorId  String?
+  type      RaceType   @default(public)
+  status    RaceStatus @default(waiting)
+  createdAt DateTime   @default(now())
+  text      String
 }
 
 model RaceText {
@@ -69,10 +69,9 @@ model RaceText {
 }
 
 model CompletedRace {
-  id     String  @id @default(uuid())
-  race   Race    @relation(fields: [raceId], references: [id], onDelete: Cascade)
-  raceId String
-  wpm    Int
-  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String?
+  id        String   @id @default(uuid())
+  wpm       Int
+  createdAt DateTime @default(now())
+  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
 }

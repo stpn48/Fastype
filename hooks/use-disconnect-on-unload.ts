@@ -2,10 +2,12 @@
 
 import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race"; // Your server action to disconnect user
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export function useDisconnectOnUnload(userId: string, raceId: string) {
   useEffect(() => {
     const handleUnload = async () => {
+      toast.loading("Disconnecting user from race...");
       await disconnectUserFromRace(userId, raceId);
     };
 

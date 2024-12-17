@@ -1,22 +1,23 @@
 "use client";
 
-import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race"; // Your server action to disconnect user
-import { useEffect } from "react";
+import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race"; // Your server action
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 export function useDisconnectOnUnload(userId: string, raceId: string) {
+  const pathname = usePathname(); // Hook to get the current route
+
   useEffect(() => {
     const handleUnload = async () => {
       toast.loading("Disconnecting user from race...");
       await disconnectUserFromRace(userId, raceId);
     };
-
-    // Register beforeunload event to disconnect the user when they leave or refresh the page
+    // Listen for beforeunload (browser refresh/close)
     window.addEventListener("beforeunload", handleUnload);
 
-    // Cleanup on component unmount or when route changes
     return () => {
       window.removeEventListener("beforeunload", handleUnload);
     };
-  }, [userId, raceId]);
+  }, [userId, raceId, pathname]);
 }

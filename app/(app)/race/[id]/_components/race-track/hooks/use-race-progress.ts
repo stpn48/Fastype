@@ -14,7 +14,7 @@ export function useRaceProgress(raceId: string, userId: string, raceType: RaceTy
   const router = useRouter();
 
   const handleRaceComplete = useCallback(async () => {
-    const { error } = await handleRaceFinish(Date.now(), raceId, raceType);
+    const { error } = await handleRaceFinish(Date.now(), raceId);
     resetTypingFieldStore();
 
     if (error) {

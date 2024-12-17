@@ -37,7 +37,7 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
     );
 
     const channel = supabase
-      .channel("listen-for-race-inserts")
+      .channel("race-updates")
       .on(
         "postgres_changes",
         {
@@ -55,9 +55,8 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
       .subscribe();
 
     const handleJoinUser = async () => {
-      if (raceDetails.type === "private" && raceUsers.some((user) => user.id !== userId)) {
+      if (raceDetails.type === "private" && !raceUsers.find((user) => user.id === userId)) {
         await joinUser(raceDetails.id);
-        await getRaceParticipants(raceDetails.id); // Ensure the users are refreshed after joining
       }
     };
 
@@ -66,17 +65,13 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [raceDetails]);
+  }, [raceDetails, raceUsers, userId]);
 
   return { raceUsers };
 }
 
 async function joinUser(raceId: string) {
-  toast.loading("Joining user to race...");
-
   const { race, error } = await joinUserToRace(raceId);
-  toast.dismiss();
-  toast.success("Joined user to race");
 
   if (error) {
     toast.error("error joining user to this race " + error);

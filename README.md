@@ -1,6 +1,8 @@
 ## TASKS
 
 [] - play with friends
+[] - don't leave race instantly after finishing, add like button or something to leave the race, show the wpm and place
+[] - leave user from race when they leave the page
 [] - progress chart to profile page (y axis: WPM, x axis: race number)
 [] - activity chart
 [] - profile settings, change username, change avatar, email, change password

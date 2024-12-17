@@ -3,14 +3,10 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
-import { CompletedRace, RaceType, Stats, User } from "@prisma/client";
+import { CompletedRace, Race, RaceType, Stats, User } from "@prisma/client";
 import { disconnectUserFromRace } from "./disconnect-user-from-race";
 
-export async function handleRaceFinish(
-  raceCompleteTimeMs: number,
-  raceId: string,
-  raceType: RaceType,
-) {
+export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: string) {
   const user = await getUser();
 
   if (!user) {
@@ -30,18 +26,15 @@ export async function handleRaceFinish(
   }
 
   const words = race.text.split(" ").length;
-  console.log("words", words);
   let timeTypedSec = (raceCompleteTimeMs - race.createdAt.getTime()) / 1000;
 
-  if (raceType === "public") {
+  if (race.type === "public") {
     timeTypedSec -= 20; // remove 15 sec for waiting for players + countdown 5 sec
-  } else if (raceType === "solo") {
+  } else if (race.type === "solo") {
     timeTypedSec -= 3; // remove 3 sec for countdown
   }
 
-  console.log("timeTypedSec", timeTypedSec);
   const wpm = Math.round((words / timeTypedSec) * 60);
-  console.log("wpm", wpm);
 
   // add race to user race history
   const { error: addRaceToUserHistoryError } = await addRaceToUserHistory(user.id, raceId, wpm);
@@ -76,7 +69,6 @@ async function addRaceToUserHistory(userId: string, raceId: string, wpm: number)
       data: {
         raceHistory: {
           create: {
-            raceId: raceId,
             wpm: wpm,
           },
         },
@@ -92,7 +84,7 @@ async function addRaceToUserHistory(userId: string, raceId: string, wpm: number)
 }
 
 async function updateUserStats(
-  user: User & { stats: Stats } & { raceHistory: CompletedRace[] },
+  user: User & { stats: Stats | null } & { raceHistory: CompletedRace[] } & { Race: Race | null },
   wpm: number,
 ) {
   // Calculate average WPM
@@ -105,7 +97,7 @@ async function updateUserStats(
   const newLast10RacesAvgWpm = Math.round(totalLast10RacesWpm / last10Races.length);
 
   // all time best wpm
-  let newAllTimeBestWpm = user.stats.bestRaceWpm || 0;
+  let newAllTimeBestWpm = user.stats?.bestRaceWpm || 0;
   if (wpm > newAllTimeBestWpm) {
     newAllTimeBestWpm = wpm;
   }

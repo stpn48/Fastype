@@ -14,7 +14,7 @@ export async function openPracticeRace() {
 
   const raceText = await generateRaceText();
 
-  if (!raceText) {
+  if (!raceText || !user.stats) {
     return { error: "Unexpected error generating race text", race: null };
   }
 

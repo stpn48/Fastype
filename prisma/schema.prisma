@@ -35,7 +35,6 @@ model User {
   username    String
   country     String          @default("unknown")
   stats       Stats?
-  statsId     String          @unique
   Race        Race?           @relation(fields: [raceId], references: [id])
   raceId      String?
   raceHistory CompletedRace[]

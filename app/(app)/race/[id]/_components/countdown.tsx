@@ -103,7 +103,7 @@ function listenForRaceUpdates(
   raceId: string,
 ) {
   const channel = supabase
-    .channel("race-countdown")
+    .channel("race-updates")
     .on(
       "postgres_changes",
       { event: "UPDATE", schema: "public", table: "Race", filter: `id=eq.${raceId}` },

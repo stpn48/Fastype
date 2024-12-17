@@ -106,12 +106,9 @@ export async function openNewRace(userData: User & { stats: Stats }) {
   // finish race after some time
   setTimeout(async () => {
     const [, updateRaceStatusError] = await catchError(
-      prisma.race.update({
+      prisma.race.delete({
         where: {
           id: race.id,
-        },
-        data: {
-          status: "completed",
         },
       }),
     );
@@ -119,11 +116,6 @@ export async function openNewRace(userData: User & { stats: Stats }) {
     if (updateRaceStatusError) {
       return { error: updateRaceStatusError.message, race: null };
     }
-
-    // disconnect all users from the race and reset raceId
-    race.users.forEach(async (user) => {
-      await disconnectUserFromRace(user.id, race.id);
-    });
   }, MAX_RACE_DURATION + WAITING_FOR_PLAYERS_TIME);
 
   return { error: null, race };

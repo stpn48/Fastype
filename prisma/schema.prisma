@@ -55,6 +55,7 @@ model Race {
   users     User[]
   avgWpm    Int
   authorId  String?
+  updatedAt DateTime   @default(now())
   type      RaceType   @default(public)
   status    RaceStatus @default(waiting)
   createdAt DateTime   @default(now())

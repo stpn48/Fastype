@@ -1,6 +1,6 @@
 "use client";
 
-import { openPracticeRace } from "@/app/actions/open-practice-race";
+import { openNewRace } from "@/app/actions/open-new-race";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ export function PlayAloneButton() {
 
   const handleClick = useCallback(async () => {
     setIsOpeningRace(true);
-    const { error, race } = await openPracticeRace();
+    const { error, race } = await openNewRace("solo");
     setIsOpeningRace(false);
 
     if (error) {
@@ -24,7 +24,7 @@ export function PlayAloneButton() {
     if (race) {
       router.push(`/race/${race.id}`);
     }
-  }, []);
+  }, [router]);
 
   return (
     <Button

@@ -3,7 +3,7 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
-import { CompletedRace, Race, RaceType, Stats, User } from "@prisma/client";
+import { CompletedRace, Race, Stats, User } from "@prisma/client";
 import { disconnectUserFromRace } from "./disconnect-user-from-race";
 
 export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: string) {
@@ -37,7 +37,7 @@ export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: strin
   const wpm = Math.round((words / timeTypedSec) * 60);
 
   // add race to user race history
-  const { error: addRaceToUserHistoryError } = await addRaceToUserHistory(user.id, raceId, wpm);
+  const { error: addRaceToUserHistoryError } = await addRaceToUserHistory(user.id, wpm);
 
   if (addRaceToUserHistoryError) {
     return { error: addRaceToUserHistoryError };
@@ -60,7 +60,7 @@ export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: strin
   return { error: null };
 }
 
-async function addRaceToUserHistory(userId: string, raceId: string, wpm: number) {
+async function addRaceToUserHistory(userId: string, wpm: number) {
   const [, updateStatsError] = await catchError(
     prisma.user.update({
       where: {

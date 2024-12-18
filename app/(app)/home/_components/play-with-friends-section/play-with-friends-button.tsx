@@ -1,6 +1,6 @@
 "use client";
 
-import { openPrivateRace } from "@/app/actions/open-private-race";
+import { openNewRace } from "@/app/actions/open-new-race";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ export function PlayWithFriendsButton() {
 
   const handleClick = useCallback(async () => {
     setIsLoading(true);
-    const { error, race } = await openPrivateRace();
+    const { error, race } = await openNewRace("private");
     setIsLoading(false);
 
     if (error) {

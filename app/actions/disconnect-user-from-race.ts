@@ -44,6 +44,7 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
         id: raceId,
       },
       data: {
+        updatedAt: new Date(),
         users: {
           disconnect: {
             id: userId,

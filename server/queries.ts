@@ -65,6 +65,7 @@ export async function getUserDetails(userId: string) {
       },
       include: {
         stats: true,
+        raceHistory: true,
       },
     }),
   );

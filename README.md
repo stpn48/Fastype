@@ -14,7 +14,7 @@
 [x] - Use real text for the typing
 [x] - Auth, each user gon have profile with stats (show top % wpm)
 [] - Ability to create custom races invite friends
-[x] - Enter typing race against other playersz
+[x] - Enter typing race against other players
 [x] - Light / Dark mode
 [x] - Ability to practice alone
 [] - improvement overtime chart (y axis: WPM, x axis: race number)

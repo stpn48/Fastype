@@ -35,7 +35,7 @@ model User {
   username    String
   country     String          @default("unknown")
   stats       Stats?
-  Race        Race?           @relation(fields: [raceId], references: [id])
+  Race        Race?           @relation(fields: [raceId], references: [id], onDelete: SetNull)
   raceId      String?
   raceHistory CompletedRace[]
 }

@@ -2,6 +2,7 @@
 
 import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
@@ -12,6 +13,8 @@ type Props = {
 
 export function DisconnectUserHandler({ userId, raceId }: Props) {
   const mounted = useRef(false);
+
+  const router = useRouter();
 
   const { resetTypingFieldStore } = useTypingFieldStore();
 
@@ -25,12 +28,17 @@ export function DisconnectUserHandler({ userId, raceId }: Props) {
   }, [userId, raceId]);
 
   useEffect(() => {
-    window.addEventListener("beforeunload", dcUser);
+    const handleBeforeUnload = () => {
+      router.prefetch("/home");
+      dcUser();
+      router.push("/home");
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.removeEventListener("beforeunload", dcUser);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [dcUser]);
+  }, [dcUser, router]);
 
   useEffect(() => {
     setTimeout(() => {

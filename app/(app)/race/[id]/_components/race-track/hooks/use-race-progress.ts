@@ -10,8 +10,9 @@ import { toast } from "sonner";
 export function useRaceProgress(raceDetails: Race, userId: string) {
   const [raceProgress, setRaceProgress] = useState(0);
   const [raceStartedAt, setRaceStartedAt] = useState<string | null>(null);
+  const [wpm, setWpm] = useState(0);
 
-  const { resetTypingFieldStore, setCanType, setUserWpm } = useTypingFieldStore();
+  const { resetTypingFieldStore, setCanType } = useTypingFieldStore();
 
   const router = useRouter();
 
@@ -50,13 +51,11 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
             return;
           }
 
-          if (raceStartedAt !== null) {
-            setUserWpm(
-              calculateUserWpm(raceStartedAt, progress, raceDetails.text.split(" ").length),
-            );
-          }
-
           setRaceProgress(progress);
+
+          if (raceStartedAt !== null) {
+            setWpm(calculateUserWpm(raceStartedAt, progress, raceDetails.text.split(" ").length));
+          }
         }
       })
       .subscribe();
@@ -85,14 +84,14 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
     };
   }, [raceDetails.id]);
 
-  return { raceProgress };
+  return { raceProgress, wpm };
 }
 
 function calculateUserWpm(raceStartedAt: string, progress: number, totalWords: number) {
   const raceStartedAtDate = new Date(raceStartedAt + "Z");
   const raceDurationSec = (Date.now() - raceStartedAtDate.getTime()) / 1000;
 
-  const wordsTyped = Math.floor((progress / 100) * totalWords);
+  const wordsTyped = Math.round((progress / 100) * totalWords);
 
   const wpm = Math.round((wordsTyped / raceDurationSec) * 60);
   return wpm;

@@ -13,17 +13,11 @@ export default async function ProfilePage(params: Promise<{ params: { id: string
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-[100px] p-10">
-      <section className="flex w-full flex-col items-center gap-10">
-        <MainStats userDetails={userDetails} />
+    <div className="flex flex-1 flex-col gap-10 p-10">
+      <MainStats userDetails={userDetails} />
 
-        <ActivityGraph />
-      </section>
-
-      <section className="flex w-full flex-col items-center gap-10">
-        <h3 className="w-full text-center text-2xl font-bold">Improvement Chart</h3>
-        <ImprovementChart raceHistory={userDetails.raceHistory} />
-      </section>
+      <ActivityGraph />
+      <ImprovementChart raceHistory={userDetails.raceHistory} />
     </div>
   );
 }

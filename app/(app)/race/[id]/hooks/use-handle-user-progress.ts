@@ -1,6 +1,6 @@
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { createClient, RealtimeChannel } from "@supabase/supabase-js";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 export function useHandleUserProgress(text: string, userId: string, raceId: string) {
@@ -9,8 +9,7 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
   const channel = useRef<RealtimeChannel | null>(null);
   const [channelSubscribed, setChannelSubscribed] = useState(false);
 
-  // subscribe on mount
-  useEffect(() => {
+  const subscribeToRaceChannel = useCallback(() => {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -23,23 +22,20 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
       },
     });
 
-    // subscribe to channel
     channel.current.subscribe((status) => {
       if (status === "SUBSCRIBED" && !channelSubscribed) {
         setChannelSubscribed(true);
       }
     });
-
-    return () => {
-      if (!channel.current) return;
-
-      supabase.removeChannel(channel.current);
-    };
-  }, [userId, raceId]);
+  }, [raceId]);
 
   // send progress payload every time userWords change (user types)
   useEffect(() => {
-    if (!channelSubscribed || !channel.current) return;
+    // subscribe to channel if not subscribed
+    if (!channelSubscribed || !channel.current) {
+      subscribeToRaceChannel();
+      return;
+    }
 
     const textWithoutSpaces = text.replace(/\s+/g, "");
 
@@ -52,6 +48,7 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
     const totalChars = textWithoutSpaces.length;
     const userChars = userWords.join("").length;
     const userProgress = (userChars / totalChars) * 100;
+
     setHasMistake(false);
 
     channel.current
@@ -64,5 +61,5 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
         },
       })
       .catch((error) => toast.error("Error sending progress update:", error));
-  }, [userWords, channelSubscribed, userId, text]);
+  }, [userWords, channelSubscribed, userId, text, channel, subscribeToRaceChannel]);
 }

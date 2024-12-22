@@ -2,7 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Race } from "@prisma/client";
-import { useRouter } from "next/navigation";
 import { useRaceProgress } from "./hooks/use-race-progress";
 import { RaceUser } from "./hooks/use-race-users";
 
@@ -12,7 +11,7 @@ type Props = {
 };
 
 export function UserTrack({ raceDetails, raceUser }: Props) {
-  const { raceProgress } = useRaceProgress(raceDetails.id, raceUser.id, raceDetails.type);
+  const { raceProgress } = useRaceProgress(raceDetails, raceUser.id);
 
   return (
     <div className="relative flex h-[50px] w-full items-center border-b border-border last:border-b-0">

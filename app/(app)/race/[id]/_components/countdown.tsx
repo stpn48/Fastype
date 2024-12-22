@@ -19,7 +19,7 @@ type Props = {
 export function Countdown({ raceType, isAuthor, raceId }: Props) {
   const [countdown, setCountdown] = useState<number | null>(null);
 
-  const { setCanType } = useTypingFieldStore();
+  const { setCanType, userWpm } = useTypingFieldStore();
 
   const intervalId = useRef<NodeJS.Timeout>();
 
@@ -42,7 +42,7 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
   useEffect(() => {
     if (countdown === 0) {
       const asyncUpdateRaceStartedAt = async () => {
-        const { error } = await updateRaceStartedAt(raceId);
+        const { error } = await updateRaceStartedAt(raceId, new Date());
 
         if (error) {
           toast.error(error.message);
@@ -105,6 +105,8 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
           {countdown}
         </motion.span>
       </div>
+
+      <p>{userWpm}</p>
     </>
   );
 }

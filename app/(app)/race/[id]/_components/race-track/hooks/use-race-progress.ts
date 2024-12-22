@@ -1,22 +1,24 @@
 import { handleRaceFinish } from "@/app/actions/handle-race-finish";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { RaceType } from "@prisma/client";
+import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
+import { Race } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export function useRaceProgress(raceId: string, userId: string, raceType: RaceType) {
+export function useRaceProgress(raceDetails: Race, userId: string) {
   const [raceProgress, setRaceProgress] = useState(0);
+  const [raceStartedAt, setRaceStartedAt] = useState<string | null>(null);
 
-  const { resetTypingFieldStore, setCanType } = useTypingFieldStore();
+  const { resetTypingFieldStore, setCanType, setUserWpm } = useTypingFieldStore();
 
   const router = useRouter();
 
   const handleRaceComplete = useCallback(async () => {
     setCanType(false);
     router.prefetch("/home");
-    const { error } = await handleRaceFinish(Date.now(), raceId);
+    const { error } = await handleRaceFinish(Date.now(), raceDetails.id);
     resetTypingFieldStore();
 
     if (error) {
@@ -24,7 +26,7 @@ export function useRaceProgress(raceId: string, userId: string, raceType: RaceTy
     }
 
     router.push("/home");
-  }, [router, userId, raceId, resetTypingFieldStore]);
+  }, [router, userId, raceDetails.id, resetTypingFieldStore]);
 
   useEffect(() => {
     const supabase = createClient(
@@ -32,7 +34,7 @@ export function useRaceProgress(raceId: string, userId: string, raceType: RaceTy
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     );
 
-    const channel = supabase.channel(`race-${raceId}`, {
+    const channel = supabase.channel(`race-${raceDetails.id}`, {
       config: {
         broadcast: { self: true },
       },
@@ -48,6 +50,12 @@ export function useRaceProgress(raceId: string, userId: string, raceType: RaceTy
             return;
           }
 
+          if (raceStartedAt !== null) {
+            setUserWpm(
+              calculateUserWpm(raceStartedAt, progress, raceDetails.text.split(" ").length),
+            );
+          }
+
           setRaceProgress(progress);
         }
       })
@@ -56,7 +64,36 @@ export function useRaceProgress(raceId: string, userId: string, raceType: RaceTy
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [userId, raceId, handleRaceComplete]);
+  }, [userId, raceDetails, handleRaceComplete, raceStartedAt]);
+
+  // Listen for race updates to get the startedAt time
+  useEffect(() => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
+
+    const channel = listenForRaceUpdates(supabase, raceDetails.id, (payload) => {
+      console.log("payload", payload);
+      if (payload.new.startedAt !== null) {
+        setRaceStartedAt(payload.new.startedAt);
+      }
+    });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [raceDetails.id]);
 
   return { raceProgress };
+}
+
+function calculateUserWpm(raceStartedAt: string, progress: number, totalWords: number) {
+  const raceStartedAtDate = new Date(raceStartedAt + "Z");
+  const raceDurationSec = (Date.now() - raceStartedAtDate.getTime()) / 1000;
+
+  const wordsTyped = Math.floor((progress / 100) * totalWords);
+
+  const wpm = Math.round((wordsTyped / raceDurationSec) * 60);
+  return wpm;
 }

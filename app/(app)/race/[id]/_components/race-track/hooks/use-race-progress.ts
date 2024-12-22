@@ -9,17 +9,18 @@ import { toast } from "sonner";
 export function useRaceProgress(raceId: string, userId: string, raceType: RaceType) {
   const [raceProgress, setRaceProgress] = useState(0);
 
-  const { resetTypingFieldStore } = useTypingFieldStore();
+  const { resetTypingFieldStore, setCanType } = useTypingFieldStore();
 
   const router = useRouter();
 
   const handleRaceComplete = useCallback(async () => {
+    setCanType(false);
+    router.prefetch("/home");
     const { error } = await handleRaceFinish(Date.now(), raceId);
     resetTypingFieldStore();
 
     if (error) {
       toast.error(error);
-      return;
     }
 
     router.push("/home");

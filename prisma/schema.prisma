@@ -58,6 +58,7 @@ model Race {
   updatedAt DateTime   @default(now())
   type      RaceType   @default(public)
   status    RaceStatus @default(waiting)
+  startedAt DateTime?
   createdAt DateTime   @default(now())
   text      String
 }

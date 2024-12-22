@@ -1,6 +1,7 @@
 "use client";
 
 import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race";
+import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
@@ -12,9 +13,13 @@ type Props = {
 export function DisconnectUserHandler({ userId, raceId }: Props) {
   const mounted = useRef(false);
 
+  const { resetTypingFieldStore } = useTypingFieldStore();
+
   const dcUser = useCallback(async () => {
     toast.loading("Disconnecting user");
     await disconnectUserFromRace(userId, raceId);
+
+    resetTypingFieldStore();
     toast.dismiss();
     toast.success("User disconnected");
   }, [userId, raceId]);

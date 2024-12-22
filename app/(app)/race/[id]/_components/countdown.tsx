@@ -1,5 +1,6 @@
 "use client";
 
+import { updateRaceStartedAt } from "@/app/actions/update-race-started-at";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
 import { RaceType } from "@prisma/client";
@@ -40,10 +41,20 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
 
   useEffect(() => {
     if (countdown === 0) {
+      const asyncUpdateRaceStartedAt = async () => {
+        const { error } = await updateRaceStartedAt(raceId);
+
+        if (error) {
+          toast.error(error.message);
+        }
+      };
+
       clearInterval(intervalId.current);
       setCanType(true);
+
+      asyncUpdateRaceStartedAt();
     }
-  }, [countdown]);
+  }, [countdown, raceId]);
 
   useEffect(() => {
     // solo race start countdown instantly

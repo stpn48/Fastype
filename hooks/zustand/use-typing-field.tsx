@@ -16,6 +16,9 @@ type TypingFieldStore = {
   hasMistake: boolean;
   setHasMistake: (hasMistake: boolean) => void;
 
+  userWpm: number;
+  setUserWpm: (wpm: number) => void;
+
   resetTypingFieldStore: () => void;
 };
 
@@ -42,6 +45,16 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
   hasMistake: false,
   setHasMistake: (hasMistake) => set({ hasMistake }),
 
+  userWpm: 0,
+  setUserWpm: (wpm) => set({ userWpm: wpm }),
+
   resetTypingFieldStore: () =>
-    set({ currWordIndex: 0, currCharIndex: 0, userWords: [""], canType: false, hasMistake: false }),
+    set({
+      currWordIndex: 0,
+      currCharIndex: 0,
+      userWords: [""],
+      canType: false,
+      hasMistake: false,
+      userWpm: 0,
+    }),
 }));

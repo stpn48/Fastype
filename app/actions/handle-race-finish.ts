@@ -25,16 +25,15 @@ export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: strin
     return { error: getRaceError?.message || "Race not found" };
   }
 
-  const words = race.text.split(" ").length;
-  let timeTypedSec = (raceCompleteTimeMs - race.createdAt.getTime()) / 1000;
-
-  if (race.type === "public") {
-    timeTypedSec -= 20; // remove 15 sec for waiting for players + countdown 5 sec
-  } else if (race.type === "solo") {
-    timeTypedSec -= 3; // remove 3 sec for countdown
+  if (!race.startedAt) {
+    return { error: "Unexpected error: Race startedAt is missing when handling race finish :/" };
   }
 
-  const wpm = Math.round((words / timeTypedSec) * 60);
+  const words = race.text.split(" ").length;
+  const raceDuration = (raceCompleteTimeMs - race.startedAt.getTime()) / 1000;
+
+  const wpm = Math.round((words / raceDuration) * 60);
+  console.log("wpm", wpm);
 
   // add race to user race history
   const { error: addRaceToUserHistoryError } = await addRaceToUserHistory(user.id, wpm);
@@ -98,6 +97,7 @@ async function updateUserStats(
 
   // all time best wpm
   let newAllTimeBestWpm = user.stats?.bestRaceWpm || 0;
+
   if (wpm > newAllTimeBestWpm) {
     newAllTimeBestWpm = wpm;
   }

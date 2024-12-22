@@ -18,6 +18,7 @@ type Props = {
 
 export function Countdown({ raceType, isAuthor, raceId }: Props) {
   const [countdown, setCountdown] = useState<number | null>(null);
+  const [raceStarted, setRaceStarted] = useState(false);
 
   const { setCanType, userWpm } = useTypingFieldStore();
 
@@ -73,7 +74,8 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
       );
 
       const onRaceUpdate = (payload: RealtimePostgresUpdatePayload<{ [key: string]: any }>) => {
-        if (payload.new.status === "closed") {
+        if (!raceStarted && payload.new.status === "closed") {
+          setRaceStarted(true);
           toast.dismiss();
           setCountdown(5);
         }
@@ -85,7 +87,7 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
         supabase.removeChannel(channel);
       };
     }
-  }, [raceType, raceId]);
+  }, [raceType, raceId, raceStarted]);
 
   if (countdown === null && raceType === "private" && isAuthor)
     return <StartRaceButton raceId={raceId} />;

@@ -1,8 +1,9 @@
 "use client";
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
 import { RaceType } from "@prisma/client";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient, RealtimePostgresUpdatePayload, SupabaseClient } from "@supabase/supabase-js";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -60,14 +61,14 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       );
 
-      const channel = listenForRaceUpdates(
-        supabase,
-        () => {
+      const onRaceUpdate = (payload: RealtimePostgresUpdatePayload<{ [key: string]: any }>) => {
+        if (payload.new.status === "closed") {
           toast.dismiss();
           setCountdown(5);
-        },
-        raceId,
-      );
+        }
+      };
+
+      const channel = listenForRaceUpdates(supabase, raceId, onRaceUpdate);
 
       return () => {
         supabase.removeChannel(channel);
@@ -95,25 +96,4 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
       </div>
     </>
   );
-}
-
-function listenForRaceUpdates(
-  supabase: SupabaseClient<any, "public", any>,
-  onRaceClose: () => void,
-  raceId: string,
-) {
-  const channel = supabase
-    .channel("race-updates")
-    .on(
-      "postgres_changes",
-      { event: "UPDATE", schema: "public", table: "Race", filter: `id=eq.${raceId}` },
-      (payload) => {
-        if (payload.new.status === "closed") {
-          onRaceClose();
-        }
-      },
-    )
-    .subscribe();
-
-  return channel;
 }

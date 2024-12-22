@@ -18,19 +18,26 @@ export async function findRace(): Promise<Response> {
   if (!user || !user.stats) {
     return { error: "Unauthenticated", race: null };
   }
-  // user is in a race, open new race
+
+  // user is in a race, dc him and open a new race
   if (user.raceId) {
-    await openNewPublicRace();
+    const { error, race } = await openNewPublicRace();
+
+    if (error) {
+      return { error: error, race: null };
+    }
+
+    return { error: null, race };
   }
 
-  // if user not in a race,ind a race in users wpm range and status open
+  // if user not in a race, find a race in users wpm range and status open
   const { race, error: findRaceError } = await findRaceBasedOnUserAvgWpm(user.stats.avgWpmAllTime);
 
   if (findRaceError) {
     return { error: findRaceError, race: null };
   }
 
-  // if race found, and there is less than 10 users in there, check if the user is already in the race, if not join it if yes open a new one
+  // if race found, and there is less than 10 users in there calc new avg wpm for the race with the new user and join him
   if (race && race.users.length < 10) {
     const totalUsersWpm =
       race.users.reduce((acc, curr) => acc + curr.stats!.avgWpmLast10Races, 0) +
@@ -45,6 +52,7 @@ export async function findRace(): Promise<Response> {
           id: race.id,
         },
         data: {
+          updatedAt: new Date(),
           avgWpm: newAvgWpm,
           users: {
             connect: {
@@ -64,7 +72,13 @@ export async function findRace(): Promise<Response> {
 
   // if no race found, open a new one
   if (!race) {
-    await openNewPublicRace();
+    const { error, race } = await openNewPublicRace();
+
+    if (error) {
+      return { error: error, race: null };
+    }
+
+    return { error: null, race };
   }
 
   return { error: null, race: null };

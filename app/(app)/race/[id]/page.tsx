@@ -1,6 +1,7 @@
 import { getRaceDetails, getUser } from "@/server/queries";
 import { redirect } from "next/navigation";
 import { Countdown } from "./_components/countdown";
+import { DisconnectUserHandler } from "./_components/disconnect-user-handler";
 import { RaceTrack } from "./_components/race-track/race-track";
 import { TypingField } from "./_components/typing-field/typing-field";
 
@@ -34,6 +35,8 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
           raceId={raceDetails.id}
         />
       </section>
+
+      <DisconnectUserHandler userId={user.id} raceId={raceDetails.id} />
     </div>
   );
 }

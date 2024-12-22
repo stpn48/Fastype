@@ -23,10 +23,16 @@ export async function getUser() {
   );
 
   if (!userData || userDataError) {
+    if (userDataError) {
+      console.error(userDataError.message);
+      return null;
+    }
+
+    console.error("User not found");
     return null;
   }
 
-  return { ...userData };
+  return userData;
 }
 
 export async function getRaceDetails(raceId: string) {

@@ -61,5 +61,11 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
         },
       })
       .catch((error) => toast.error("Error sending progress update:", error));
+
+    return () => {
+      if (channel.current) {
+        channel.current.unsubscribe();
+      }
+    };
   }, [userWords, channelSubscribed, userId, text, channel, subscribeToRaceChannel]);
 }

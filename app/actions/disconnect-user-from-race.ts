@@ -21,7 +21,7 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
     return { error: "Unexpected error getting user or race" };
   }
 
-  // If the race has author its a private race, if the author leaves the page, delete the race
+  // If the author of this race is the user, delete the race
   if (race.authorId === user.id) {
     const [, deleteRaceError] = await catchError(
       prisma.race.delete({

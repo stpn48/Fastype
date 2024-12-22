@@ -73,7 +73,7 @@ export async function openNewRace(raceType: RaceType) {
   }
 
   if (raceType === "public") {
-    // close race
+    // close race after some time (waiting for players)
     setTimeout(async () => {
       const [, updateRaceStatusError] = await catchError(
         prisma.race.update({
@@ -93,7 +93,7 @@ export async function openNewRace(raceType: RaceType) {
   }
 
   if (raceType === "solo") {
-    // delete race
+    // delete race after some time (race duration)
     setTimeout(async () => {
       const [, deleteRaceError] = await catchError(
         prisma.race.delete({

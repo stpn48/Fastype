@@ -1,6 +1,5 @@
 "use client";
 
-import { useDisconnectOnUnload } from "@/hooks/use-disconnect-on-unload";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
 import { memo } from "react";
@@ -23,8 +22,6 @@ export function TypingField({ text, userId, raceId }: Props) {
   useHandleUserProgress(text, userId, raceId);
 
   useHandleKeydown(text);
-
-  useDisconnectOnUnload(userId, raceId);
 
   return (
     <div

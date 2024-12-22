@@ -5,7 +5,6 @@ import { Race } from "@prisma/client";
 import {
   createClient,
   RealtimeChannel,
-  RealtimePostgresChangesPayload,
   RealtimePostgresUpdatePayload,
 } from "@supabase/supabase-js";
 import { useCallback, useEffect, useRef, useState } from "react";

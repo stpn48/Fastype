@@ -25,7 +25,7 @@ export function DisconnectUserHandler({ userId, raceId }: Props) {
     resetTypingFieldStore();
     toast.dismiss();
     toast.success("User disconnected");
-  }, [userId, raceId]);
+  }, [userId, raceId, resetTypingFieldStore]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {

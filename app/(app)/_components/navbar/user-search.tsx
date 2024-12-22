@@ -4,7 +4,7 @@ import { getUsersByQuery } from "@/app/actions/get-users-by-query";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type UserSuggestion = {

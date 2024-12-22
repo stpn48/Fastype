@@ -4,7 +4,7 @@ import { updateRaceStartedAt } from "@/app/actions/update-race-started-at";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
 import { RaceType } from "@prisma/client";
-import { createClient, RealtimePostgresUpdatePayload, SupabaseClient } from "@supabase/supabase-js";
+import { createClient, RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";

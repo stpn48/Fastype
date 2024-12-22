@@ -7,9 +7,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
-type Props = {};
-
-export function FindRaceButton({}: Props) {
+export function FindRaceButton() {
   const [isFindingRace, setIsFindingRace] = useState(false);
 
   const router = useRouter();

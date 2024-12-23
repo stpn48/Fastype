@@ -27,6 +27,17 @@ export function useHandleKeydown(text: string) {
       }
 
       if (e.key === "Backspace") {
+        if (e.altKey) {
+          setUserWords((prev) => {
+            const newUserWords = [...prev];
+            newUserWords[currWordIndex] = "";
+            return newUserWords;
+          });
+
+          setCurrCharIndex(0);
+          return;
+        }
+
         if (currCharIndex > 0) {
           setUserWords((prev) => {
             const newUserWords = [...prev];

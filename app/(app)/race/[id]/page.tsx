@@ -2,6 +2,7 @@ import { getRaceDetails, getUser } from "@/server/queries";
 import { redirect } from "next/navigation";
 import { Countdown } from "./_components/countdown";
 import { DisconnectUserHandler } from "./_components/disconnect-user-handler";
+import { PrivateRaceOptions } from "./_components/private-race-options";
 import { RaceTrack } from "./_components/race-track/race-track";
 import { TypingField } from "./_components/typing-field/typing-field";
 
@@ -29,11 +30,9 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
       <section className="flex w-full max-w-4xl grid-cols-1 grid-rows-2 flex-col gap-10">
         <RaceTrack raceDetails={raceDetails} userId={user.id} />
         <TypingField text={raceDetails.text} userId={user.id} raceId={paramsResolved.id} />
-        <Countdown
-          raceType={raceDetails.type}
-          isAuthor={raceDetails.authorId === user.id}
-          raceId={raceDetails.id}
-        />
+        <Countdown raceType={raceDetails.type} raceId={raceDetails.id} />
+
+        {raceDetails.type === "private" && <PrivateRaceOptions raceId={raceDetails.id} />}
       </section>
 
       <DisconnectUserHandler userId={user.id} raceId={raceDetails.id} />

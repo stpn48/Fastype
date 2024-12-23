@@ -8,15 +8,13 @@ import { createClient, RealtimePostgresUpdatePayload } from "@supabase/supabase-
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { StartRaceButton } from "./start-race-button";
 
 type Props = {
   raceType: RaceType;
-  isAuthor: boolean;
   raceId: string;
 };
 
-export function Countdown({ raceType, isAuthor, raceId }: Props) {
+export function Countdown({ raceType, raceId }: Props) {
   const [countdown, setCountdown] = useState<number | null>(null);
   const [raceStarted, setRaceStarted] = useState(false);
 
@@ -26,6 +24,7 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
 
   const intervalId = useRef<NodeJS.Timeout>();
 
+  // start countdown when countdown is set
   useEffect(() => {
     if (countdown === null) return;
 
@@ -42,6 +41,7 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
     };
   }, [countdown]);
 
+  // handle countdown end
   useEffect(() => {
     if (countdown === 0) {
       const asyncUpdateRaceStartedAt = async () => {
@@ -59,6 +59,7 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
     }
   }, [countdown, raceId]);
 
+  // start countdown either instantly for solo mode or wait for race status to change to closed for public and private races
   useEffect(() => {
     setIsMounted(true);
 
@@ -71,7 +72,7 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
     // public and private races wait for race status to change to closed
     if (raceType === "public" || raceType === "private") {
       if (isMounted) {
-        toast.loading("Waiting for players...");
+        toast.info("Waiting for players...");
       }
 
       const supabase = createClient(
@@ -94,9 +95,6 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
       };
     }
   }, [raceType, raceId, raceStarted, isMounted]);
-
-  if (countdown === null && raceType === "private" && isAuthor)
-    return <StartRaceButton raceId={raceId} />;
 
   if (countdown === null) return null;
 

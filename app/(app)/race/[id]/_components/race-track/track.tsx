@@ -1,5 +1,8 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useCallback } from "react";
 import { RaceUser } from "./hooks/use-race-users";
 
 type Props = {
@@ -9,6 +12,12 @@ type Props = {
 };
 
 export function Track({ raceProgress, userPlace, raceUser }: Props) {
+  const router = useRouter();
+
+  const handleAvatarClick = useCallback(() => {
+    router.push(`/profile/${raceUser.id}`);
+  }, [raceUser.id]);
+
   return (
     <div className="flex-1">
       <div
@@ -21,7 +30,8 @@ export function Track({ raceProgress, userPlace, raceUser }: Props) {
             {userPlace === 1 ? "st" : userPlace === 2 ? "nd" : userPlace === 3 ? "rd" : "th"}
           </p>
         )}
-        <Avatar className="h-8 w-8 cursor-pointer hover:opacity-80">
+
+        <Avatar className="h-8 w-8 cursor-pointer hover:opacity-80" onClick={handleAvatarClick}>
           <AvatarImage src={raceUser.imageUrl ?? ""} />
           <AvatarFallback>
             {raceUser.firstName?.charAt(0) ?? "U"}

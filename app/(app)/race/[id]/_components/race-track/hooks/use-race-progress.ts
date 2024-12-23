@@ -1,4 +1,5 @@
 import { handleRaceFinish } from "@/app/actions/handle-race-finish";
+import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
 import { Race } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
@@ -10,7 +11,10 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
   const [raceStartedAt, setRaceStartedAt] = useState<string | null>(null);
   const [wpm, setWpm] = useState(0);
 
+  const { setCanType } = useTypingFieldStore();
+
   const handleRaceComplete = useCallback(async () => {
+    setCanType(false);
     const { error } = await handleRaceFinish(Date.now(), raceDetails.id);
 
     if (error) {

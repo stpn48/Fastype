@@ -30,7 +30,7 @@ export function UserTrack({ raceDetails, raceUser, place, setPlace }: Props) {
     <div
       className={cn(
         "relative flex h-[50px] w-full items-center justify-between border-b border-border pr-4 last:border-b-0",
-        raceProgress === 100 && "rounded-md border-x border-primary first:border-t last:border-b",
+        raceProgress === 100 && "rounded-md border-x border-t border-primary last:border-b",
       )}
     >
       <div className="flex-1">

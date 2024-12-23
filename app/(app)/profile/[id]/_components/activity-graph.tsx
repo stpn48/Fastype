@@ -13,7 +13,7 @@ export async function ActivityGraph() {
   const weeksLast12Months = getWeeksLast12MonthsStartingMonday();
 
   return (
-    <div className="flex w-full justify-center gap-1 rounded-md border border-border p-10">
+    <div className="flex w-full justify-center gap-1 rounded-lg border border-border p-10">
       {weeksLast12Months.map((week, weekIndex) => (
         <Week key={weekIndex} week={week} userActivity={userActivity} />
       ))}

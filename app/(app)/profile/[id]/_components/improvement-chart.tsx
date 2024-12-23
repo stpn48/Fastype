@@ -11,7 +11,7 @@ export function ImprovementChart({ raceHistory }: Props) {
   const raceHistoryData = getRaceHistoryData(raceHistory);
 
   return (
-    <div className="h-[350px] w-full border border-border p-10">
+    <div className="h-[350px] w-full rounded-lg border border-border p-10">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={raceHistoryData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
           <XAxis

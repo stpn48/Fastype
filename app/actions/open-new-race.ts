@@ -72,42 +72,5 @@ export async function openNewRace(raceType: RaceType) {
     return { error: "Unexpected error creating race. Race was not created", race: null };
   }
 
-  if (raceType === "public") {
-    // close race after some time (waiting for players)
-    setTimeout(async () => {
-      const [, updateRaceStatusError] = await catchError(
-        prisma.race.update({
-          where: {
-            id: race.id,
-          },
-          data: {
-            status: "closed",
-          },
-        }),
-      );
-
-      if (updateRaceStatusError) {
-        return { error: updateRaceStatusError.message, race: null };
-      }
-    }, WAITING_FOR_PLAYERS_TIME);
-  }
-
-  if (raceType === "solo") {
-    // delete race after some time (race duration)
-    setTimeout(async () => {
-      const [, deleteRaceError] = await catchError(
-        prisma.race.delete({
-          where: {
-            id: race.id,
-          },
-        }),
-      );
-
-      if (deleteRaceError) {
-        return { error: deleteRaceError.message, race: null };
-      }
-    }, RACE_DURATION);
-  }
-
   return { error: null, race };
 }

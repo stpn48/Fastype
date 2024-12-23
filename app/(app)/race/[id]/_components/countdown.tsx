@@ -107,8 +107,6 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
           {countdown}
         </motion.span>
       </div>
-
-      <p>{userWpm}</p>
     </>
   );
 }

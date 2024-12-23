@@ -24,7 +24,7 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
   const channelRef = useRef<RealtimeChannel | null>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  const getRaceParticipants = useCallback(async (raceId: string) => {
+  const getRaceParticipants = useCallback(async (raceId: string, startedAt: Date | null) => {
     const raceUsers = await getRaceUsers(raceId);
 
     if (!raceUsers) {
@@ -32,7 +32,9 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
       return;
     }
 
-    setRaceUsers(raceUsers);
+    if (!startedAt) {
+      setRaceUsers(raceUsers);
+    }
   }, []);
 
   const subscribeToRaceUpdates = useCallback(() => {
@@ -44,8 +46,11 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
     const onRaceUpdate = (payload: RealtimePostgresUpdatePayload<{ [key: string]: any }>) => {
       console.log("payload received", payload);
 
+      const { startedAt } = payload.new;
+      console.log("startedAt", startedAt);
+
       const awaitGetRaceParticipants = async () => {
-        await getRaceParticipants(raceDetails.id);
+        await getRaceParticipants(raceDetails.id, startedAt);
       };
 
       awaitGetRaceParticipants();

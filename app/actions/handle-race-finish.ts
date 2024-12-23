@@ -33,7 +33,6 @@ export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: strin
   const raceDuration = (raceCompleteTimeMs - race.startedAt.getTime()) / 1000;
 
   const wpm = Math.round((words / raceDuration) * 60);
-  console.log("wpm", wpm);
 
   // add race to user race history
   const { error: addRaceToUserHistoryError } = await addRaceToUserHistory(user.id, wpm);
@@ -47,13 +46,6 @@ export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: strin
 
   if (updateUserStatsError) {
     return { error: updateUserStatsError };
-  }
-
-  // dc from race
-  const { error: disconnectUserFromRaceError } = await disconnectUserFromRace(user.id, raceId);
-
-  if (disconnectUserFromRaceError) {
-    return { error: disconnectUserFromRaceError };
   }
 
   return { error: null };

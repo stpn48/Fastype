@@ -20,7 +20,9 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
   const [countdown, setCountdown] = useState<number | null>(null);
   const [raceStarted, setRaceStarted] = useState(false);
 
-  const { setCanType, userWpm } = useTypingFieldStore();
+  const [isMounted, setIsMounted] = useState(false);
+
+  const { setCanType } = useTypingFieldStore();
 
   const intervalId = useRef<NodeJS.Timeout>();
 
@@ -58,6 +60,8 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
   }, [countdown, raceId]);
 
   useEffect(() => {
+    setIsMounted(true);
+
     // solo race start countdown instantly
     if (raceType === "solo") {
       setCountdown(3);
@@ -66,7 +70,9 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
 
     // public and private races wait for race status to change to closed
     if (raceType === "public" || raceType === "private") {
-      toast.loading("Waiting for players...");
+      if (isMounted) {
+        toast.loading("Waiting for players...");
+      }
 
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -87,7 +93,7 @@ export function Countdown({ raceType, isAuthor, raceId }: Props) {
         supabase.removeChannel(channel);
       };
     }
-  }, [raceType, raceId, raceStarted]);
+  }, [raceType, raceId, raceStarted, isMounted]);
 
   if (countdown === null && raceType === "private" && isAuthor)
     return <StartRaceButton raceId={raceId} />;

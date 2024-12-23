@@ -1,9 +1,7 @@
 import { handleRaceFinish } from "@/app/actions/handle-race-finish";
-import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
 import { Race } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -12,22 +10,13 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
   const [raceStartedAt, setRaceStartedAt] = useState<string | null>(null);
   const [wpm, setWpm] = useState(0);
 
-  const { resetTypingFieldStore, setCanType } = useTypingFieldStore();
-
-  const router = useRouter();
-
   const handleRaceComplete = useCallback(async () => {
-    setCanType(false);
-    router.prefetch("/home");
     const { error } = await handleRaceFinish(Date.now(), raceDetails.id);
-    resetTypingFieldStore();
 
     if (error) {
       toast.error(error);
     }
-
-    router.push("/home");
-  }, [router, userId, raceDetails.id, resetTypingFieldStore]);
+  }, [userId, raceDetails.id]);
 
   useEffect(() => {
     const supabase = createClient(
@@ -48,7 +37,6 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
         if (progressUpdateUserId === userId) {
           if (progress === 100) {
             handleRaceComplete();
-            return;
           }
 
           setRaceProgress(progress);

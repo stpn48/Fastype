@@ -21,7 +21,8 @@ export function MainStats({ userDetails }: Props) {
           <h2>{userDetails.username}</h2>
         </div>
       </section>
-      <div className="gird-rows-2 grid flex-1 grid-cols-2 items-center md:grid-cols-4 md:grid-rows-1">
+
+      <div className="gird-rows-2 grid flex-1 grid-cols-2 items-center gap-8 md:grid-cols-4 md:grid-rows-1">
         <section className="flex flex-col items-center gap-2">
           <h2 className="text-center font-bold text-muted-foreground">WPM</h2>
           <p className="text-4xl">{userDetails.stats.avgWpmAllTime}</p>

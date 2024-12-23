@@ -10,6 +10,7 @@ export function useHandleKeydown(text: string) {
     userWords,
     setUserWords,
     canType,
+    hasMistake,
   } = useTypingFieldStore();
 
   const handleKeydown = useCallback(
@@ -37,15 +38,12 @@ export function useHandleKeydown(text: string) {
           return;
         }
 
-        if (currCharIndex === 0 && currWordIndex > 0) {
-          const prevRealWord = text.split(" ")[currWordIndex - 1];
+        if (currCharIndex === 0 && currWordIndex > 0 && hasMistake) {
           const prevUserWord = userWords[currWordIndex - 1];
 
-          if (prevUserWord !== prevRealWord) {
-            setUserWords((prev) => prev.slice(0, -1));
-            setCurrWordIndex((prev) => prev - 1);
-            setCurrCharIndex(prevUserWord.length);
-          }
+          setUserWords((prev) => prev.slice(0, -1));
+          setCurrWordIndex((prev) => prev - 1);
+          setCurrCharIndex(prevUserWord.length);
 
           return;
         }

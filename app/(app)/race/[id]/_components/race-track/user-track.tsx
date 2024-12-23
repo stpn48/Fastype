@@ -1,11 +1,11 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Race } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useRaceProgress } from "./hooks/use-race-progress";
 import { RaceUser } from "./hooks/use-race-users";
+import { Track } from "./track";
 
 type Props = {
   raceDetails: Race & { users: RaceUser[] };
@@ -33,26 +33,8 @@ export function UserTrack({ raceDetails, raceUser, place, setPlace }: Props) {
         raceProgress === 100 && "rounded-md border-x border-t border-primary last:border-b",
       )}
     >
-      <div className="flex-1">
-        <div
-          className="flex min-w-fit justify-end px-4 transition-all"
-          style={{ width: `${raceProgress}%` }}
-        >
-          {raceProgress === 100 && (
-            <p className="mr-4 flex items-center justify-center text-sm text-muted-foreground">
-              {userPlace}
-              {userPlace === 1 ? "st" : userPlace === 2 ? "nd" : userPlace === 3 ? "rd" : "th"}
-            </p>
-          )}
-          <Avatar className="h-8 w-8 cursor-pointer hover:opacity-80">
-            <AvatarImage src={raceUser.imageUrl ?? ""} />
-            <AvatarFallback>
-              {raceUser.firstName?.charAt(0) ?? "U"}
-              {raceUser.lastName?.charAt(0) ?? "N"}
-            </AvatarFallback>
-          </Avatar>
-        </div>
-      </div>
+      <Track raceProgress={raceProgress} userPlace={userPlace} raceUser={raceUser} />
+
       <p className="flex h-full min-w-[80px] items-center justify-center whitespace-nowrap border-l border-border pl-4 text-sm text-muted-foreground">
         {wpm} WPM
       </p>

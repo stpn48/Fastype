@@ -36,9 +36,6 @@ export async function findRaceBasedOnUserAvgWpm(userAvgWpmAllTime: number) {
 }
 
 export async function generateRaceText() {
-  // TODO: FIX THE SHIT IN DB IT REMOVED
-  return "hello hello hello hello hello hello hello hello hello hello";
-
   const [raceTextCell, randomTextError] = await catchError(
     prisma.$queryRaw`SELECT * FROM "RaceText" ORDER BY RANDOM() LIMIT 1`,
   );

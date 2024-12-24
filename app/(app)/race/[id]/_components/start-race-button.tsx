@@ -54,7 +54,7 @@ export function StartRaceButton({ raceId, setRaceStarted }: Props) {
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>Don't start yet</AlertDialogCancel>
+          <AlertDialogCancel>Don&apos;t start yet</AlertDialogCancel>
           <AlertDialogAction onClick={handleClick}>Start</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

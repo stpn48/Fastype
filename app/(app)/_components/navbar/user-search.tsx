@@ -2,7 +2,6 @@
 
 import { getUsersByQuery } from "@/app/actions/get-users-by-query";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -19,13 +18,10 @@ type Props = {
 export function UserSearch({ closeDialog }: Props) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<UserSuggestion[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      setIsLoading(true);
       const { error, users } = await getUsersByQuery(query);
-      setIsLoading(false);
 
       if (error) {
         toast.error(error);

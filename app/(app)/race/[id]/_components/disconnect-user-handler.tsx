@@ -4,7 +4,6 @@ import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race"
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
-import { toast } from "sonner";
 
 type Props = {
   userId: string;

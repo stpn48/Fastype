@@ -4,7 +4,6 @@ import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
 import { CompletedRace, Race, Stats, User } from "@prisma/client";
-import { disconnectUserFromRace } from "./disconnect-user-from-race";
 
 export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: string) {
   const user = await getUser();

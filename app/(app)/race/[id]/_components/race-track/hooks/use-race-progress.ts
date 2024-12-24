@@ -61,7 +61,7 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
       channel.unsubscribe();
       supabase.removeChannel(channel);
     };
-  }, [userId, raceDetails, handleRaceComplete, raceStartedAt, supabase]);
+  }, [userId, raceDetails, handleRaceComplete, raceStartedAt]);
 
   // Listen for race updates to get the startedAt time
   useEffect(() => {
@@ -76,7 +76,7 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
       channel.unsubscribe();
       supabase.removeChannel(channel);
     };
-  }, [raceDetails.id, supabase]);
+  }, [raceDetails.id]);
 
   return { raceProgress, wpm };
 }

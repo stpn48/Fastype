@@ -27,7 +27,7 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
         setChannelSubscribed(true);
       }
     });
-  }, [raceId, supabase]);
+  }, [raceId]);
 
   // send progress payload every time userWords change (user types)
   useEffect(() => {
@@ -68,5 +68,5 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
         supabase.removeChannel(channel.current);
       }
     };
-  }, [userWords, channelSubscribed, userId, text, channel, subscribeToRaceChannel, supabase]);
+  }, [userWords, channelSubscribed, userId, text, channel, subscribeToRaceChannel]);
 }

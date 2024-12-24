@@ -13,6 +13,11 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
 
   const { setCanType } = useTypingFieldStore();
 
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+
   const handleRaceComplete = useCallback(async () => {
     setCanType(false);
     const { error } = await handleRaceFinish(Date.now(), raceDetails.id);
@@ -22,12 +27,8 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
     }
   }, [userId, raceDetails.id]);
 
+  // Listen for broadcast updates to get the progress for user
   useEffect(() => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
-
     const channel = supabase.channel(`race-${raceDetails.id}`, {
       config: {
         broadcast: { self: true },
@@ -50,20 +51,20 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
           }
         }
       })
-      .subscribe();
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          console.log("subscribed to channel, listening for progress updates");
+        }
+      });
 
     return () => {
+      channel.unsubscribe();
       supabase.removeChannel(channel);
     };
-  }, [userId, raceDetails, handleRaceComplete, raceStartedAt]);
+  }, [userId, raceDetails, handleRaceComplete, raceStartedAt, supabase]);
 
   // Listen for race updates to get the startedAt time
   useEffect(() => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
-
     const channel = listenForRaceUpdates(supabase, raceDetails.id, (payload) => {
       console.log("payload", payload);
       if (payload.new.startedAt !== null) {
@@ -72,9 +73,10 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
     });
 
     return () => {
+      channel.unsubscribe();
       supabase.removeChannel(channel);
     };
-  }, [raceDetails.id]);
+  }, [raceDetails.id, supabase]);
 
   return { raceProgress, wpm };
 }

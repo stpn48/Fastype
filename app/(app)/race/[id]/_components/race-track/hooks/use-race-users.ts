@@ -24,6 +24,11 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
   const channelRef = useRef<RealtimeChannel | null>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
 
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+
   const getRaceParticipants = useCallback(async (raceId: string, startedAt: Date | null) => {
     const raceUsers = await getRaceUsers(raceId);
 
@@ -38,11 +43,6 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
   }, []);
 
   const subscribeToRaceUpdates = useCallback(() => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
-
     const onRaceUpdate = (payload: RealtimePostgresUpdatePayload<{ [key: string]: any }>) => {
       console.log("payload received", payload);
 
@@ -79,6 +79,7 @@ export function useRaceUsers(userId: string, raceDetails: Race & { users: RaceUs
     return () => {
       if (channelRef.current) {
         channelRef.current.unsubscribe();
+        supabase.removeChannel(channelRef.current);
         setIsSubscribed(false);
       }
     };

@@ -9,12 +9,12 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
   const channel = useRef<RealtimeChannel | null>(null);
   const [channelSubscribed, setChannelSubscribed] = useState(false);
 
-  const subscribeToRaceChannel = useCallback(() => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
 
+  const subscribeToRaceChannel = useCallback(() => {
     // subscribe to this race's channel
     channel.current = supabase.channel(`race-${raceId}`, {
       config: {
@@ -27,7 +27,7 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
         setChannelSubscribed(true);
       }
     });
-  }, [raceId]);
+  }, [raceId, supabase]);
 
   // send progress payload every time userWords change (user types)
   useEffect(() => {
@@ -65,7 +65,8 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
     return () => {
       if (channel.current) {
         channel.current.unsubscribe();
+        supabase.removeChannel(channel.current);
       }
     };
-  }, [userWords, channelSubscribed, userId, text, channel, subscribeToRaceChannel]);
+  }, [userWords, channelSubscribed, userId, text, channel, subscribeToRaceChannel, supabase]);
 }

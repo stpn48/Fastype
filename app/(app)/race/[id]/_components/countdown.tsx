@@ -91,6 +91,7 @@ export function Countdown({ raceType, raceId }: Props) {
       const channel = listenForRaceUpdates(supabase, raceId, onRaceUpdate);
 
       return () => {
+        channel.unsubscribe();
         supabase.removeChannel(channel);
       };
     }

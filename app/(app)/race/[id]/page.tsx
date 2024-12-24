@@ -15,13 +15,11 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
   const raceDetails = await getRaceDetails(paramsResolved.id);
 
   if (!raceDetails) {
-    console.error("Race not found");
     redirect("/home");
   }
 
   // USER IS NOT AUTHENTICATED AND RACE TYPE IS NOT PRIVATE GO HOME
   if (!user || (user.raceId !== paramsResolved.id && raceDetails.type !== "private")) {
-    console.error("User not authenticated");
     redirect("/home");
   }
 

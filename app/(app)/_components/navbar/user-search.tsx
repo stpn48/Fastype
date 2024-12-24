@@ -40,10 +40,12 @@ export function UserSearch({ closeDialog }: Props) {
         return { id: user.id, username: user.username };
       });
 
+      // Store current suggestions as previous before updating
       setSuggestions(userSuggestions);
     };
 
     if (!query) {
+      // When query is empty, show previous suggestions
       return;
     }
 
@@ -56,12 +58,6 @@ export function UserSearch({ closeDialog }: Props) {
 
       {suggestions.length > 0 && (
         <section className="flex flex-col gap-2 rounded-lg border border-border">
-          {isLoading && (
-            <div className="flex w-full justify-center">
-              <Loader2 className="size-4 animate-spin" />
-            </div>
-          )}
-
           {suggestions.map((suggestion) => (
             <Link
               onClick={closeDialog}

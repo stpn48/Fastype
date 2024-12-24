@@ -19,12 +19,8 @@ export function DisconnectUserHandler({ userId, raceId }: Props) {
   const { resetTypingFieldStore } = useTypingFieldStore();
 
   const dcUser = useCallback(async () => {
-    toast.loading("Disconnecting user");
     await disconnectUserFromRace(userId, raceId);
-
     resetTypingFieldStore();
-    toast.dismiss();
-    toast.success("User disconnected");
   }, [userId, raceId, resetTypingFieldStore]);
 
   useEffect(() => {

@@ -13,13 +13,7 @@ export function Day({ activity, day }: Props) {
     <TooltipProvider delayDuration={0.5}>
       <Tooltip>
         <TooltipTrigger className="cursor-default" asChild>
-          <div
-            className={cn(
-              "size-4 border-[1px] border-border bg-primary",
-              color,
-              activity !== 0 && "border-0",
-            )}
-          />
+          <div className={cn("size-4", color)} />
         </TooltipTrigger>
         <TooltipContent className="flex flex-col gap-2 text-center">
           <span>{activity} races</span>
@@ -33,7 +27,7 @@ export function Day({ activity, day }: Props) {
 function getActivityColor(activity: number) {
   switch (true) {
     case activity === 0:
-      return "bg-primary/0";
+      return "bg-secondary/30";
     case activity >= 20:
       return "bg-primary/100";
     case activity >= 10:
@@ -41,8 +35,8 @@ function getActivityColor(activity: number) {
     case activity >= 5:
       return "bg-primary/60";
     case activity >= 1:
-      return "bg-primary/40 ";
+      return "bg-primary/40";
     default:
-      return "bg-primary/0";
+      return "bg-secondary";
   }
 }

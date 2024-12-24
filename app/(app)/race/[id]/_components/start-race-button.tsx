@@ -36,7 +36,7 @@ export function StartRaceButton({ raceId, setRaceStarted }: Props) {
       toast.error("error changing race status");
       return;
     }
-  }, []);
+  }, [raceId]);
 
   return (
     <AlertDialog>

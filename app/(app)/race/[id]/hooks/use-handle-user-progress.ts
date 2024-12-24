@@ -23,7 +23,7 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
         setChannelSubscribed(true);
       }
     });
-  }, [raceId]);
+  }, [raceId, channelSubscribed]);
 
   // send progress payload every time userWords change (user types)
   useEffect(() => {

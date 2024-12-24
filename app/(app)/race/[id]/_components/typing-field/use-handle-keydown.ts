@@ -72,7 +72,7 @@ export function useHandleKeydown(text: string) {
         }
       }
     },
-    [currWordIndex, currCharIndex],
+    [currWordIndex, currCharIndex, hasMistake, text, userWords],
   );
 
   useEffect(() => {

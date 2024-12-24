@@ -17,7 +17,7 @@ export function Track({ raceProgress, raceUser }: Props) {
 
   const handleAvatarClick = useCallback(() => {
     router.push(`/profile/${raceUser.id}`);
-  }, [raceUser.id]);
+  }, [raceUser.id, router]);
 
   return (
     <div className="flex-1">

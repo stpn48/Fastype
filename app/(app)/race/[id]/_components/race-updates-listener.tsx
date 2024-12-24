@@ -49,7 +49,7 @@ export function RaceUpdatesListener({ raceId }: Props) {
       // get race participants
       await getRaceParticipants(raceId);
     },
-    [],
+    [getRaceParticipants, raceId],
   );
 
   // get race participants on mount

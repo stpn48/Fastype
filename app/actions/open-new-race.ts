@@ -6,9 +6,6 @@ import { getUser } from "@/server/queries";
 import { generateRaceText } from "@/services/services";
 import { RaceType } from "@prisma/client";
 
-const WAITING_FOR_PLAYERS_TIME = 1000 * 15; // 15 sec
-const RACE_DURATION = 1000 * 60 * 1.5;
-
 export async function openNewRace(raceType: RaceType) {
   const user = await getUser();
 

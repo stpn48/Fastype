@@ -1,11 +1,9 @@
 "use client";
 
 import { updateRaceStartedAt } from "@/app/actions/update-race-started-at";
+import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
-import { supabase } from "@/lib/supabase/client";
 import { RaceType } from "@prisma/client";
-import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -16,10 +14,9 @@ type Props = {
 };
 
 export function Countdown({ raceType, raceId }: Props) {
-  const [countdown, setCountdown] = useState<number | null>(null);
-  const [raceStarted, setRaceStarted] = useState(false);
-
   const [isMounted, setIsMounted] = useState(false);
+
+  const { countdown, setCountdown } = useRaceStore();
 
   const { setCanType } = useTypingFieldStore();
 
@@ -60,7 +57,7 @@ export function Countdown({ raceType, raceId }: Props) {
     }
   }, [countdown, raceId]);
 
-  // start countdown either instantly for solo mode or wait for race status to change to closed for public and private races
+  // handle countdown start for solo and show toast for public and private races
   useEffect(() => {
     setIsMounted(true);
 
@@ -70,28 +67,13 @@ export function Countdown({ raceType, raceId }: Props) {
       return;
     }
 
-    // public and private races wait for race status to change to closed
+    // show toast if race is public or private
     if (raceType === "public" || raceType === "private") {
       if (isMounted) {
         toast.info("Waiting for players...");
       }
-
-      const onRaceUpdate = (payload: RealtimePostgresUpdatePayload<{ [key: string]: any }>) => {
-        if (!raceStarted && payload.new.status === "closed") {
-          setRaceStarted(true);
-          toast.dismiss();
-          setCountdown(5);
-        }
-      };
-
-      const channel = listenForRaceUpdates(supabase, raceId, onRaceUpdate);
-
-      return () => {
-        channel.unsubscribe();
-        supabase.removeChannel(channel);
-      };
     }
-  }, [raceType, raceId, raceStarted, isMounted]);
+  }, [raceType, isMounted]);
 
   if (countdown === null) return null;
 

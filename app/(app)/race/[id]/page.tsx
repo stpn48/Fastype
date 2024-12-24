@@ -4,6 +4,7 @@ import { Countdown } from "./_components/countdown";
 import { DisconnectUserHandler } from "./_components/disconnect-user-handler";
 import { PrivateRaceOptions } from "./_components/private-race-options";
 import { RaceTrack } from "./_components/race-track/race-track";
+import { RaceUpdatesListener } from "./_components/race-updates-listener";
 import { TypingField } from "./_components/typing-field/typing-field";
 
 export default async function RacePage({ params }: { params: Promise<{ id: string }> }) {
@@ -31,6 +32,7 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
         <Countdown raceType={raceDetails.type} raceId={raceId} />
       </section>
 
+      <RaceUpdatesListener raceId={raceId} />
       <DisconnectUserHandler userId={user.id} raceId={raceDetails.id} />
     </div>
   );

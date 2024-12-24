@@ -1,9 +1,9 @@
 "use client";
 
-import { RealtimePostgresUpdatePayload, SupabaseClient } from "@supabase/supabase-js";
+import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
+import { supabase } from "./supabase/client";
 
 export function listenForRaceUpdates(
-  supabase: SupabaseClient<any, "public", any>,
   raceId: string,
   callback: (
     payload: RealtimePostgresUpdatePayload<{

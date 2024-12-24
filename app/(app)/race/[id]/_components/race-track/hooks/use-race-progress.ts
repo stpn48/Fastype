@@ -1,6 +1,8 @@
+"use client";
+
 import { handleRaceFinish } from "@/app/actions/handle-race-finish";
+import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
 import { supabase } from "@/lib/supabase/client";
 import { Race } from "@prisma/client";
 import { useCallback, useEffect, useState } from "react";
@@ -8,9 +10,9 @@ import { toast } from "sonner";
 
 export function useRaceProgress(raceDetails: Race, userId: string) {
   const [raceProgress, setRaceProgress] = useState(0);
-  const [raceStartedAt, setRaceStartedAt] = useState<string | null>(null);
   const [wpm, setWpm] = useState(0);
 
+  const { raceStartedAt } = useRaceStore();
   const { setCanType } = useTypingFieldStore();
 
   const handleRaceComplete = useCallback(async () => {
@@ -24,54 +26,49 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
 
   // Listen for broadcast updates to get the progress for user
   useEffect(() => {
+    // join channel for this race
     const channel = supabase.channel(`race-${raceDetails.id}`, {
       config: {
         broadcast: { self: true },
       },
     });
 
+    // listen for progress updates
     channel
       .on("broadcast", { event: "user-progress-update" }, (payload) => {
+        // get the payload sent to this channel
         const { progress, userId: progressUpdateUserId } = payload.payload;
 
+        // if the progress update is for the current user, update the race progress
         if (progressUpdateUserId === userId) {
+          // if the progress is 100, handle the race complete
           if (progress === 100) {
             handleRaceComplete();
           }
 
+          // update the race progress
           setRaceProgress(progress);
 
+          // if the race has started, calculate the user's wpm
           if (raceStartedAt !== null) {
-            setWpm(calculateUserWpm(raceStartedAt, progress, raceDetails.text.split(" ").length));
+            const newWpm = calculateUserWpm(
+              raceStartedAt,
+              progress,
+              raceDetails.text.split(" ").length,
+            );
+
+            setWpm(newWpm);
           }
         }
       })
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          console.log("subscribed to channel, listening for progress updates");
-        }
-      });
+      .subscribe();
 
+    // cleanup
     return () => {
       channel.unsubscribe();
       supabase.removeChannel(channel);
     };
   }, [userId, raceDetails, handleRaceComplete, raceStartedAt]);
-
-  // Listen for race updates to get the startedAt time
-  useEffect(() => {
-    const channel = listenForRaceUpdates(supabase, raceDetails.id, (payload) => {
-      console.log("payload", payload);
-      if (payload.new.startedAt !== null) {
-        setRaceStartedAt(payload.new.startedAt);
-      }
-    });
-
-    return () => {
-      channel.unsubscribe();
-      supabase.removeChannel(channel);
-    };
-  }, [raceDetails.id]);
 
   return { raceProgress, wpm };
 }

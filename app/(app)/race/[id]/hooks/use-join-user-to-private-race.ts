@@ -1,17 +1,15 @@
 "use client";
 
 import { joinUserToRace } from "@/app/actions/join-user-to-race";
+import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { RaceUser } from "@/types/types";
 import { RaceType } from "@prisma/client";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
-export function useJoinUserToPrivateRace(
-  raceId: string,
-  raceType: RaceType,
-  raceUsers: RaceUser[],
-  userId: string,
-) {
+export function useJoinUserToPrivateRace(raceId: string, raceType: RaceType, userId: string) {
+  const { raceUsers } = useRaceStore();
+
   const joinUserToThisRace = useCallback(async () => {
     const { race, error } = await joinUserToRace(raceId);
 

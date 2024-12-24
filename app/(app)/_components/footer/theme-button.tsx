@@ -12,12 +12,15 @@ type Props = {
 export function ThemeButton({ themeName }: Props) {
   const { colors } = useThemeColorsFor(themeName);
 
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   return (
     <button
       onClick={() => setTheme(themeName)}
-      className="flex w-full items-center justify-between rounded-lg p-2 hover:bg-secondary"
+      className={cn(
+        "flex w-full items-center justify-between rounded-lg p-2 hover:bg-secondary",
+        theme === themeName && "bg-secondary/50",
+      )}
     >
       <h2 className="capitalize">{themeName}</h2>
 

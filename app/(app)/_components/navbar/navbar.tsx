@@ -13,7 +13,7 @@ export async function Navbar() {
       <div className="flex-1" />
 
       <SignedOut>
-        <Button>
+        <Button asChild>
           <SignInButton />
         </Button>
       </SignedOut>

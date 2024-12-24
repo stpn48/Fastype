@@ -33,9 +33,17 @@ export async function UserDropdown() {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
+
         <DropdownMenuItem asChild>
           <Link href={`/profile/${user.id}`}>Profile</Link>
         </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link href={`/user-settings`}>Settings</Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
         <SignoutItem />
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,6 +1,7 @@
 import { NextThemeProvider } from "@/app/_components/next-theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{ baseTheme: [dark] }}>
       <html lang="en" suppressHydrationWarning>
         <body
           suppressHydrationWarning
@@ -35,6 +36,7 @@ export default function RootLayout({
         >
           <NextThemeProvider>
             {children}
+
             <Toaster />
           </NextThemeProvider>
         </body>

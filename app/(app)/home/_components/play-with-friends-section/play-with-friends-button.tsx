@@ -14,20 +14,20 @@ export function PlayWithFriendsButton() {
 
   const handleClick = useCallback(async () => {
     setIsLoading(true);
+
+    toast.loading("Creating lobby...");
     const { error, race } = await openNewRace("private");
-    setIsLoading(false);
+
+    toast.dismiss();
 
     if (error) {
       toast.error(error);
-      return;
     }
 
-    if (!race) {
-      toast.error("Unexpected error creating race, please try again");
-      return;
+    setIsLoading(false);
+    if (race) {
+      router.push(`/race/${race.id}`);
     }
-
-    router.push(`/race/${race.id}`);
   }, [router]);
 
   return (

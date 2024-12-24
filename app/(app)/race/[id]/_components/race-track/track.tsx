@@ -1,17 +1,18 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { RaceUser } from "@/types/types";
 import { useRouter } from "next/navigation";
-import React, { useCallback } from "react";
-import { RaceUser } from "./hooks/use-race-users";
+import { useCallback } from "react";
+import { useUserPlace } from "./hooks/use-user-place";
 
 type Props = {
   raceProgress: number;
-  userPlace: number;
   raceUser: RaceUser;
 };
 
-export function Track({ raceProgress, userPlace, raceUser }: Props) {
+export function Track({ raceProgress, raceUser }: Props) {
+  const { userPlace } = useUserPlace(raceProgress);
   const router = useRouter();
 
   const handleAvatarClick = useCallback(() => {

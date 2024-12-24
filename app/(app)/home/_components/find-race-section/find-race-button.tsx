@@ -14,12 +14,8 @@ export function FindRaceButton() {
 
   const handleClick = useCallback(async () => {
     setIsFindingRace(true);
-
     toast.loading("Searching for a race...");
-
     const { error, race } = await findRace();
-
-    setIsFindingRace(false);
 
     toast.dismiss();
 
@@ -27,6 +23,7 @@ export function FindRaceButton() {
       toast.error(error);
     }
 
+    setIsFindingRace(false);
     if (race) {
       router.push(`/race/${race.id}`);
     }

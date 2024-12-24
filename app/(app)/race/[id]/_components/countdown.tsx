@@ -3,8 +3,9 @@
 import { updateRaceStartedAt } from "@/app/actions/update-race-started-at";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
+import { supabase } from "@/lib/supabase/client";
 import { RaceType } from "@prisma/client";
-import { createClient, RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
+import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -74,11 +75,6 @@ export function Countdown({ raceType, raceId }: Props) {
       if (isMounted) {
         toast.info("Waiting for players...");
       }
-
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      );
 
       const onRaceUpdate = (payload: RealtimePostgresUpdatePayload<{ [key: string]: any }>) => {
         if (!raceStarted && payload.new.status === "closed") {

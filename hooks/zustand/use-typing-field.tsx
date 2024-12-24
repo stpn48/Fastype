@@ -19,6 +19,9 @@ type TypingFieldStore = {
   userWpm: number;
   setUserWpm: (wpm: number) => void;
 
+  currPlace: number;
+  setCurrPlace: (place: number | ((prev: number) => number)) => void;
+
   resetTypingFieldStore: () => void;
 };
 
@@ -48,6 +51,10 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
   userWpm: 0,
   setUserWpm: (wpm) => set({ userWpm: wpm }),
 
+  currPlace: 1,
+  setCurrPlace: (place) =>
+    set((state) => ({ currPlace: typeof place === "function" ? place(state.currPlace) : place })),
+
   resetTypingFieldStore: () =>
     set({
       currWordIndex: 0,
@@ -56,5 +63,6 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       canType: false,
       hasMistake: false,
       userWpm: 0,
+      currPlace: 1,
     }),
 }));

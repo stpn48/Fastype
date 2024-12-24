@@ -1,8 +1,8 @@
 import { handleRaceFinish } from "@/app/actions/handle-race-finish";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
+import { supabase } from "@/lib/supabase/client";
 import { Race } from "@prisma/client";
-import { createClient } from "@supabase/supabase-js";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -12,11 +12,6 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
   const [wpm, setWpm] = useState(0);
 
   const { setCanType } = useTypingFieldStore();
-
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
 
   const handleRaceComplete = useCallback(async () => {
     setCanType(false);

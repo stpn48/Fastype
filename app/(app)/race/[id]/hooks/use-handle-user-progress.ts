@@ -1,5 +1,6 @@
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { createClient, RealtimeChannel } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase/client";
+import { RealtimeChannel } from "@supabase/supabase-js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -8,11 +9,6 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
 
   const channel = useRef<RealtimeChannel | null>(null);
   const [channelSubscribed, setChannelSubscribed] = useState(false);
-
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
 
   const subscribeToRaceChannel = useCallback(() => {
     // subscribe to this race's channel

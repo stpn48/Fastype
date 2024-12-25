@@ -46,7 +46,7 @@ export function RaceUpdatesListener({ raceId }: Props) {
         setCountdown(5);
       }
 
-      // get race participants
+      // get race participants every time the race is updated
       await getRaceParticipants(raceId);
     },
     [getRaceParticipants, raceId],

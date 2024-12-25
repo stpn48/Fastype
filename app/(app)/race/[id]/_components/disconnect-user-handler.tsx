@@ -1,6 +1,7 @@
 "use client";
 
 import { disconnectUserFromRace } from "@/app/actions/disconnect-user-from-race";
+import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
@@ -16,11 +17,15 @@ export function DisconnectUserHandler({ userId, raceId }: Props) {
   const router = useRouter();
 
   const { resetTypingFieldStore } = useTypingFieldStore();
+  const { resetRaceStore } = useRaceStore();
 
   const dcUser = useCallback(async () => {
     await disconnectUserFromRace(userId, raceId);
+
+    // reset the stores
     resetTypingFieldStore();
-  }, [userId, raceId, resetTypingFieldStore]);
+    resetRaceStore();
+  }, [userId, raceId, resetTypingFieldStore, resetRaceStore]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -28,6 +33,7 @@ export function DisconnectUserHandler({ userId, raceId }: Props) {
       dcUser();
       router.push("/home");
     };
+
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {

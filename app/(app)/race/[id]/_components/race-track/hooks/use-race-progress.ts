@@ -33,7 +33,7 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
       },
     });
 
-    // listen for progress updates
+    // listen for progress updates with supabase broadcast
     channel
       .on("broadcast", { event: "user-progress-update" }, (payload) => {
         // get the payload sent to this channel

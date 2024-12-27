@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { SearchUsersDialog } from "./search-users-dialog";
 import { UserDropdown } from "./user-dropdown/user-dropdown";
@@ -12,19 +10,11 @@ export async function Navbar() {
       </Link>
       <div className="flex-1" />
 
-      <SignedOut>
-        <Button asChild>
-          <SignInButton />
-        </Button>
-      </SignedOut>
+      <div className="flex items-center gap-4">
+        <SearchUsersDialog />
 
-      <SignedIn>
-        <div className="flex items-center gap-4">
-          <SearchUsersDialog />
-
-          <UserDropdown />
-        </div>
-      </SignedIn>
+        <UserDropdown />
+      </div>
     </div>
   );
 }

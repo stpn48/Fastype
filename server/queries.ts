@@ -41,18 +41,6 @@ export async function getRaceDetails(raceId: string) {
       where: {
         id: raceId,
       },
-      include: {
-        users: {
-          select: {
-            id: true,
-            clerkId: true,
-            username: true,
-            imageUrl: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
-      },
     }),
   );
 

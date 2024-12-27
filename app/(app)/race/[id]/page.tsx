@@ -26,8 +26,14 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
   return (
     <div className="relative flex items-center justify-center">
       <section className="flex w-full max-w-4xl grid-cols-1 grid-rows-2 flex-col gap-10">
-        <RaceTrack raceDetails={raceDetails} userId={user.id} />
-        <TypingField text={raceDetails.text} userId={user.id} raceId={raceId} />
+        <RaceTrack userId={user.id} raceDetails={raceDetails} />
+        <TypingField
+          text={raceDetails.text}
+          userId={user.id}
+          raceId={raceId}
+          raceType={raceDetails.type}
+        />
+
         {raceDetails.type === "private" && <PrivateRaceOptions raceId={raceDetails.id} />}
         <Countdown raceType={raceDetails.type} raceId={raceId} />
       </section>

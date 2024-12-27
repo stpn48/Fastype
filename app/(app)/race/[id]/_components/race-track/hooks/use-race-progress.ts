@@ -4,11 +4,10 @@ import { handleRaceFinish } from "@/app/actions/handle-race-finish";
 import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { supabase } from "@/lib/supabase/client";
-import { Race } from "@prisma/client";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export function useRaceProgress(raceDetails: Race, userId: string) {
+export function useRaceProgress(raceId: string, raceText: string, userId: string) {
   const [raceProgress, setRaceProgress] = useState(0);
   const [wpm, setWpm] = useState(0);
 
@@ -17,17 +16,17 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
 
   const handleRaceComplete = useCallback(async () => {
     setCanType(false);
-    const { error } = await handleRaceFinish(Date.now(), raceDetails.id);
+    const { error } = await handleRaceFinish(Date.now(), raceId);
 
     if (error) {
       toast.error(error);
     }
-  }, [userId, raceDetails.id]);
+  }, [userId, raceId]);
 
   // Listen for broadcast updates to get the progress for user
   useEffect(() => {
     // join channel for this race
-    const channel = supabase.channel(`race-${raceDetails.id}`, {
+    const channel = supabase.channel(`race-${raceId}`, {
       config: {
         broadcast: { self: true },
       },
@@ -51,11 +50,7 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
 
           // if the race has started, calculate the user's wpm
           if (raceStartedAt !== null) {
-            const newWpm = calculateUserWpm(
-              raceStartedAt,
-              progress,
-              raceDetails.text.split(" ").length,
-            );
+            const newWpm = calculateUserWpm(raceStartedAt, progress, raceText.split(" ").length);
 
             setWpm(newWpm);
           }
@@ -68,7 +63,7 @@ export function useRaceProgress(raceDetails: Race, userId: string) {
       channel.unsubscribe();
       supabase.removeChannel(channel);
     };
-  }, [userId, raceDetails, handleRaceComplete, raceStartedAt]);
+  }, [userId, raceText, handleRaceComplete, raceStartedAt]);
 
   return { raceProgress, wpm };
 }

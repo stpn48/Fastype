@@ -14,7 +14,9 @@ export function PlayAloneButton() {
 
   const handleClick = useCallback(async () => {
     setIsOpeningRace(true);
+
     toast.loading("Creating race...");
+
     const { error, race } = await openNewRace("solo");
 
     toast.dismiss();
@@ -23,9 +25,9 @@ export function PlayAloneButton() {
       toast.error(error);
     }
 
-    setIsOpeningRace(false);
     if (race) {
       router.push(`/race/${race.id}`);
+      setIsOpeningRace(false);
     }
   }, [router]);
 

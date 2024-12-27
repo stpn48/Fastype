@@ -3,15 +3,15 @@
 import { joinUserToRace } from "@/app/actions/join-user-to-race";
 import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { RaceUser } from "@/types/types";
-import { RaceType } from "@prisma/client";
+import { Race } from "@prisma/client";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
-export function useJoinUserToPrivateRace(raceId: string, raceType: RaceType, userId: string) {
+export function useJoinUserToPrivateRace(raceDetails: Race, userId: string) {
   const { raceUsers } = useRaceStore();
 
   const joinUserToThisRace = useCallback(async () => {
-    const { race, error } = await joinUserToRace(raceId);
+    const { race, error } = await joinUserToRace(raceDetails.id);
 
     if (error) {
       toast.error("error joining user to this race " + error);
@@ -22,14 +22,14 @@ export function useJoinUserToPrivateRace(raceId: string, raceType: RaceType, use
       toast.error("Unexpected error joining user to the race, try again");
       return;
     }
-  }, [raceId]);
+  }, [raceDetails.id]);
 
   // join user if this race is private and user is not in the race
   useEffect(() => {
-    if (raceType === "private" && !isUserInThisRace(raceUsers, userId)) {
+    if (raceDetails.type === "private" && !isUserInThisRace(raceUsers, userId)) {
       joinUserToThisRace();
     }
-  }, [raceType, raceUsers, userId, joinUserToThisRace]);
+  }, [raceDetails.type, raceUsers, userId, joinUserToThisRace]);
 }
 
 function isUserInThisRace(raceUsers: RaceUser[], userId: string) {

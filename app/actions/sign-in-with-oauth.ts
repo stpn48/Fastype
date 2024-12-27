@@ -15,11 +15,12 @@ export async function signInWithOAuth(provider: Provider) {
   });
 
   if (error) {
+    console.log(error);
     return { error: error.message };
   }
 
   if (data.url) {
-    redirect(data.url); // use the redirect API for your server framework
+    redirect(data.url);
   }
 
   return { error: "No URL provided" };

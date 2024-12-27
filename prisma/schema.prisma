@@ -28,16 +28,13 @@ enum RaceType {
 // basic data like name, email, avatar are in clerk, here is the stats for this user
 model User {
   id          String          @id @default(uuid())
-  clerkId     String          @unique
-  firstName   String
-  lastName    String
   imageUrl    String?
-  username    String
-  country     String          @default("unknown")
-  stats       Stats?
+  username    String          @unique
   Race        Race?           @relation(fields: [raceId], references: [id], onDelete: SetNull)
   raceId      String?
   raceHistory CompletedRace[]
+  stats       Stats           @relation(fields: [statsId], references: [id])
+  statsId     String
 }
 
 model Stats {
@@ -46,8 +43,7 @@ model Stats {
   avgWpmAllTime     Int    @default(0)
   lastRaceWpm       Int    @default(0)
   bestRaceWpm       Int    @default(0)
-  User              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String @unique
+  User              User[]
 }
 
 model Race {
@@ -73,6 +69,6 @@ model CompletedRace {
   id        String   @id @default(uuid())
   wpm       Int
   createdAt DateTime @default(now())
-  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User      User?    @relation(fields: [userId], references: [id])
   userId    String?
 }

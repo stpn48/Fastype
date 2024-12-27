@@ -1,5 +1,5 @@
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { supabase } from "@/lib/supabase/client";
+import { supabaseJsClient } from "@/lib/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -12,7 +12,7 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
 
   const subscribeToRaceChannel = useCallback(() => {
     // subscribe to this race's channel
-    channel.current = supabase.channel(`race-${raceId}`, {
+    channel.current = supabaseJsClient.channel(`race-${raceId}`, {
       config: {
         broadcast: { self: true },
       },
@@ -61,7 +61,7 @@ export function useHandleUserProgress(text: string, userId: string, raceId: stri
     return () => {
       if (channel.current) {
         channel.current.unsubscribe();
-        supabase.removeChannel(channel.current);
+        supabaseJsClient.removeChannel(channel.current);
       }
     };
   }, [userWords, channelSubscribed, userId, text, channel, subscribeToRaceChannel]);

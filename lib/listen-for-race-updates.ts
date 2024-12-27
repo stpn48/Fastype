@@ -1,7 +1,7 @@
 "use client";
 
 import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
-import { supabase } from "./supabase/client";
+import { supabaseJsClient } from "./supabase/client";
 
 export function listenForRaceUpdates(
   raceId: string,
@@ -12,7 +12,7 @@ export function listenForRaceUpdates(
   ) => void,
   onSubscribe?: () => void,
 ) {
-  const channel = supabase
+  const channel = supabaseJsClient
     .channel("race-updates")
     .on(
       "postgres_changes",

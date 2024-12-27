@@ -3,7 +3,7 @@
 import { handleRaceFinish } from "@/app/actions/handle-race-finish";
 import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { supabase } from "@/lib/supabase/client";
+import { supabaseJsClient } from "@/lib/supabase/client";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -26,7 +26,7 @@ export function useRaceProgress(raceId: string, raceText: string, userId: string
   // Listen for broadcast updates to get the progress for user
   useEffect(() => {
     // join channel for this race
-    const channel = supabase.channel(`race-${raceId}`, {
+    const channel = supabaseJsClient.channel(`race-${raceId}`, {
       config: {
         broadcast: { self: true },
       },
@@ -61,7 +61,7 @@ export function useRaceProgress(raceId: string, raceText: string, userId: string
     // cleanup
     return () => {
       channel.unsubscribe();
-      supabase.removeChannel(channel);
+      supabaseJsClient.removeChannel(channel);
     };
   }, [userId, raceText, handleRaceComplete, raceStartedAt]);
 

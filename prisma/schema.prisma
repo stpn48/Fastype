@@ -13,62 +13,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum RaceStatus {
+enum race_status {
   waiting
   closed
   completed
 }
 
-enum RaceType {
+enum race_type {
   public
   private
   solo
 }
 
 // basic data like name, email, avatar are in clerk, here is the stats for this user
-model User {
-  id          String          @id @default(uuid())
+model user {
+  id          String           @id @default(uuid())
   imageUrl    String?
-  username    String          @unique
-  Race        Race?           @relation(fields: [raceId], references: [id], onDelete: SetNull)
+  username    String           @unique
+  race        race?            @relation(fields: [raceId], references: [id], onDelete: SetNull)
   raceId      String?
-  raceHistory CompletedRace[]
-  stats       Stats           @relation(fields: [statsId], references: [id])
+  raceHistory completed_race[]
+  stats       stats            @relation(fields: [statsId], references: [id])
   statsId     String
 }
 
-model Stats {
+model stats {
   id                String @id @default(uuid())
   avgWpmLast10Races Int    @default(0)
   avgWpmAllTime     Int    @default(0)
   lastRaceWpm       Int    @default(0)
   bestRaceWpm       Int    @default(0)
-  User              User[]
+  user              user[]
 }
 
-model Race {
-  id        String     @id @default(uuid())
-  users     User[]
+model race {
+  id        String      @id @default(uuid())
+  users     user[]
   avgWpm    Int
   authorId  String?
-  updatedAt DateTime   @default(now())
-  type      RaceType   @default(public)
-  status    RaceStatus @default(waiting)
+  updatedAt DateTime    @default(now())
+  type      race_type   @default(public)
+  status    race_status @default(waiting)
   startedAt DateTime?
-  createdAt DateTime   @default(now())
+  createdAt DateTime    @default(now())
   text      String
 }
 
-model RaceText {
+model race_text {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   text      String
 }
 
-model CompletedRace {
+model completed_race {
   id        String   @id @default(uuid())
   wpm       Int
   createdAt DateTime @default(now())
-  User      User?    @relation(fields: [userId], references: [id])
+  user      user?    @relation(fields: [userId], references: [id])
   userId    String?
 }

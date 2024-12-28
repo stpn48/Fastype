@@ -27,48 +27,48 @@ enum race_type {
 
 // basic data like name, email, avatar are in clerk, here is the stats for this user
 model user {
-  id          String           @id @default(uuid())
-  imageUrl    String?
-  username    String           @unique
-  race        race?            @relation(fields: [raceId], references: [id], onDelete: SetNull)
-  raceId      String?
-  raceHistory completed_race[]
-  stats       stats            @relation(fields: [statsId], references: [id])
-  statsId     String
+  id           String           @id @default(uuid())
+  image_url    String?
+  username     String           @unique
+  race         race?            @relation(fields: [race_id], references: [id], onDelete: SetNull)
+  race_id      String?
+  race_history completed_race[]
+  stats        stats            @relation(fields: [stats_id], references: [id])
+  stats_id     String
 }
 
 model stats {
-  id                String @id @default(uuid())
-  avgWpmLast10Races Int    @default(0)
-  avgWpmAllTime     Int    @default(0)
-  lastRaceWpm       Int    @default(0)
-  bestRaceWpm       Int    @default(0)
-  user              user[]
+  id                    String @id @default(uuid())
+  avg_wpm_last_10_races Int    @default(0)
+  avg_wpm_all_time      Int    @default(0)
+  last_race_wpm         Int    @default(0)
+  best_race_wpm         Int    @default(0)
+  user                  user[]
 }
 
 model race {
-  id        String      @id @default(uuid())
-  users     user[]
-  avgWpm    Int
-  authorId  String?
-  updatedAt DateTime    @default(now())
-  type      race_type   @default(public)
-  status    race_status @default(waiting)
-  startedAt DateTime?
-  createdAt DateTime    @default(now())
-  text      String
+  id         String      @id @default(uuid())
+  users      user[]
+  avg_wpm    Int
+  author_id  String?
+  updated_at DateTime    @default(now())
+  type       race_type   @default(public)
+  status     race_status @default(waiting)
+  started_at DateTime?
+  created_at DateTime    @default(now())
+  text       String
 }
 
 model race_text {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  text      String
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  text       String
 }
 
 model completed_race {
-  id        String   @id @default(uuid())
-  wpm       Int
-  createdAt DateTime @default(now())
-  user      user?    @relation(fields: [userId], references: [id])
-  userId    String?
+  id         String   @id @default(uuid())
+  wpm        Int
+  created_at DateTime @default(now())
+  user       user?    @relation(fields: [user_id], references: [id])
+  user_id    String?
 }

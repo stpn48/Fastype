@@ -28,7 +28,7 @@ enum race_type {
 // basic data like name, email, avatar are in clerk, here is the stats for this user
 model user {
   id           String           @id @default(uuid())
-  image_url    String?
+  image_url    String
   username     String           @unique
   race         race?            @relation(fields: [race_id], references: [id], onDelete: SetNull)
   race_id      String?

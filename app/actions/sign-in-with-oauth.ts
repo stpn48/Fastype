@@ -2,7 +2,6 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { Provider } from "@supabase/supabase-js";
-import { redirect } from "next/navigation";
 
 export async function signInWithOAuth(provider: Provider) {
   const supabase = await createClient();
@@ -15,13 +14,12 @@ export async function signInWithOAuth(provider: Provider) {
   });
 
   if (error) {
-    console.log(error);
-    return { error: error.message };
+    return { error: error.message, url: null };
   }
 
-  if (data.url) {
-    redirect(data.url);
+  if (!data.url) {
+    return { error: "No URL provided", url: null };
   }
 
-  return { error: "No URL provided" };
+  return { error: null, url: data.url };
 }

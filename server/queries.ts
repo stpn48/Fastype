@@ -1,15 +1,42 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
+import { UserDetails } from "@/types/types";
 
-export async function getUser() {
+export async function getUser(): Promise<UserDetails | null> {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  return user;
+  if (!user) {
+    return null;
+  }
+
+  const [userDetails, error] = await catchError(
+    prisma.user.findFirst({
+      where: {
+        id: user.id,
+      },
+      include: {
+        stats: true,
+        race_history: true,
+      },
+    }),
+  );
+
+  if (error || !userDetails) {
+    console.error(error);
+    return null;
+  }
+
+  console.log(userDetails);
+
+  return {
+    ...user,
+    ...userDetails,
+  };
 }
 
 export async function getRaceDetails(raceId: string) {
@@ -36,7 +63,7 @@ export async function getUserDetails(userId: string) {
       },
       include: {
         stats: true,
-        raceHistory: true,
+        race_history: true,
       },
     }),
   );

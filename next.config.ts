@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: [""],
+    domains: ["lh3.googleusercontent.com"],
   },
   eslint: {
     // Disable ESLint during builds

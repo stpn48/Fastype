@@ -9,8 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 enum race_status {
@@ -29,7 +30,7 @@ enum race_type {
 model user {
   id           String           @id @default(uuid())
   image_url    String
-  username     String           @unique
+  username     String?          @unique
   race         race?            @relation(fields: [race_id], references: [id], onDelete: SetNull)
   race_id      String?
   race_history completed_race[]

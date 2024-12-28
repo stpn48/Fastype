@@ -31,8 +31,6 @@ export async function getUser(): Promise<UserDetails | null> {
     return null;
   }
 
-  console.log(userDetails);
-
   return {
     ...user,
     ...userDetails,

@@ -6,6 +6,6 @@ export type Theme = "light" | "dark" | "dark-forest" | "rose";
 
 export type UserDetails = User &
   user & {
-    stats: stats;
+    stats: stats | null;
     race_history: completed_race[];
   };

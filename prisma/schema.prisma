@@ -34,8 +34,7 @@ model user {
   race         race?            @relation(fields: [race_id], references: [id], onDelete: SetNull)
   race_id      String?
   race_history completed_race[]
-  stats        stats            @relation(fields: [stats_id], references: [id])
-  stats_id     String
+  stats        stats?
 }
 
 model stats {
@@ -44,7 +43,8 @@ model stats {
   avg_wpm_all_time      Int    @default(0)
   last_race_wpm         Int    @default(0)
   best_race_wpm         Int    @default(0)
-  user                  user[]
+  user_id               String @unique
+  user                  user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model race {
@@ -70,6 +70,6 @@ model completed_race {
   id         String   @id @default(uuid())
   wpm        Int
   created_at DateTime @default(now())
-  user       user?    @relation(fields: [user_id], references: [id])
+  user       user?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String?
 }

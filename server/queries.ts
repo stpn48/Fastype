@@ -26,8 +26,13 @@ export async function getUser(): Promise<UserDetails | null> {
     }),
   );
 
-  if (error || !userDetails) {
+  if (error) {
     console.error(error);
+    return null;
+  }
+
+  if (!userDetails) {
+    console.error("User details not found");
     return null;
   }
 

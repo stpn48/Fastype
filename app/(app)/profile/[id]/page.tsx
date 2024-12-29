@@ -3,10 +3,14 @@ import { ActivityGraph } from "./_components/activity-graph";
 import { ImprovementChart } from "./_components/improvement-chart";
 import { MainStats } from "./_components/main-stats";
 
-export default async function ProfilePage(params: Promise<{ params: { id: string } }>) {
-  const paramsAwaited = await params;
+type Props = {
+  params: Promise<{ id: string }>;
+};
 
-  const userDetails = await getUserDetails(paramsAwaited.params.id);
+export default async function ProfilePage({ params }: Props) {
+  const { id: userId } = await params;
+
+  const userDetails = await getUserDetails(userId);
 
   if (!userDetails || !userDetails.stats) {
     return null;
@@ -17,7 +21,7 @@ export default async function ProfilePage(params: Promise<{ params: { id: string
       <MainStats userDetails={userDetails} />
 
       <ActivityGraph />
-      <ImprovementChart raceHistory={userDetails.raceHistory} />
+      <ImprovementChart raceHistory={userDetails.race_history} />
     </div>
   );
 }

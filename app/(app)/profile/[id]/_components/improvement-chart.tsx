@@ -1,10 +1,10 @@
 "use client";
 
-import { CompletedRace } from "@prisma/client";
+import { completed_race } from "@prisma/client";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 type Props = {
-  raceHistory: CompletedRace[];
+  raceHistory: completed_race[];
 };
 
 export function ImprovementChart({ raceHistory }: Props) {
@@ -83,7 +83,7 @@ export function ImprovementChart({ raceHistory }: Props) {
   );
 }
 
-function getRaceHistoryData(raceHistory: CompletedRace[]) {
+function getRaceHistoryData(raceHistory: completed_race[]) {
   return raceHistory.map((race, raceIndex) => ({
     raceNumber: raceIndex + 1,
     wpm: race.wpm,

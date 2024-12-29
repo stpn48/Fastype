@@ -1,5 +1,5 @@
 import { getUser } from "@/server/queries";
-import { CompletedRace } from "@prisma/client";
+import { completed_race } from "@prisma/client";
 import { Week } from "./week";
 
 export async function ActivityGraph() {
@@ -9,7 +9,7 @@ export async function ActivityGraph() {
     return null;
   }
 
-  const userActivity = getActivity(user.raceHistory);
+  const userActivity = getActivity(user.race_history);
   const weeksLast12Months = getWeeksLast12MonthsStartingMonday();
 
   return (
@@ -21,13 +21,15 @@ export async function ActivityGraph() {
   );
 }
 
-function getActivity(raceHistory: CompletedRace[]) {
-  const raceHistoryAsc = raceHistory.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+function getActivity(raceHistory: completed_race[]) {
+  const raceHistoryAsc = raceHistory.sort(
+    (a, b) => a.created_at.getTime() - b.created_at.getTime(),
+  );
 
   const activity: Record<string, number> = {};
 
   raceHistoryAsc.forEach((race) => {
-    const raceDay = race.createdAt.toLocaleDateString();
+    const raceDay = race.created_at.toLocaleDateString();
 
     if (!activity[raceDay]) {
       activity[raceDay] = 1;

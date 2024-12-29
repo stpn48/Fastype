@@ -1,7 +1,7 @@
-import { Stats, User } from "@prisma/client";
+import { stats, user } from "@prisma/client";
 
 type Props = {
-  userDetails: User & { stats: Stats | null };
+  userDetails: user & { stats: stats | null };
 };
 
 export function MainStats({ userDetails }: Props) {
@@ -14,7 +14,7 @@ export function MainStats({ userDetails }: Props) {
       <section className="flex flex-col items-center justify-center gap-6 md:flex-row">
         <img
           className="size-[100px] rounded-full"
-          src={userDetails.imageUrl || ""}
+          src={userDetails.image_url || ""}
           alt="user-image"
         />
         <div className="flex flex-col items-center gap-1">
@@ -25,19 +25,19 @@ export function MainStats({ userDetails }: Props) {
       <div className="gird-rows-2 grid flex-1 grid-cols-2 items-center gap-8 md:grid-cols-4 md:grid-rows-1">
         <section className="flex flex-col items-center gap-2">
           <h2 className="text-center font-bold text-muted-foreground">WPM</h2>
-          <p className="text-4xl">{userDetails.stats.avgWpmAllTime}</p>
+          <p className="text-4xl">{userDetails.stats.avg_wpm_all_time}</p>
         </section>
         <section className="flex flex-col items-center gap-2">
           <h2 className="text-center font-bold text-muted-foreground">LAST 10 RACES WPM</h2>
-          <p className="text-4xl">{userDetails.stats.avgWpmLast10Races}</p>
+          <p className="text-4xl">{userDetails.stats.avg_wpm_last_10_races}</p>
         </section>
         <section className="flex flex-col items-center gap-2">
           <h2 className="text-center font-bold text-muted-foreground">BEST RACE WPM</h2>
-          <p className="text-4xl">{userDetails.stats.bestRaceWpm}</p>
+          <p className="text-4xl">{userDetails.stats.best_race_wpm}</p>
         </section>
         <section className="flex flex-col items-center gap-2">
           <h2 className="text-center font-bold text-muted-foreground">LAST RACE WPM</h2>
-          <p className="text-4xl">{userDetails.stats.lastRaceWpm}</p>
+          <p className="text-4xl">{userDetails.stats.last_race_wpm}</p>
         </section>
       </div>
     </div>

@@ -9,70 +9,67 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
-enum RaceStatus {
+enum race_status {
   waiting
   closed
   completed
 }
 
-enum RaceType {
+enum race_type {
   public
   private
   solo
 }
 
 // basic data like name, email, avatar are in clerk, here is the stats for this user
-model User {
-  id          String          @id @default(uuid())
-  clerkId     String          @unique
-  firstName   String
-  lastName    String
-  imageUrl    String?
-  username    String
-  country     String          @default("unknown")
-  stats       Stats?
-  Race        Race?           @relation(fields: [raceId], references: [id], onDelete: SetNull)
-  raceId      String?
-  raceHistory CompletedRace[]
+model user {
+  id           String           @id @default(uuid())
+  image_url    String
+  username     String?          @unique
+  race         race?            @relation(fields: [race_id], references: [id], onDelete: SetNull)
+  race_id      String?
+  race_history completed_race[]
+  stats        stats?
 }
 
-model Stats {
-  id                String @id @default(uuid())
-  avgWpmLast10Races Int    @default(0)
-  avgWpmAllTime     Int    @default(0)
-  lastRaceWpm       Int    @default(0)
-  bestRaceWpm       Int    @default(0)
-  User              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String @unique
+model stats {
+  id                    String @id @default(uuid())
+  avg_wpm_last_10_races Int    @default(0)
+  avg_wpm_all_time      Int    @default(0)
+  last_race_wpm         Int    @default(0)
+  best_race_wpm         Int    @default(0)
+  user_id               String @unique
+  user                  user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model Race {
-  id        String     @id @default(uuid())
-  users     User[]
-  avgWpm    Int
-  authorId  String?
-  updatedAt DateTime   @default(now())
-  type      RaceType   @default(public)
-  status    RaceStatus @default(waiting)
-  startedAt DateTime?
-  createdAt DateTime   @default(now())
-  text      String
+model race {
+  id         String      @id @default(uuid())
+  users      user[]
+  avg_wpm    Int
+  author_id  String?
+  updated_at DateTime    @default(now())
+  type       race_type   @default(public)
+  status     race_status @default(waiting)
+  started_at DateTime?
+  created_at DateTime    @default(now())
+  text       String
 }
 
-model RaceText {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  text      String
+model race_text {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  text       String
 }
 
-model CompletedRace {
-  id        String   @id @default(uuid())
-  wpm       Int
-  createdAt DateTime @default(now())
-  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String?
+model completed_race {
+  id         String   @id @default(uuid())
+  wpm        Int
+  created_at DateTime @default(now())
+  user       user?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String?
 }

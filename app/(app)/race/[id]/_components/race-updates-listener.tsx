@@ -3,7 +3,7 @@
 import { getRaceUsers } from "@/app/actions/get-race-users";
 import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
-import { supabase } from "@/lib/supabase/client";
+import { supabaseJsClient } from "@/lib/supabase/client";
 import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
@@ -62,7 +62,7 @@ export function RaceUpdatesListener({ raceId }: Props) {
 
     return () => {
       channel.unsubscribe();
-      supabase.removeChannel(channel);
+      supabaseJsClient.removeChannel(channel);
     };
   }, [raceId, onRaceUpdate]);
 

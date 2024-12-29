@@ -1,38 +1,45 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server";
+import { createClient } from "@/lib/supabase/server";
+import { UserDetails } from "@/types/types";
 
-export async function getUser() {
-  const clerkUser = await currentUser();
+export async function getUser(): Promise<UserDetails | null> {
+  const supabase = await createClient();
 
-  if (!clerkUser) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
     return null;
   }
 
-  const [userData, userDataError] = await catchError(
-    prisma.user.findUnique({
+  const [userDetails, error] = await catchError(
+    prisma.user.findFirst({
       where: {
-        clerkId: clerkUser.id,
+        id: user.id,
       },
       include: {
-        Race: true,
         stats: true,
-        raceHistory: true,
+        race_history: true,
       },
     }),
   );
 
-  if (!userData || userDataError) {
-    if (userDataError) {
-      console.error(userDataError.message);
-      return null;
-    }
-
-    console.error("User not found");
+  if (error) {
+    console.error(error);
     return null;
   }
 
-  return userData;
+  if (!userDetails) {
+    console.error("User details not found");
+    return null;
+  }
+
+  return {
+    ...user,
+    ...userDetails,
+  };
 }
 
 export async function getRaceDetails(raceId: string) {
@@ -59,7 +66,7 @@ export async function getUserDetails(userId: string) {
       },
       include: {
         stats: true,
-        raceHistory: true,
+        race_history: true,
       },
     }),
   );

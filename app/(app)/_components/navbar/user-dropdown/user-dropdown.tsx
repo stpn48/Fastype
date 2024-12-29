@@ -22,10 +22,10 @@ export async function UserDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className="size-8">
-          <AvatarImage src={user.imageUrl || ""} />
+          <AvatarImage src={user.image_url} />
           <AvatarFallback>
-            {user?.firstName?.charAt(0) ?? "U"}
-            {user?.lastName?.charAt(0) ?? "N"}
+            {user.username?.charAt(0).toUpperCase() ?? "U"}
+            {user.username?.charAt(0).toUpperCase() ?? "N"}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

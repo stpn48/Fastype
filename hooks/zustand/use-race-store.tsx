@@ -1,4 +1,4 @@
-import { RaceUser } from "@/types/types";
+import { race, user } from "@prisma/client";
 import { create } from "zustand";
 
 type RaceStore = {

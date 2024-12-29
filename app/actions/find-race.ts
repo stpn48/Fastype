@@ -4,12 +4,12 @@ import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
 import { findRaceBasedOnUserAvgWpm } from "@/services/services";
-import { Race } from "@prisma/client";
+import { race } from "@prisma/client";
 import { openNewRace } from "./open-new-race";
 
 type Response = {
   error: string | null;
-  race: Race | null;
+  race: race | null;
 };
 
 export async function findRace(): Promise<Response> {
@@ -19,19 +19,21 @@ export async function findRace(): Promise<Response> {
     return { error: "Unauthenticated", race: null };
   }
 
-  // user is in a race, dc him and open a new race
-  if (user.raceId) {
-    const { error, race } = await openNewPublicRace();
+  // user is in a race, open a new race
+  if (user.race_id) {
+    const { race, error: openRaceError } = await openNewRace("public");
 
-    if (error) {
-      return { error: error, race: null };
+    if (openRaceError) {
+      return { error: openRaceError, race: null };
     }
 
     return { error: null, race };
   }
 
   // if user not in a race, find a race in users wpm range and status open
-  const { race, error: findRaceError } = await findRaceBasedOnUserAvgWpm(user.stats.avgWpmAllTime);
+  const { race, error: findRaceError } = await findRaceBasedOnUserAvgWpm(
+    user.stats.avg_wpm_all_time,
+  );
 
   if (findRaceError) {
     return { error: findRaceError, race: null };
@@ -40,8 +42,8 @@ export async function findRace(): Promise<Response> {
   // if race found, and there is less than 10 users in there calc new avg wpm for the race with the new user and join him
   if (race && race.users.length < 10) {
     const totalUsersWpm =
-      race.users.reduce((acc, curr) => acc + curr.stats!.avgWpmLast10Races, 0) +
-      user.stats.avgWpmAllTime;
+      race.users.reduce((acc, curr) => acc + curr.stats!.avg_wpm_last_10_races, 0) +
+      user.stats.avg_wpm_all_time;
 
     const newAvgWpm = totalUsersWpm / (race.users.length + 1);
 
@@ -52,8 +54,8 @@ export async function findRace(): Promise<Response> {
           id: race.id,
         },
         data: {
-          updatedAt: new Date(),
-          avgWpm: newAvgWpm,
+          updated_at: new Date(),
+          avg_wpm: newAvgWpm,
           users: {
             connect: {
               id: user.id,
@@ -72,28 +74,14 @@ export async function findRace(): Promise<Response> {
 
   // if no race found, open a new one
   if (!race) {
-    const { error, race } = await openNewPublicRace();
+    const { race, error: openRaceError } = await openNewRace("public");
 
-    if (error) {
-      return { error: error, race: null };
+    if (openRaceError) {
+      return { error: openRaceError, race: null };
     }
 
     return { error: null, race };
   }
 
   return { error: null, race: null };
-}
-
-async function openNewPublicRace() {
-  const { race, error: openRaceError } = await openNewRace("public");
-
-  if (openRaceError) {
-    return { error: openRaceError, race: null };
-  }
-
-  if (!race) {
-    return { error: "Unexpected error opening race. Race not found", race: null };
-  }
-
-  return { error: null, race };
 }

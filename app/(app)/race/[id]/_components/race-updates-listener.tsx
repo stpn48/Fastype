@@ -35,13 +35,13 @@ export function RaceUpdatesListener({ raceId }: Props) {
 
   const onRaceUpdate = useCallback(
     async (payload: RealtimePostgresUpdatePayload<{ [key: string]: any }>) => {
-      console.log("payload", payload);
-      const { startedAt, status, type } = payload.new;
+      const { started_at, status, type } = payload.new;
+      console.log("race update", payload);
 
-      setRaceStartedAt(startedAt);
+      setRaceStartedAt(started_at);
 
       // check if race is not solo, has not started yet and is closed, if so, set countdown to 5 (start the race)
-      if (type !== "solo" && !startedAt && status === "closed") {
+      if (type !== "solo" && !started_at && status === "closed") {
         toast.dismiss();
         setCountdown(5);
       }

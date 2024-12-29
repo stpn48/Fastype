@@ -3,20 +3,22 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { RaceUser } from "@/types/types";
-import { Race } from "@prisma/client";
+import { race } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { useRaceProgress } from "./hooks/use-race-progress";
-import { useUserPlace } from "./hooks/use-user-place";
 
 type Props = {
-  raceDetails: Race;
+  raceDetails: race;
   raceUser: RaceUser;
 };
 
 export function UserTrack({ raceDetails, raceUser }: Props) {
-  const { raceProgress, wpm } = useRaceProgress(raceDetails.id, raceDetails.text, raceUser.id);
-  const { userPlace } = useUserPlace(raceProgress);
+  const { raceProgress, wpm, userPlace } = useRaceProgress(
+    raceDetails.id,
+    raceDetails.text,
+    raceUser.id,
+  );
 
   const router = useRouter();
 
@@ -44,10 +46,10 @@ export function UserTrack({ raceDetails, raceUser }: Props) {
           )}
 
           <Avatar className="h-8 w-8 cursor-pointer hover:opacity-80" onClick={handleAvatarClick}>
-            <AvatarImage src={raceUser.imageUrl ?? ""} />
+            <AvatarImage src={raceUser.image_url ?? ""} />
             <AvatarFallback>
-              {raceUser.firstName?.charAt(0) ?? "U"}
-              {raceUser.lastName?.charAt(0) ?? "N"}
+              {raceUser.username?.charAt(0) ?? "U"}
+              {raceUser.username?.charAt(0) ?? "N"}
             </AvatarFallback>
           </Avatar>
         </div>

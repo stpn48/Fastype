@@ -48,6 +48,9 @@ export async function getRaceDetails(raceId: string) {
       where: {
         id: raceId,
       },
+      include: {
+        users: true,
+      },
     }),
   );
 

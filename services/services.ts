@@ -1,6 +1,6 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
-import { RaceText } from "@prisma/client";
+import { race_text } from "@prisma/client";
 import "server-only";
 
 // service functions are utils for server actions. They should only be used in server actions !!!
@@ -13,7 +13,7 @@ export async function findRaceBasedOnUserAvgWpm(userAvgWpmAllTime: number) {
       where: {
         type: "public",
         status: "waiting",
-        avgWpm: {
+        avg_wpm: {
           lt: userAvgWpmAllTime + WPM_THRESHOLD,
           gt: userAvgWpmAllTime - WPM_THRESHOLD,
         },
@@ -37,14 +37,14 @@ export async function findRaceBasedOnUserAvgWpm(userAvgWpmAllTime: number) {
 
 export async function generateRaceText() {
   const [raceTextCell, randomTextError] = await catchError(
-    prisma.$queryRaw`SELECT * FROM "RaceText" ORDER BY RANDOM() LIMIT 1`,
+    prisma.$queryRaw`SELECT * FROM "race_text" ORDER BY RANDOM() LIMIT 1`,
   );
 
   if (randomTextError) {
     return null;
   }
 
-  const raceTextCellType = raceTextCell as RaceText[];
+  const raceTextCellType = raceTextCell as race_text[];
   const raceText = raceTextCellType[0].text;
 
   return raceText;

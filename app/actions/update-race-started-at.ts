@@ -7,7 +7,7 @@ export async function updateRaceStartedAt(raceId: string, startedAt: Date) {
   const [, error] = await catchError(
     prisma.race.update({
       where: { id: raceId },
-      data: { startedAt },
+      data: { started_at: startedAt },
     }),
   );
 

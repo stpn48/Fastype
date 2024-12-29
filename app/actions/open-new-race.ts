@@ -4,24 +4,29 @@ import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
 import { generateRaceText } from "@/services/services";
-import { RaceType } from "@prisma/client";
+import { race, race_type } from "@prisma/client";
 
-export async function openNewRace(raceType: RaceType) {
+type Response = {
+  error: string | null;
+  race: race | null;
+};
+
+export async function openNewRace(raceType: race_type): Promise<Response> {
   const user = await getUser();
 
   if (!user || !user.stats) {
-    return { error: "User not found" };
+    return { error: "User not found", race: null };
   }
 
   // dc user from the race hes in if he is in one
-  if (user.raceId) {
+  if (user.race_id) {
     const [, disconnectUserError] = await catchError(
       prisma.race.update({
         where: {
-          id: user.raceId,
+          id: user.race_id,
         },
         data: {
-          updatedAt: new Date(),
+          updated_at: new Date(),
           users: {
             disconnect: {
               id: user.id,
@@ -47,11 +52,11 @@ export async function openNewRace(raceType: RaceType) {
   const [race, error] = await catchError(
     prisma.race.create({
       data: {
-        authorId: raceType === "private" ? user.id : null,
+        author_id: raceType === "private" ? user.id : null,
         type: raceType,
         status: raceType === "solo" ? "closed" : "waiting",
         text: raceText,
-        avgWpm: user.stats.avgWpmAllTime,
+        avg_wpm: user.stats.avg_wpm_all_time,
         users: {
           connect: {
             id: user.id,

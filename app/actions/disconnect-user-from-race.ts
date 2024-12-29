@@ -38,7 +38,7 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
   }
 
   // If the author of this race is the user, delete the race
-  if (race.authorId === user.id) {
+  if (race.author_id === user.id) {
     const [, deleteRaceError] = await catchError(
       prisma.race.delete({
         where: {
@@ -60,7 +60,7 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
         id: raceId,
       },
       data: {
-        updatedAt: new Date(),
+        updated_at: new Date(),
         users: {
           disconnect: {
             id: userId,

@@ -19,7 +19,7 @@ export function listenForRaceUpdates(
       {
         event: "UPDATE",
         schema: "public",
-        table: "Race",
+        table: "race",
         filter: `id=eq.${raceId}`,
       },
       callback,

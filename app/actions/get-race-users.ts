@@ -14,14 +14,12 @@ export async function getRaceUsers(raceId: string) {
   const [raceDetails, error] = await catchError(
     prisma.user.findMany({
       where: {
-        raceId: raceId,
+        race_id: raceId,
       },
       select: {
         id: true,
-        clerkId: true,
-        imageUrl: true,
-        firstName: true,
-        lastName: true,
+        username: true,
+        image_url: true,
       },
     }),
   );

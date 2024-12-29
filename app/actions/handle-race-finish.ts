@@ -3,7 +3,7 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
-import { CompletedRace, Race, Stats, User } from "@prisma/client";
+import { completed_race, stats, user } from "@prisma/client";
 
 export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: string) {
   const user = await getUser();
@@ -24,12 +24,12 @@ export async function handleRaceFinish(raceCompleteTimeMs: number, raceId: strin
     return { error: getRaceError?.message || "Race not found" };
   }
 
-  if (!race.startedAt) {
+  if (!race.started_at) {
     return { error: "Unexpected error: Race startedAt is missing when handling race finish :/" };
   }
 
   const words = race.text.split(" ").length;
-  const raceDuration = (raceCompleteTimeMs - race.startedAt.getTime()) / 1000;
+  const raceDuration = (raceCompleteTimeMs - race.started_at.getTime()) / 1000;
 
   const wpm = Math.round((words / raceDuration) * 60);
 
@@ -57,7 +57,7 @@ async function addRaceToUserHistory(userId: string, wpm: number) {
         id: userId,
       },
       data: {
-        raceHistory: {
+        race_history: {
           create: {
             wpm: wpm,
           },
@@ -74,20 +74,20 @@ async function addRaceToUserHistory(userId: string, wpm: number) {
 }
 
 async function updateUserStats(
-  user: User & { stats: Stats | null } & { raceHistory: CompletedRace[] } & { Race: Race | null },
+  user: user & { stats: stats | null } & { race_history: completed_race[] },
   wpm: number,
 ) {
   // Calculate average WPM
-  const totalUserWpm = user.raceHistory.reduce((sum, race) => sum + race.wpm, 0) + wpm;
-  const newAverageWpm = Math.round(totalUserWpm / (user.raceHistory.length + 1));
+  const totalUserWpm = user.race_history.reduce((sum, race) => sum + race.wpm, 0) + wpm;
+  const newAverageWpm = Math.round(totalUserWpm / (user.race_history.length + 1));
 
   // Last 10 races WPM
-  const last10Races = [...user.raceHistory.slice(-9), { wpm }]; // Include the latest race
+  const last10Races = [...user.race_history.slice(-9), { wpm }]; // Include the latest race
   const totalLast10RacesWpm = last10Races.reduce((sum, race) => sum + race.wpm, 0);
   const newLast10RacesAvgWpm = Math.round(totalLast10RacesWpm / last10Races.length);
 
   // all time best wpm
-  let newAllTimeBestWpm = user.stats?.bestRaceWpm || 0;
+  let newAllTimeBestWpm = user.stats?.best_race_wpm || 0;
 
   if (wpm > newAllTimeBestWpm) {
     newAllTimeBestWpm = wpm;
@@ -102,10 +102,10 @@ async function updateUserStats(
       data: {
         stats: {
           update: {
-            avgWpmAllTime: newAverageWpm,
-            avgWpmLast10Races: newLast10RacesAvgWpm,
-            bestRaceWpm: newAllTimeBestWpm,
-            lastRaceWpm: wpm,
+            avg_wpm_all_time: newAverageWpm,
+            avg_wpm_last_10_races: newLast10RacesAvgWpm,
+            best_race_wpm: newAllTimeBestWpm,
+            last_race_wpm: wpm,
           },
         },
       },

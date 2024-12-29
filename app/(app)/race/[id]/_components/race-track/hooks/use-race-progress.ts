@@ -10,8 +10,9 @@ import { toast } from "sonner";
 export function useRaceProgress(raceId: string, raceText: string, userId: string) {
   const [raceProgress, setRaceProgress] = useState(0);
   const [wpm, setWpm] = useState(0);
+  const [userPlace, setUserPlace] = useState<number | null>(null);
 
-  const { raceStartedAt } = useRaceStore();
+  const { raceStartedAt, currPlace, setCurrPlace } = useRaceStore();
   const { setCanType } = useTypingFieldStore();
 
   const handleRaceComplete = useCallback(async () => {
@@ -22,6 +23,13 @@ export function useRaceProgress(raceId: string, raceText: string, userId: string
       toast.error(error);
     }
   }, [userId, raceId]);
+
+  useEffect(() => {
+    if (raceProgress === 100) {
+      setUserPlace(currPlace);
+      setCurrPlace((prev) => prev + 1);
+    }
+  }, [raceProgress]);
 
   // Listen for broadcast updates to get the progress for user
   useEffect(() => {
@@ -42,6 +50,8 @@ export function useRaceProgress(raceId: string, raceText: string, userId: string
         if (progressUpdateUserId === userId) {
           // if the progress is 100, handle the race complete
           if (progress === 100) {
+            channel.unsubscribe();
+            supabaseJsClient.removeChannel(channel);
             handleRaceComplete();
           }
 
@@ -65,7 +75,7 @@ export function useRaceProgress(raceId: string, raceText: string, userId: string
     };
   }, [userId, raceText, handleRaceComplete, raceStartedAt]);
 
-  return { raceProgress, wpm };
+  return { raceProgress, wpm, userPlace };
 }
 
 function calculateUserWpm(raceStartedAt: string, progress: number, totalWords: number) {

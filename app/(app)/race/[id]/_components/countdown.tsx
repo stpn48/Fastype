@@ -61,17 +61,8 @@ export function Countdown({ raceType, raceId }: Props) {
   useEffect(() => {
     setIsMounted(true);
 
-    // solo race start countdown instantly
-    if (raceType === "solo") {
-      setCountdown(3);
-      return;
-    }
-
-    // show toast if race is public or private
-    if (raceType === "public" || raceType === "private") {
-      if (isMounted) {
-        toast.info("Waiting for players...");
-      }
+    if (isMounted) {
+      toast.info("Waiting for players...");
     }
   }, [raceType, isMounted]);
 

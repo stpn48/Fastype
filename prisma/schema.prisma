@@ -14,6 +14,11 @@ datasource db {
   directUrl = env("DIRECT_DATABASE_URL")
 }
 
+enum race_text_type {
+  quote
+  text
+}
+
 enum race_status {
   waiting
   closed
@@ -23,7 +28,6 @@ enum race_status {
 enum race_type {
   public
   private
-  solo
 }
 
 // basic data like name, email, avatar are in clerk, here is the stats for this user
@@ -61,8 +65,9 @@ model race {
 }
 
 model race_text {
-  id         String   @id @default(uuid())
-  created_at DateTime @default(now())
+  id         String         @id @default(uuid())
+  created_at DateTime       @default(now())
+  type       race_text_type
   text       String
 }
 

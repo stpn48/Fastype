@@ -1,12 +1,12 @@
 import { getRaceDetails, getUser } from "@/server/queries";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { TypingField } from "../_components/typing-field";
 import { Countdown } from "./_components/countdown";
 import { DisconnectUserHandler } from "./_components/disconnect-user-handler";
 import { PrivateRaceOptions } from "./_components/private-race-options";
 import { RaceTrack } from "./_components/race-track/race-track";
 import { RaceUpdatesListener } from "./_components/race-updates-listener";
-import { TypingField } from "./_components/typing-field/typing-field";
 
 export const metadata: Metadata = {
   title: "FastType - Race",
@@ -38,12 +38,7 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
       <section className="flex w-full max-w-4xl grid-cols-1 grid-rows-2 flex-col gap-10">
         <RaceTrack userId={user.id} raceDetails={raceDetails} />
 
-        <TypingField
-          text={raceDetails.text}
-          userId={user.id}
-          raceId={raceId}
-          raceType={raceDetails.type}
-        />
+        <TypingField text={raceDetails.text} userId={user.id} raceId={raceId} />
 
         {raceDetails.type === "private" && <PrivateRaceOptions raceId={raceDetails.id} />}
 

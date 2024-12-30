@@ -3,7 +3,6 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
-import { generateRaceText } from "@/services/services";
 import { race, race_type } from "@prisma/client";
 
 type Response = {
@@ -41,8 +40,8 @@ export async function openNewRace(raceType: race_type): Promise<Response> {
     }
   }
 
-  // generate text
-  const raceText = await generateRaceText();
+  // generate text TODO:
+  const raceText = "prdel prdel prdel predel";
 
   if (!raceText) {
     return { error: "Unexpected error generating race text", race: null };
@@ -54,7 +53,7 @@ export async function openNewRace(raceType: race_type): Promise<Response> {
       data: {
         author_id: raceType === "private" ? user.id : null,
         type: raceType,
-        status: raceType === "solo" ? "closed" : "waiting",
+        status: "waiting",
         text: raceText,
         avg_wpm: user.stats.avg_wpm_all_time,
         users: {

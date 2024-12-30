@@ -34,18 +34,3 @@ export async function findRaceBasedOnUserAvgWpm(userAvgWpmAllTime: number) {
 
   return { error: null, race };
 }
-
-export async function generateRaceText() {
-  const [raceTextCell, randomTextError] = await catchError(
-    prisma.$queryRaw`SELECT * FROM "race_text" ORDER BY RANDOM() LIMIT 1`,
-  );
-
-  if (randomTextError) {
-    return null;
-  }
-
-  const raceTextCellType = raceTextCell as race_text[];
-  const raceText = raceTextCellType[0].text;
-
-  return raceText;
-}

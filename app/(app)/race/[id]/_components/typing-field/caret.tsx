@@ -39,5 +39,5 @@ export function Caret() {
     caretRef.current.style.top = `${currChar.offsetTop}px`;
   }, [currCharIndex, currWordIndex]);
 
-  return <div ref={caretRef} className="absolute h-[25px] w-[2px] bg-primary transition-all" />;
+  return <div ref={caretRef} className="absolute h-[24px] w-[2px] bg-primary transition-all" />;
 }

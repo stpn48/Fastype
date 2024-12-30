@@ -2,29 +2,24 @@
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
-import { race } from "@prisma/client";
 import { memo } from "react";
-import { useHandleUserProgress } from "../../hooks/use-handle-user-progress";
-import { Caret } from "./caret";
-import { useHandleKeydown } from "./use-handle-keydown";
-import { Word } from "./word";
+import { Caret } from "../[id]/_components/typing-field/caret";
+import { useHandleKeydown } from "../[id]/_components/typing-field/use-handle-keydown";
+import { Word } from "../[id]/_components/typing-field/word";
+import { useHandleUserProgress } from "../[id]/hooks/use-handle-user-progress";
 
 type Props = {
   text: string;
-  raceType: race["type"];
-  userId: string;
-  raceId: string;
+  userId?: string;
+  raceId?: string;
 };
 
 const MemoWord = memo(Word);
 
-export function TypingField({ text, userId, raceId, raceType }: Props) {
+export function TypingField({ text, userId, raceId }: Props) {
   const { currWordIndex, userWords, canType, hasMistake } = useTypingFieldStore();
 
-  // don't broadcast user progress if the race is solo
-  if (raceType !== "solo") {
-    useHandleUserProgress(text, userId, raceId);
-  }
+  useHandleUserProgress(text, userId, raceId);
 
   useHandleKeydown(text);
 

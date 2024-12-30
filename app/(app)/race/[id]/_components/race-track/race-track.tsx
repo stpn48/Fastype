@@ -22,7 +22,7 @@ export function RaceTrack({ userId, raceDetails }: Props) {
   return (
     <div className="flex w-full flex-col rounded-lg border border-border">
       {raceUsers.map((raceUser) => (
-        <UserTrack key={raceUser.id} raceUser={raceUser} raceDetails={raceDetails} />
+        <UserqqqTrack key={raceUser.id} raceUser={raceUser} raceDetails={raceDetails} />
       ))}
     </div>
   );

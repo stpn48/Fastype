@@ -7,7 +7,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
     <div className="flex h-screen flex-col">
       <Navbar />
       <main className="mt-[56px] flex flex-1 flex-col">
-        <div className="min-h-screen flex-1 p-10">{children}</div>
+        <div className="flex-1 p-10">{children}</div>
         <Footer />
       </main>
     </div>

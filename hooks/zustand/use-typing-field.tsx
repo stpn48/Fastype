@@ -19,6 +19,12 @@ type TypingFieldStore = {
   userWpm: number;
   setUserWpm: (wpm: number) => void;
 
+  userProgress: number;
+  setUserProgress: (progress: number | ((prev: number) => number)) => void;
+
+  text: string;
+  setText: (text: string) => void;
+
   resetTypingFieldStore: () => void;
 };
 
@@ -48,6 +54,15 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
   userWpm: 0,
   setUserWpm: (wpm) => set({ userWpm: wpm }),
 
+  userProgress: 0,
+  setUserProgress: (progress) =>
+    set((state) => ({
+      userProgress: typeof progress === "function" ? progress(state.userProgress) : progress,
+    })),
+
+  text: "",
+  setText: (text) => set({ text }),
+
   resetTypingFieldStore: () =>
     set({
       currWordIndex: 0,
@@ -56,5 +71,6 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       canType: false,
       hasMistake: false,
       userWpm: 0,
+      userProgress: 0,
     }),
 }));

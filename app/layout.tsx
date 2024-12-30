@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,8 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} font-geist-sans text-sm font-medium ${geistMono.variable} antialiased`}
       >
         <NextThemeProvider>
-          {children}
-
+          <NuqsAdapter>{children}</NuqsAdapter>
           <Toaster />
         </NextThemeProvider>
       </body>

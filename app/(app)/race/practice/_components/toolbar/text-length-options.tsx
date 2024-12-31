@@ -1,7 +1,7 @@
 "use client";
 
 import { race_text_length } from "@prisma/client";
-import { useToolbar } from "../hooks/useToolbar";
+import { useToolbar } from "@/app/(app)/race/practice/hooks/use-toolbar";
 import { ToolbarButton } from "./toolbar-button";
 
 const randomWordsOptions = [25, 50, 100];

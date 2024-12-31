@@ -10,12 +10,14 @@ type ToolbarContextType = {
   currMode: TypingFieldMode;
   randomWordsCount: number;
   textLength: race_text_length;
-  includePunctuation: boolean;
+  includeSymbols: boolean;
   includeNumbers: boolean;
   updateCurrMode: (newMode: TypingFieldMode) => void;
   updateRandomWordsCount: (newCount: number) => void;
   updateTextLength: (newLength: race_text_length) => void;
-  updateIncludePunctuation: (newIncludePunctuation: boolean | ((prev: boolean) => boolean)) => void;
+  updateIncludeSymbolstuation: (
+    newIncludePunctuation: boolean | ((prev: boolean) => boolean),
+  ) => void;
   updateIncludeNumbers: (newIncludeNumbers: boolean | ((prev: boolean) => boolean)) => void;
 };
 
@@ -37,8 +39,8 @@ export function ToolbarProvider({ children }: PropsWithChildren) {
     parseAsRaceTextLength.withDefault("medium"),
   );
 
-  const [includePunctuation, setIncludePunctuation] = useQueryState(
-    "punctuation",
+  const [includeSymbols, setIncludeSymbols] = useQueryState(
+    "symbols",
     parseAsBoolean.withDefault(false),
   );
   const [includeNumbers, setIncludeNumbers] = useQueryState(
@@ -67,11 +69,11 @@ export function ToolbarProvider({ children }: PropsWithChildren) {
     [setTextLength],
   );
 
-  const updateIncludePunctuation = useCallback(
+  const updateIncludeSymbolstuation = useCallback(
     (newIncludePunctuation: boolean | ((prev: boolean) => boolean)) => {
-      setIncludePunctuation(newIncludePunctuation);
+      setIncludeSymbols(newIncludePunctuation);
     },
-    [setIncludePunctuation],
+    [setIncludeSymbols],
   );
 
   const updateIncludeNumbers = useCallback(
@@ -86,24 +88,25 @@ export function ToolbarProvider({ children }: PropsWithChildren) {
       currMode,
       randomWordsCount,
       textLength,
-      includePunctuation,
+      includeSymbols,
       includeNumbers,
       updateCurrMode,
+
       updateRandomWordsCount,
       updateTextLength,
-      updateIncludePunctuation,
+      updateIncludeSymbolstuation,
       updateIncludeNumbers,
     };
   }, [
     currMode,
     randomWordsCount,
     textLength,
-    includePunctuation,
+    includeSymbols,
     includeNumbers,
     updateCurrMode,
     updateRandomWordsCount,
     updateTextLength,
-    updateIncludePunctuation,
+    updateIncludeSymbolstuation,
     updateIncludeNumbers,
   ]);
 

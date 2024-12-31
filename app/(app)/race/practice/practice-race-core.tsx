@@ -2,9 +2,9 @@
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useEffect } from "react";
-import { TypingField } from "../_components/typing-field";
-import { Toolbar } from "./_components/toolbar";
-import { ToolbarProvider } from "./hooks/useToolbar";
+import { TypingField } from "@/app/(app)/race/_components/typing-field";
+import { ToolbarProvider } from "./hooks/use-toolbar";
+import { Toolbar } from "./_components/toolbar/toolbar";
 
 export function PracticeRaceCore() {
   const { setCanType, text } = useTypingFieldStore();

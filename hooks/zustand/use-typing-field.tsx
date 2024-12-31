@@ -25,6 +25,9 @@ type TypingFieldStore = {
   text: string;
   setText: (text: string) => void;
 
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+
   resetTypingFieldStore: () => void;
 };
 
@@ -63,6 +66,9 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
   text: "",
   setText: (text) => set({ text }),
 
+  isLoading: false,
+  setIsLoading: (isLoading) => set({ isLoading }),
+
   resetTypingFieldStore: () =>
     set({
       currWordIndex: 0,
@@ -72,5 +78,6 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       hasMistake: false,
       userWpm: 0,
       userProgress: 0,
+      isLoading: false,
     }),
 }));

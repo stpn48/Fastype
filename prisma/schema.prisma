@@ -30,6 +30,12 @@ enum race_type {
   private
 }
 
+enum race_text_length {
+  short
+  medium
+  long
+}
+
 // basic data like name, email, avatar are in clerk, here is the stats for this user
 model user {
   id           String           @id @default(uuid())
@@ -65,10 +71,11 @@ model race {
 }
 
 model race_text {
-  id         String         @id @default(uuid())
-  created_at DateTime       @default(now())
+  id         String           @id @default(uuid())
+  created_at DateTime         @default(now())
   type       race_text_type
   text       String
+  length     race_text_length
 }
 
 model completed_race {

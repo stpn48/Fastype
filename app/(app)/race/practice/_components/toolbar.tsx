@@ -1,24 +1,19 @@
 "use client";
 
-import { getRandomText } from "@/app/actions/get-random-text";
+import { getText } from "@/app/actions/get-random-text";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { parseAsTypingFieldMode } from "@/lib/nuqs/parsers";
-import { AtSign, Hash } from "lucide-react";
-import { parseAsBoolean, useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { TextLengthOptions } from "./text-length-options";
-import { ToolbarButton } from "./toolbar-button";
+import { useToolbar } from "../hooks/useToolbar";
+import { ModeOptions } from "./mode-options";
+import { ToggleOptions } from "./toggle-options";
+import { generate } from "random-words";
 
 export function Toolbar() {
-  const [currMode, setCurrMode] = useQueryState(
-    "currMode",
-    parseAsTypingFieldMode.withDefault("normal-text"),
-  );
-  const [includePunctuation, setIncludePunctuation] = useQueryState("punctuation", parseAsBoolean);
-  const [includeNumbers, setIncludeNumbers] = useQueryState("numbers", parseAsBoolean);
+  const { setText, resetTypingFieldStore, setCanType, setIsLoading } = useTypingFieldStore();
 
-  const { setText, resetTypingFieldStore, setCanType } = useTypingFieldStore();
+  const { currMode, textLength, randomWordsCount } = useToolbar();
 
   useEffect(() => {
     if (!currMode) return;
@@ -27,62 +22,44 @@ export function Toolbar() {
     setCanType(true);
 
     const generateNewText = async () => {
-      const newText = await getRandomText(currMode);
+      setIsLoading(true);
+      const { text, error } = await getText(currMode, textLength);
+      setIsLoading(false);
 
-      if (!newText) {
+      if (error) {
+        toast.error(error);
+        return;
+      }
+
+      if (!text) {
         toast.error("Failed to generate text");
         return;
       }
 
-      setText(newText);
+      setText(text);
     };
 
+    if (currMode === "random-words") {
+      const words = generate(randomWordsCount) as string[];
+
+      setText(words.join(" "));
+      return;
+    }
+
     generateNewText();
-  }, [currMode]);
+  }, [currMode, textLength, resetTypingFieldStore, setCanType, setText, randomWordsCount]);
 
   return (
     <div className="flex w-fit gap-2 rounded-lg bg-foreground/10 p-4 text-xs">
-      <section className="flex gap-2 border-r">
-        <ToolbarButton
-          isActive={includePunctuation || false}
-          onClick={() => setIncludePunctuation((prev) => !prev)}
-        >
-          <AtSign className="size-3" />
-          <span>punctuation</span>
-        </ToolbarButton>
-
-        <ToolbarButton
-          isActive={includeNumbers || false}
-          onClick={() => setIncludeNumbers((prev) => !prev)}
-        >
-          <Hash className="size-3" />
-          <span>numbers</span>
-        </ToolbarButton>
-      </section>
+      <ToggleOptions />
 
       <div className="w-[2px] rounded-lg bg-foreground/20" />
 
-      <section className="flex gap-2">
-        <ToolbarButton
-          isActive={currMode === "random-words"}
-          onClick={() => setCurrMode("random-words")}
-        >
-          random
-        </ToolbarButton>
+      <ModeOptions />
 
-        <ToolbarButton isActive={currMode === "quote"} onClick={() => setCurrMode("quote")}>
-          quote
-        </ToolbarButton>
+      <div className="w-[2px] rounded-lg bg-foreground/20" />
 
-        <ToolbarButton
-          isActive={currMode === "normal-text"}
-          onClick={() => setCurrMode("normal-text")}
-        >
-          text
-        </ToolbarButton>
-      </section>
-
-      <TextLengthOptions currMode={currMode} />
+      <TextLengthOptions />
     </div>
   );
 }

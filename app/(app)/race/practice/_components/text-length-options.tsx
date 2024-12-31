@@ -1,40 +1,49 @@
 "use client";
 
-import { TypingFieldMode } from "@/types/types";
+import { race_text_length } from "@prisma/client";
+import { useToolbar } from "../hooks/useToolbar";
 import { ToolbarButton } from "./toolbar-button";
 
-type Props = {
-  currMode: TypingFieldMode | null;
-};
+const randomWordsOptions = [25, 50, 100];
+const textLengthOptions: race_text_length[] = ["short", "medium", "long"];
 
-export function TextLengthOptions({ currMode }: Props) {
-  if (currMode === "quote")
+export function TextLengthOptions() {
+  const { currMode, updateTextLength, updateRandomWordsCount, textLength, randomWordsCount } =
+    useToolbar();
+
+  if (currMode === "quote" || currMode === "text") {
     return (
-      <>
-        <div className="w-[2px] rounded-lg bg-foreground/20" />
-
-        <section className="flex gap-2 border-r">
-          <ToolbarButton>Short</ToolbarButton>
-          <ToolbarButton>Medium</ToolbarButton>
-          <ToolbarButton>Long</ToolbarButton>
-        </section>
-      </>
+      <section className="flex gap-2">
+        {textLengthOptions.map((option) => (
+          <ToolbarButton
+            key={option}
+            onClick={() => updateTextLength(option)}
+            isActive={option === textLength}
+          >
+            {option}
+          </ToolbarButton>
+        ))}
+      </section>
     );
+  }
 
-  if (currMode === "random-words")
+  // For "random-words" mode, render random word count options (25, 50, 100, 150)
+  if (currMode === "random-words") {
     return (
-      <>
-        <div className="w-[2px] rounded-lg bg-foreground/20" />
-
-        <section className="flex gap-2 border-r">
-          <ToolbarButton>25</ToolbarButton>
-          <ToolbarButton>50</ToolbarButton>
-          <ToolbarButton>100</ToolbarButton>
-          <ToolbarButton>150</ToolbarButton>
-          <ToolbarButton>Custom</ToolbarButton>
-        </section>
-      </>
+      <section className="flex gap-2">
+        {randomWordsOptions.map((count) => (
+          <ToolbarButton
+            key={count}
+            onClick={() => updateRandomWordsCount(count)}
+            isActive={count === randomWordsCount}
+          >
+            {count}
+          </ToolbarButton>
+        ))}
+        <ToolbarButton>Custom</ToolbarButton>
+      </section>
     );
+  }
 
-  return null;
+  return null; // Return null if no valid mode
 }

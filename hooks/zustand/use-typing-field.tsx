@@ -89,7 +89,7 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
     })),
 
   resetTypingFieldStore: () =>
-    set((state) => ({
+    set({
       currWordIndex: 0,
       currCharIndex: 0,
       userWords: [""],
@@ -100,5 +100,5 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       isLoading: false,
       totalMistakes: 0,
       startedTypingAt: null,
-    })),
+    }),
 }));

@@ -39,7 +39,12 @@ export function Word({ word, userWord, isBehind, wordIndex }: Props) {
             .slice(word.length, word.length + 20)
             .split("")
             .map((char, overflowCharIndex) => (
-              <Char char={char} userChar={"overflow-letter"} key={overflowCharIndex} />
+              <Char
+                char={char}
+                className="text-red-800"
+                userChar={"overflow-letter"}
+                key={overflowCharIndex}
+              />
             ))}
         </>
       )}

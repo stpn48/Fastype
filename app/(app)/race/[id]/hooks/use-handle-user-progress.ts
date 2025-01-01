@@ -35,12 +35,12 @@ export function useHandleUserProgress(text: string, userId?: string, raceId?: st
 
     // if curr letter is not matching with the acctual letter increment total mistakes
     if (currWord && currWord[currCharIndex - 1] !== currUserWord[currCharIndex - 1]) {
-      console.log("made mistake");
       setTotalMistakes((prev) => prev + 1);
     }
 
     if (textArrJoined.slice(0, userWordsJoined.length) !== userWords.join("")) {
       setHasMistake(true);
+      return;
     } else {
       setHasMistake(false);
     }
@@ -54,7 +54,6 @@ export function useHandleUserProgress(text: string, userId?: string, raceId?: st
     // calculate user WPM
     if (startedTypingAt) {
       const wpm = calculateUserWpm(startedTypingAt, userProgress, textArr.length);
-      console.log("wpm", wpm);
       setUserWpm(wpm);
     }
   }, [userWords, text, currCharIndex, currWordIndex, startedTypingAt]);

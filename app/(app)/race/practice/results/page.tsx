@@ -1,21 +1,26 @@
 "use client";
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { Repeat } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useRouter } from "next/navigation";
 
-type Props = {
-  hideStats: () => void;
-};
-
-export function RaceComplete({ hideStats }: Props) {
+export default function RaceResultsPage() {
   const [time, setTime] = useState<string | null>(null);
-  const { userWpm, totalMistakes, startedTypingAt, text, resetTypingFieldStore } =
+  const { userWpm, totalMistakes, startedTypingAt, text, resetTypingFieldStore, setUserProgress } =
     useTypingFieldStore();
 
+  const router = useRouter();
+
+  // set user progress to 0 on mount to prevent being redirectaed back when click the back button in the browser
+  useEffect(() => {
+    setUserProgress(0);
+  }, [setUserProgress]);
+
   const handlePlayAgainClick = useCallback(() => {
-    resetTypingFieldStore();
-    hideStats();
-  }, [hideStats, resetTypingFieldStore]);
+    router.push("/race/practice");
+  }, [resetTypingFieldStore, router]);
 
   useEffect(() => {
     const duration = (new Date().getTime() - new Date(startedTypingAt || 0).getTime()) / 1000;
@@ -23,7 +28,7 @@ export function RaceComplete({ hideStats }: Props) {
   }, [setTime, startedTypingAt]);
 
   return (
-    <div className="flex w-full justify-between">
+    <div className="flex w-full items-end justify-between">
       <section className="flex flex-col gap-8 font-geist-mono">
         <Statiscic name="WPM" value={userWpm} />
         <Statiscic name="MISTAKES" value={totalMistakes} />
@@ -34,7 +39,16 @@ export function RaceComplete({ hideStats }: Props) {
         <Statiscic name="TIME" value={(time || "") + "s"} />
       </section>
 
-      <button onClick={handlePlayAgainClick}>play again</button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger className="h-fit" onClick={handlePlayAgainClick}>
+            <Repeat />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Play again</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 }
@@ -49,6 +63,7 @@ function Statiscic({ name, value }: { name: string; value: number | string }) {
 }
 
 function calculateAccuracy(totalMistakes: number, totalChars: number) {
-  const onePercent = totalChars / 100;
-  return (100 - onePercent * totalMistakes).toFixed(0);
+  if (totalChars === 0) return "0"; // Handle edge case where totalChars is 0
+  const accuracy = (1 - totalMistakes / totalChars) * 100;
+  return accuracy.toFixed(0); // Round to nearest whole number as a string
 }

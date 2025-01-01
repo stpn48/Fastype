@@ -17,7 +17,7 @@ export function useRaceProgress(raceId: string, raceText: string, userId: string
 
   const handleRaceComplete = useCallback(async () => {
     setCanType(false);
-    const { error } = await handleRaceFinish(raceId, wpm);
+    const { error } = await handleRaceFinish(wpm);
 
     if (error) {
       toast.error(error);

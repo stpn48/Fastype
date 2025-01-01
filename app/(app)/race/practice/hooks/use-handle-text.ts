@@ -6,14 +6,14 @@ import { toast } from "sonner";
 import { generateRandomWords } from "../utils/generateRandomWords";
 
 export function useHandleText() {
-  const { setText, resetTypingFieldStore, setCanType, setIsLoading } = useTypingFieldStore();
+  const { setText, resetTypingFieldStore, setIsLoading } = useTypingFieldStore();
   const { currMode, textLength, randomWordsCount, includeNumbers, includeSymbols } = useToolbar();
 
   useEffect(() => {
     if (!currMode) return;
 
     resetTypingFieldStore();
-    setCanType(true);
+    console.log("generate new text");
 
     if (currMode === "random-words") {
       const randomWords = generateRandomWords(randomWordsCount, includeNumbers, includeSymbols);
@@ -40,15 +40,5 @@ export function useHandleText() {
     };
 
     generateNewText();
-  }, [
-    currMode,
-    textLength,
-    resetTypingFieldStore,
-    setCanType,
-    setText,
-    randomWordsCount,
-    includeNumbers,
-    includeSymbols,
-    setIsLoading,
-  ]);
+  }, [currMode, textLength, randomWordsCount, includeNumbers, includeSymbols]);
 }

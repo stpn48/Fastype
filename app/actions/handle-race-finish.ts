@@ -5,27 +5,11 @@ import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
 import { completed_race, stats, user } from "@prisma/client";
 
-export async function handleRaceFinish(raceId: string, finalWpm: number) {
+export async function handleRaceFinish(finalWpm: number) {
   const user = await getUser();
 
   if (!user) {
     return { error: "User not found" };
-  }
-
-  const [race, getRaceError] = await catchError(
-    prisma.race.findUnique({
-      where: {
-        id: raceId,
-      },
-    }),
-  );
-
-  if (getRaceError || !race) {
-    return { error: getRaceError?.message || "Race not found" };
-  }
-
-  if (!race.started_at) {
-    return { error: "Unexpected error: Race startedAt is missing when handling race finish :/" };
   }
 
   // add race to user race history

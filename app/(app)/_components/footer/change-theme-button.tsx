@@ -8,7 +8,7 @@ export function ChangeThemeButton() {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <SwatchBook className="size-5 text-muted-foreground group-hover:text-foreground" />
+          <SwatchBook className="size-4 text-muted-foreground group-hover:text-foreground" />
         </TooltipTrigger>
         <TooltipContent>
           <p>Change Theme</p>

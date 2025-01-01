@@ -1,14 +1,14 @@
 "use client";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Palette } from "lucide-react";
+import { SwatchBook } from "lucide-react";
 
 export function ChangeThemeButton() {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Palette className="size-5 text-muted-foreground group-hover:text-foreground" />
+          <SwatchBook className="size-5 text-muted-foreground group-hover:text-foreground" />
         </TooltipTrigger>
         <TooltipContent>
           <p>Change Theme</p>

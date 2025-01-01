@@ -13,7 +13,6 @@ export function useHandleText() {
     if (!currMode) return;
 
     resetTypingFieldStore();
-    console.log("generate new text");
 
     if (currMode === "random-words") {
       const randomWords = generateRandomWords(randomWordsCount, includeNumbers, includeSymbols);

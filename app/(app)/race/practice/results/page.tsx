@@ -28,15 +28,15 @@ export default function RaceResultsPage() {
   }, [setTime, startedTypingAt]);
 
   return (
-    <div className="flex w-full items-end justify-between">
-      <section className="flex flex-col gap-8 font-geist-mono">
+    <div className="flex h-full w-full items-center justify-center gap-20">
+      <section className="flex flex-wrap gap-10 font-geist-mono">
         <Statiscic name="WPM" value={userWpm} />
+        <Statiscic name="TIME" value={(time || "") + "s"} />
         <Statiscic name="MISTAKES" value={totalMistakes} />
         <Statiscic
           name="ACCURACCY"
           value={calculateAccuracy(totalMistakes, text.split(" ").join("").length) + "%"}
         />
-        <Statiscic name="TIME" value={(time || "") + "s"} />
       </section>
 
       <TooltipProvider>
@@ -55,7 +55,7 @@ export default function RaceResultsPage() {
 
 function Statiscic({ name, value }: { name: string; value: number | string }) {
   return (
-    <section className="flex flex-col gap-1">
+    <section className="flex w-fit flex-col items-center gap-1">
       <h1 className="text-2xl">{name}</h1>
       <p className="font-geist-mono text-7xl text-primary">{value}</p>
     </section>

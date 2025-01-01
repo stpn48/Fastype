@@ -12,7 +12,7 @@ export function Toolbar() {
   useHandleText();
 
   return (
-    <div className="flex w-fit gap-2 rounded-lg bg-foreground/10 p-4 text-xs">
+    <div className="flex w-fit gap-2 rounded-lg bg-foreground/10 px-6 py-[14px] text-xs shadow-lg">
       {currMode === "random-words" && (
         <>
           <ToggleOptions />

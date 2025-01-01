@@ -19,6 +19,12 @@ export function useHandleKeydown(text: string, canTypeLock?: boolean) {
       if (e.key.length === 1 && e.code !== "Space") {
         setUserWords((prev) => {
           const newUserWords = [...prev];
+
+          // Ensure the current word exists
+          if (!newUserWords[currWordIndex]) {
+            newUserWords[currWordIndex] = ""; // Initialize the word if undefined
+          }
+
           newUserWords[currWordIndex] += e.key;
           return newUserWords;
         });
@@ -29,18 +35,17 @@ export function useHandleKeydown(text: string, canTypeLock?: boolean) {
 
       // backspace
       if (e.key === "Backspace") {
-        if (e.altKey) {
-          setUserWords((prev) => {
-            const newUserWords = [...prev];
-            newUserWords[currWordIndex] = "";
-            return newUserWords;
-          });
-
-          setCurrCharIndex(0);
-          return;
-        }
-
         if (currCharIndex > 0) {
+          if (e.altKey) {
+            setUserWords((prev) => {
+              const newUserWords = [...prev];
+              return newUserWords.slice(0, -1);
+            });
+
+            setCurrCharIndex(0);
+            return;
+          }
+
           setUserWords((prev) => {
             const newUserWords = [...prev];
             newUserWords[currWordIndex] = newUserWords[currWordIndex].slice(0, -1);
@@ -52,6 +57,14 @@ export function useHandleKeydown(text: string, canTypeLock?: boolean) {
         }
 
         if (currCharIndex === 0 && currWordIndex > 0 && hasMistake) {
+          if (e.altKey) {
+            setUserWords((prev) => prev.slice(0, -1));
+
+            setCurrWordIndex((prev) => Math.max(0, prev - 1)); // Ensure it doesn't go negative
+            setCurrCharIndex(0); // Reset character index
+            return;
+          }
+
           const prevUserWord = userWords[currWordIndex - 1];
 
           setUserWords((prev) => prev.slice(0, -1));

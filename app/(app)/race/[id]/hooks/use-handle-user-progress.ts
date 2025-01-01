@@ -34,7 +34,11 @@ export function useHandleUserProgress(text: string, userId?: string, raceId?: st
     }
 
     // if curr letter is not matching with the acctual letter increment total mistakes
-    if (currWord && currWord[currCharIndex - 1] !== currUserWord[currCharIndex - 1]) {
+    if (
+      currWord &&
+      currUserWord &&
+      currWord[currCharIndex - 1] !== currUserWord[currCharIndex - 1]
+    ) {
       setTotalMistakes((prev) => prev + 1);
     }
 

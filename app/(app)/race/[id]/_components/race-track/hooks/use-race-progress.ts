@@ -12,17 +12,17 @@ export function useRaceProgress(raceId: string, raceText: string, userId: string
   const [wpm, setWpm] = useState(0);
   const [userPlace, setUserPlace] = useState<number | null>(null);
 
-  const { raceStartedAt, currPlace, setCurrPlace } = useRaceStore();
-  const { setCanType } = useTypingFieldStore();
+  const { currPlace, setCurrPlace } = useRaceStore();
+  const { setCanType, startedTypingAt } = useTypingFieldStore();
 
   const handleRaceComplete = useCallback(async () => {
     setCanType(false);
-    const { error } = await handleRaceFinish(Date.now(), raceId);
+    const { error } = await handleRaceFinish(raceId, wpm);
 
     if (error) {
       toast.error(error);
     }
-  }, [userId, raceId]);
+  }, [userId, raceId, wpm]);
 
   useEffect(() => {
     if (raceProgress === 100) {
@@ -59,9 +59,8 @@ export function useRaceProgress(raceId: string, raceText: string, userId: string
           setRaceProgress(progress);
 
           // if the race has started, calculate the user's wpm
-          if (raceStartedAt !== null) {
-            const newWpm = calculateUserWpm(raceStartedAt, progress, raceText.split(" ").length);
-
+          if (startedTypingAt !== null) {
+            const newWpm = calculateUserWpm(startedTypingAt, progress, raceText.split(" ").length);
             setWpm(newWpm);
           }
         }
@@ -73,17 +72,19 @@ export function useRaceProgress(raceId: string, raceText: string, userId: string
       channel.unsubscribe();
       supabaseJsClient.removeChannel(channel);
     };
-  }, [userId, raceText, handleRaceComplete, raceStartedAt]);
+  }, [userId, raceText, handleRaceComplete, startedTypingAt]);
 
   return { raceProgress, wpm, userPlace };
 }
 
-function calculateUserWpm(raceStartedAt: string, progress: number, totalWords: number) {
-  const raceStartedAtDate = new Date(raceStartedAt + "Z");
+export function calculateUserWpm(raceStartedAt: string, progress: number, totalWords: number) {
+  const raceStartedAtDate = new Date(
+    raceStartedAt[raceStartedAt.length - 1] === "Z" ? raceStartedAt : `${raceStartedAt}Z`,
+  );
   const raceDurationSec = (Date.now() - raceStartedAtDate.getTime()) / 1000;
 
-  const wordsTyped = Math.round((progress / 100) * totalWords);
+  const lettersTyped = Math.round((progress / 100) * totalWords);
 
-  const wpm = Math.round((wordsTyped / raceDurationSec) * 60);
+  const wpm = Math.round((lettersTyped / raceDurationSec) * 60);
   return wpm;
 }

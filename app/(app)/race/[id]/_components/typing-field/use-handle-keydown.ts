@@ -15,6 +15,7 @@ export function useHandleKeydown(text: string) {
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
+      // letter
       if (e.key.length === 1 && e.code !== "Space") {
         setUserWords((prev) => {
           const newUserWords = [...prev];
@@ -26,6 +27,7 @@ export function useHandleKeydown(text: string) {
         return;
       }
 
+      // backspace
       if (e.key === "Backspace") {
         if (e.altKey) {
           setUserWords((prev) => {
@@ -62,6 +64,7 @@ export function useHandleKeydown(text: string) {
         return;
       }
 
+      // space
       if (e.code === "Space") {
         e.preventDefault();
         const realWord = text.split(" ")[currWordIndex];

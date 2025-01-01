@@ -2,6 +2,8 @@
 
 [x] - migrate to supabase auth
 [] - rework typing field design
+[] - fix cannont type after clicking play again in practice mode after completing a race
+[] - fix mistakes count not correct
 [] - show stats at the end of a race
 [] - rework practice mode
 [] - add options (include numbers, include special characters, include uppercase, include lowercase, code mode, quote mode)

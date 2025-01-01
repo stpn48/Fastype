@@ -2,7 +2,7 @@
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Caret } from "../[id]/_components/typing-field/caret";
 import { useHandleKeydown } from "../[id]/_components/typing-field/use-handle-keydown";
 import { Word } from "../[id]/_components/typing-field/word";
@@ -17,11 +17,17 @@ type Props = {
 const MemoWord = memo(Word);
 
 export function TypingField({ text, userId, raceId }: Props) {
-  const { currWordIndex, userWords, canType, hasMistake, isLoading } = useTypingFieldStore();
+  const { currWordIndex, userWords, canType, hasMistake, isLoading, resetTypingFieldStore } =
+    useTypingFieldStore();
 
   useHandleUserProgress(text, userId, raceId);
 
   useHandleKeydown(text);
+
+  // reset typing field store on mount to prevent leftover state
+  useEffect(() => {
+    resetTypingFieldStore();
+  }, [resetTypingFieldStore]);
 
   if (isLoading) {
     return (

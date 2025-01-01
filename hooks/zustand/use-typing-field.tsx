@@ -28,6 +28,12 @@ type TypingFieldStore = {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
 
+  totalMistakes: number;
+  setTotalMistakes: (mistakes: number | ((prev: number) => number)) => void;
+
+  startedTypingAt: string | null;
+  setStartedTypingAt: (startedAt: string | null | ((prev: string | null) => string | null)) => void;
+
   resetTypingFieldStore: () => void;
 };
 
@@ -69,8 +75,21 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
   isLoading: false,
   setIsLoading: (isLoading) => set({ isLoading }),
 
+  totalMistakes: 0,
+  setTotalMistakes: (mistakes) =>
+    set((state) => ({
+      totalMistakes: typeof mistakes === "function" ? mistakes(state.totalMistakes) : mistakes,
+    })),
+
+  startedTypingAt: null,
+  setStartedTypingAt: (startedAt) =>
+    set((state) => ({
+      startedTypingAt:
+        typeof startedAt === "function" ? startedAt(state.startedTypingAt) : startedAt,
+    })),
+
   resetTypingFieldStore: () =>
-    set({
+    set((state) => ({
       currWordIndex: 0,
       currCharIndex: 0,
       userWords: [""],
@@ -79,5 +98,7 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       userWpm: 0,
       userProgress: 0,
       isLoading: false,
-    }),
+      totalMistakes: 0,
+      startedTypingAt: null,
+    })),
 }));

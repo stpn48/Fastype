@@ -6,7 +6,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-export function useBroadcastUserProgress(userId: string, raceId: string) {
+export function useBroadcastUserProgress(userId?: string, raceId?: string) {
   const { userProgress } = useTypingFieldStore();
 
   const channel = useRef<RealtimeChannel | null>(null);
@@ -28,6 +28,9 @@ export function useBroadcastUserProgress(userId: string, raceId: string) {
   }, [raceId, channelSubscribed]);
 
   useEffect(() => {
+    // dont run in practice races
+    if (!userId || !raceId) return;
+
     // subscribe to channel if not subscribed
     if (!channelSubscribed || !channel.current) {
       subscribeToRaceChannel();

@@ -2,96 +2,60 @@
 
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
+import { TypingFieldMode } from "@/types/types";
+import { race_text_length } from "@prisma/client";
 
-export async function getRandomText(textType: "random-words" | "quote" | "normal-text") {
-  if (textType === "random-words") {
-    return "hello hello hello hello hello";
-    // setText(generateRandomWords(25));
-  }
+type Response = Promise<{
+  error?: string;
+  text?: string;
+}>;
 
+export async function getText(textType: TypingFieldMode, length: race_text_length): Response {
   if (textType === "quote") {
-    const [quote, fetchQuoteError] = await catchError(
-      prisma.race_text.aggregate({
-        where: {
-          type: "quote",
-        },
-        _count: {
-          id: true,
-        },
-      }),
-    );
-
-    if (fetchQuoteError) {
-      throw new Error(fetchQuoteError.message);
-    }
-
-    if (!quote || quote._count.id === 0) {
-      throw new Error("No quote found");
-    }
-
-    const randomIndex = Math.floor(Math.random() * quote._count.id);
-
-    const [randomQuote, fetchRandomQuoteError] = await catchError(
+    const [quotes, fetchQuotesError] = await catchError(
       prisma.race_text.findMany({
         where: {
           type: "quote",
+          length: length,
         },
-        skip: randomIndex,
-        take: 1,
       }),
     );
 
-    if (fetchRandomQuoteError) {
-      throw new Error(fetchRandomQuoteError.message);
+    if (fetchQuotesError) {
+      return { error: fetchQuotesError.message };
     }
 
-    if (!randomQuote || randomQuote.length === 0) {
-      throw new Error("No quote found");
+    if (!quotes || quotes.length === 0) {
+      return { error: "No quotes found" };
     }
 
-    return randomQuote[0].text;
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+
+    return { text: quotes[randomIndex].text };
   }
 
-  if (textType === "normal-text") {
-    const [normalText, fetchNormalTextError] = await catchError(
-      prisma.race_text.aggregate({
-        where: {
-          type: "text",
-        },
-        _count: {
-          id: true,
-        },
-      }),
-    );
-
-    if (fetchNormalTextError) {
-      throw new Error(fetchNormalTextError.message);
-    }
-
-    if (!normalText || normalText._count.id === 0) {
-      throw new Error("No normal text found");
-    }
-
-    const randomIndex = Math.floor(Math.random() * normalText._count.id);
-
-    const [randomNormalText, fetchRandomNormalTextError] = await catchError(
+  if (textType === "text") {
+    const [texts, fetchTextsError] = await catchError(
       prisma.race_text.findMany({
         where: {
           type: "text",
+          length: length,
         },
-        skip: randomIndex,
-        take: 1,
       }),
     );
 
-    if (fetchRandomNormalTextError) {
-      throw new Error(fetchRandomNormalTextError.message);
+    if (fetchTextsError) {
+      return { error: fetchTextsError.message };
     }
 
-    if (!randomNormalText || randomNormalText.length === 0) {
-      throw new Error("No normal text found");
+    if (!texts || texts.length === 0) {
+      return { error: "No texts found" };
     }
 
-    return randomNormalText[0].text;
+    const randomIndex = Math.floor(Math.random() * texts.length);
+
+    return { text: texts[randomIndex].text };
   }
+
+  return { error: "Invalid text type" };
 }

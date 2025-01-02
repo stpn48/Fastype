@@ -1,15 +1,16 @@
-import { getUser } from "@/server/queries";
-import { redirect } from "next/navigation";
-import { PracticeRaceCore } from "./practice-race-core";
+import { Metadata } from "next";
+import { ToolbarProvider } from "./hooks/use-toolbar";
+import PracticeRacePageCore from "./practice-page-core";
 
-type Props = {};
+export const metadata: Metadata = {
+  title: "fastype - Practice",
+  description: "Practice typing with fastype.",
+};
 
-export default async function PracticeRacePage({}: Props) {
-  const user = await getUser();
-
-  if (!user) {
-    redirect("/home");
-  }
-
-  return <PracticeRaceCore />;
+export default function PracticeRacePage() {
+  return (
+    <ToolbarProvider>
+      <PracticeRacePageCore />
+    </ToolbarProvider>
+  );
 }

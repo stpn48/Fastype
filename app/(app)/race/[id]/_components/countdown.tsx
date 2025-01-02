@@ -1,6 +1,6 @@
 "use client";
 
-import { updateRaceStartedAt } from "@/app/actions/update-race-started-at";
+import { updateRaceStartedAt } from "@/app/actions/update-rece-started-at";
 import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { race_type } from "@prisma/client";

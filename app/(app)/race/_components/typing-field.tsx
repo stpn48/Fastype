@@ -2,7 +2,7 @@
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Caret } from "../[id]/_components/typing-field/caret";
 import { useHandleKeydown } from "../[id]/_components/typing-field/use-handle-keydown";
 import { Word } from "../[id]/_components/typing-field/word";
@@ -17,21 +17,44 @@ type Props = {
 const MemoWord = memo(Word);
 
 export function TypingField({ text, userId, raceId }: Props) {
-  const { currWordIndex, userWords, canType, hasMistake } = useTypingFieldStore();
+  const {
+    currWordIndex,
+    userWords,
+    canType,
+    hasMistake,
+    isLoading,
+    resetTypingFieldStore,
+    isTyping,
+  } = useTypingFieldStore();
 
   useHandleUserProgress(text, userId, raceId);
 
   useHandleKeydown(text);
 
+  // reset typing field store on mount to prevent leftover state
+  useEffect(() => {
+    resetTypingFieldStore();
+  }, [resetTypingFieldStore]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full w-full flex-col gap-4 rounded-lg border border-border p-6">
+        <div className="h-[18px] w-full animate-pulse rounded-sm bg-secondary" />
+        <div className="h-[18px] w-full animate-pulse rounded-sm bg-secondary" />
+        <div className="h-[18px] w-[60%] animate-pulse rounded-sm bg-secondary" />
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(
-        "relative flex w-full flex-wrap gap-2 rounded-lg border border-border p-6 font-geist-mono text-xl text-muted-foreground",
+        "relative flex w-full flex-wrap gap-2 rounded-lg border border-border p-6 font-geist-mono text-xl text-muted-foreground shadow-lg",
         !canType && "cursor-not-allowed opacity-30",
         hasMistake && "border-red-500",
       )}
     >
-      <Caret />
+      {isTyping && <Caret />}
 
       {text.split(" ").map((word, wordIndex) => (
         <MemoWord

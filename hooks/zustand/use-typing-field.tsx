@@ -25,6 +25,18 @@ type TypingFieldStore = {
   text: string;
   setText: (text: string) => void;
 
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+
+  totalMistakes: number;
+  setTotalMistakes: (mistakes: number | ((prev: number) => number)) => void;
+
+  startedTypingAt: string | null;
+  setStartedTypingAt: (startedAt: string | null | ((prev: string | null) => string | null)) => void;
+
+  isTyping: boolean;
+  setIsTyping: (isTyping: boolean) => void;
+
   resetTypingFieldStore: () => void;
 };
 
@@ -63,6 +75,25 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
   text: "",
   setText: (text) => set({ text }),
 
+  isLoading: false,
+  setIsLoading: (isLoading) => set({ isLoading }),
+
+  totalMistakes: 0,
+  setTotalMistakes: (mistakes) =>
+    set((state) => ({
+      totalMistakes: typeof mistakes === "function" ? mistakes(state.totalMistakes) : mistakes,
+    })),
+
+  startedTypingAt: null,
+  setStartedTypingAt: (startedAt) =>
+    set((state) => ({
+      startedTypingAt:
+        typeof startedAt === "function" ? startedAt(state.startedTypingAt) : startedAt,
+    })),
+
+  isTyping: false,
+  setIsTyping: (isTyping) => set({ isTyping }),
+
   resetTypingFieldStore: () =>
     set({
       currWordIndex: 0,
@@ -72,5 +103,9 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       hasMistake: false,
       userWpm: 0,
       userProgress: 0,
+      isLoading: false,
+      totalMistakes: 0,
+      startedTypingAt: null,
+      isTyping: false,
     }),
 }));

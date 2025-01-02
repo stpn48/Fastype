@@ -16,7 +16,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value));
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({
             request,
           });
@@ -37,6 +37,7 @@ export async function updateSession(request: NextRequest) {
 
   // no user, not on sign-in page, go to sign-in page
   if (!user && !request.nextUrl.pathname.startsWith("/sign-in")) {
+    console.log("no user, not on sign-in page, go to sign-in page");
     const url = request.nextUrl.clone();
     url.pathname = "/sign-in";
     return NextResponse.redirect(url);
@@ -44,6 +45,7 @@ export async function updateSession(request: NextRequest) {
 
   // user, does't have username, is not on sign-in/new-username page, go to new-username page
   if (user && !user.username && !request.nextUrl.pathname.startsWith("/sign-in/new-username")) {
+    console.log("user logged in, doesnt have username, is not on new-username page");
     const url = request.nextUrl.clone();
     url.pathname = "/sign-in/new-username";
     return NextResponse.redirect(url);
@@ -51,6 +53,7 @@ export async function updateSession(request: NextRequest) {
 
   // user, has username already, trying to go on sign-in page, go to home page
   if (user && user.username && request.nextUrl.pathname.startsWith("/sign-in")) {
+    console.log("user logged in, has username, trying to go on sign-in page, go to home page");
     const url = request.nextUrl.clone();
     url.pathname = "/home";
     return NextResponse.redirect(url);

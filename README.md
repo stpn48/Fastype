@@ -1,9 +1,11 @@
 ## TASKS
 
-[x] - migrate to supabase auth
+[] - fix text generation in public race !!!
+[] - fix themes
+[] - implement custom random word count in practice mode
+[] - rework homepage design
+[] - add typing field settings to change font, font size, caret movement and other (save it to user config in the db)
 [] - rework typing field design
-[] - show stats at the end of a race
-[] - rework practice mode
-[] - add options (include numbers, include special characters, include uppercase, include lowercase, code mode, quote mode)
+[] - fix activity chart not mobile friendly
 [] - add leaderboards
 [] - profile settings, change username, change avatar, email, change password

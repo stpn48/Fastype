@@ -1,5 +1,7 @@
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
+
+const INACTIVITY_TIMEOUT = 750;
 
 export function useHandleKeydown(text: string) {
   const {
@@ -11,13 +13,32 @@ export function useHandleKeydown(text: string) {
     setUserWords,
     canType,
     hasMistake,
+    setIsTyping,
   } = useTypingFieldStore();
+
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
+      // logic to handle isTyping
+      if (e.key.length === 1 || e.key === "Backspace" || e.code === "Space") {
+        setIsTyping(true);
+
+        // Clear any existing timeout when a key is pressed
+        if (typingTimeoutRef.current) {
+          clearTimeout(typingTimeoutRef.current);
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+          setIsTyping(false);
+        }, INACTIVITY_TIMEOUT);
+      }
+
+      // Handle key logic (letters, backspace, space)
       if (e.key.length === 1 && e.code !== "Space") {
         setUserWords((prev) => {
           const newUserWords = [...prev];
+          if (!newUserWords[currWordIndex]) newUserWords[currWordIndex] = "";
           newUserWords[currWordIndex] += e.key;
           return newUserWords;
         });
@@ -27,17 +48,6 @@ export function useHandleKeydown(text: string) {
       }
 
       if (e.key === "Backspace") {
-        if (e.altKey) {
-          setUserWords((prev) => {
-            const newUserWords = [...prev];
-            newUserWords[currWordIndex] = "";
-            return newUserWords;
-          });
-
-          setCurrCharIndex(0);
-          return;
-        }
-
         if (currCharIndex > 0) {
           setUserWords((prev) => {
             const newUserWords = [...prev];
@@ -46,19 +56,12 @@ export function useHandleKeydown(text: string) {
           });
 
           setCurrCharIndex((prev) => prev - 1);
-          return;
-        }
-
-        if (currCharIndex === 0 && currWordIndex > 0 && hasMistake) {
+        } else if (currCharIndex === 0 && currWordIndex > 0 && hasMistake) {
           const prevUserWord = userWords[currWordIndex - 1];
-
           setUserWords((prev) => prev.slice(0, -1));
           setCurrWordIndex((prev) => prev - 1);
           setCurrCharIndex(prevUserWord.length);
-
-          return;
         }
-
         return;
       }
 
@@ -79,9 +82,15 @@ export function useHandleKeydown(text: string) {
     if (!canType) return;
 
     window.addEventListener("keydown", handleKeydown);
-
     return () => {
       window.removeEventListener("keydown", handleKeydown);
     };
   }, [handleKeydown, canType]);
+
+  // Clear timeout when the component unmounts
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    };
+  }, []);
 }

@@ -34,6 +34,9 @@ type TypingFieldStore = {
   startedTypingAt: string | null;
   setStartedTypingAt: (startedAt: string | null | ((prev: string | null) => string | null)) => void;
 
+  isTyping: boolean;
+  setIsTyping: (isTyping: boolean) => void;
+
   resetTypingFieldStore: () => void;
 };
 
@@ -88,6 +91,9 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
         typeof startedAt === "function" ? startedAt(state.startedTypingAt) : startedAt,
     })),
 
+  isTyping: false,
+  setIsTyping: (isTyping) => set({ isTyping }),
+
   resetTypingFieldStore: () =>
     set({
       currWordIndex: 0,
@@ -100,5 +106,6 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       isLoading: false,
       totalMistakes: 0,
       startedTypingAt: null,
+      isTyping: false,
     }),
 }));

@@ -2,7 +2,6 @@
 
 import { TypingField } from "@/app/(app)/race/_components/typing-field";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { RegenerateTextButton } from "./_components/regenerate-text-button";
 import { ResultsDialog } from "./_components/results-dialog";
 import { Toolbar } from "./_components/toolbar/toolbar";
 import { useHandleRaceComplete } from "./hooks/use-handle-race-complete";

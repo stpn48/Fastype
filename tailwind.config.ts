@@ -9,6 +9,9 @@ export default {
   ],
   theme: {
     extend: {
+      transitionDuration: {
+        "400": "400ms",
+      },
       fontFamily: {
         "geist-sans": ["var(--font-geist-sans)"],
         "geist-mono": ["var(--font-geist-mono)"],

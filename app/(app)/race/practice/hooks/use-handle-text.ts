@@ -1,8 +1,8 @@
 "use client";
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { useEffect } from "react";
-import { generateNewText } from "../utils/generate-new-text";
+import { useCallback, useEffect } from "react";
+import { generateNewText as generateNewTextAction } from "../utils/generate-new-text";
 import { generateRandomWords } from "../utils/generate-random-words";
 import { useToolbar } from "./use-toolbar";
 
@@ -10,24 +10,28 @@ export function useHandleText(raceCompleted: boolean) {
   const { setText, resetTypingFieldStore, setIsLoading, setCanType } = useTypingFieldStore();
   const { currMode, textLength, randomWordsCount, includeNumbers, includeSymbols } = useToolbar();
 
-  useEffect(() => {
-    if (raceCompleted) return;
-
-    resetTypingFieldStore();
-    setCanType(true);
-
+  const generateNewText = useCallback(async () => {
     if (currMode === "random-words") {
       const randomWords = generateRandomWords(randomWordsCount, includeNumbers, includeSymbols);
       setText(randomWords);
       return;
     }
 
-    (async () => {
-      const text = await generateNewText(currMode, textLength, setIsLoading);
+    const text = await generateNewTextAction(currMode, textLength, setIsLoading);
 
-      if (!text) return;
+    if (!text) return;
 
-      setText(text);
-    })();
-  }, [raceCompleted, currMode, textLength, randomWordsCount, includeNumbers, includeSymbols]);
+    setText(text);
+  }, [currMode, textLength, randomWordsCount, includeNumbers, includeSymbols]);
+
+  useEffect(() => {
+    if (raceCompleted) return;
+
+    resetTypingFieldStore();
+    setCanType(true);
+
+    generateNewText();
+  }, [raceCompleted, generateNewText]);
+
+  return { generateNewText };
 }

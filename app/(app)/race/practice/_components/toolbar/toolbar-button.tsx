@@ -14,7 +14,7 @@ export function ToolbarButton({ className, isActive, ...props }: Props) {
       className={twMerge(
         "flex items-center gap-1 text-foreground/60 hover:text-foreground",
         className,
-        isActive && "text-foreground",
+        isActive && "text-primary",
       )}
       {...props}
     >

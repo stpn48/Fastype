@@ -9,12 +9,12 @@ export function ToggleOptions() {
     useToolbar();
 
   return (
-    <section className="flex gap-2">
+    <section className="flex gap-4">
       <ToolbarButton
         isActive={includeSymbols || false}
         onClick={() => updateIncludeSymbols((prev) => !prev)}
       >
-        <AtSign className="size-3" />
+        <AtSign className="size-4" />
         <span>punctuation</span>
       </ToolbarButton>
 
@@ -22,7 +22,7 @@ export function ToggleOptions() {
         isActive={includeNumbers || false}
         onClick={() => updateIncludeNumbers((prev) => !prev)}
       >
-        <Hash className="size-3" />
+        <Hash className="size-4" />
         <span>numbers</span>
       </ToolbarButton>
     </section>

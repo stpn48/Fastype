@@ -1,7 +1,7 @@
 "use client";
 
-import { race_text_length } from "@prisma/client";
 import { useToolbar } from "@/app/(app)/race/practice/hooks/use-toolbar";
+import { race_text_length } from "@prisma/client";
 import { ToolbarButton } from "./toolbar-button";
 
 const randomWordsOptions = [25, 50, 100];
@@ -13,7 +13,7 @@ export function TextLengthOptions() {
 
   if (currMode === "quote" || currMode === "text") {
     return (
-      <section className="flex gap-2">
+      <section className="flex gap-6">
         {textLengthOptions.map((option) => (
           <ToolbarButton
             key={option}

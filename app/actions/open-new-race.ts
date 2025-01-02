@@ -3,7 +3,9 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
-import { race, race_type } from "@prisma/client";
+import { TypingFieldMode } from "@/types/types";
+import { race, race_text_length, race_type } from "@prisma/client";
+import { getText } from "./get-random-text";
 
 type Response = {
   error: string | null;
@@ -40,8 +42,22 @@ export async function openNewRace(raceType: race_type): Promise<Response> {
     }
   }
 
-  // generate text TODO:
-  const raceText = "prdel prdel prdel predel";
+  // generate text (choose random mode, and random length)
+  const lengthChoices: Exclude<race_text_length[], "short"> = ["medium", "long"];
+  const modeChoices: Exclude<TypingFieldMode, "random-words">[] = ["text", "quote"];
+
+  // Generate random indices
+  const modeChoice = Math.floor(Math.random() * modeChoices.length);
+  const lengthChoice = Math.floor(Math.random() * lengthChoices.length);
+
+  const { error: getTextError, text: raceText } = await getText(
+    modeChoices[modeChoice],
+    lengthChoices[lengthChoice],
+  );
+
+  if (getTextError) {
+    return { error: getTextError, race: null };
+  }
 
   if (!raceText) {
     return { error: "Unexpected error generating race text", race: null };

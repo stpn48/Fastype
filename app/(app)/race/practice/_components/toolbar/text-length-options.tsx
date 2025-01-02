@@ -2,9 +2,10 @@
 
 import { useToolbar } from "@/app/(app)/race/practice/hooks/use-toolbar";
 import { race_text_length } from "@prisma/client";
+import { ChooseCustomWordCountDialog } from "./choose-custom-word-count-dialog";
 import { ToolbarButton } from "./toolbar-button";
 
-const randomWordsOptions = [25, 50, 100];
+const randomWordsOptions = [10, 25, 50];
 const textLengthOptions: race_text_length[] = ["short", "medium", "long"];
 
 export function TextLengthOptions() {
@@ -40,7 +41,8 @@ export function TextLengthOptions() {
             {count}
           </ToolbarButton>
         ))}
-        <ToolbarButton>Custom</ToolbarButton>
+
+        <ChooseCustomWordCountDialog />
       </section>
     );
   }

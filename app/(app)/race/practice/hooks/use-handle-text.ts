@@ -6,13 +6,21 @@ import { generateNewText as generateNewTextAction } from "../utils/generate-new-
 import { generateRandomWords } from "../utils/generate-random-words";
 import { useToolbar } from "./use-toolbar";
 
+const MAXIMUM_RANDOM_WORDS_COUNT = 10000;
+
 export function useHandleText(raceCompleted: boolean) {
   const { setText, resetTypingFieldStore, setIsLoading, setCanType } = useTypingFieldStore();
   const { currMode, textLength, randomWordsCount, includeNumbers, includeSymbols } = useToolbar();
 
   const generateNewText = useCallback(async () => {
     if (currMode === "random-words") {
-      const randomWords = generateRandomWords(randomWordsCount, includeNumbers, includeSymbols);
+      let wordCount = randomWordsCount;
+
+      if (wordCount > MAXIMUM_RANDOM_WORDS_COUNT) {
+        wordCount = MAXIMUM_RANDOM_WORDS_COUNT;
+      }
+
+      const randomWords = generateRandomWords(wordCount, includeNumbers, includeSymbols);
       setText(randomWords);
       return;
     }

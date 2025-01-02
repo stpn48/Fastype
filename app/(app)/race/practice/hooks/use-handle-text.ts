@@ -1,16 +1,20 @@
-import { getText } from "@/app/actions/get-random-text";
+"use client";
+
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useEffect } from "react";
-import { toast } from "sonner";
+import { generateNewText } from "../utils/generate-new-text";
 import { generateRandomWords } from "../utils/generate-random-words";
 import { useToolbar } from "./use-toolbar";
 
-export function useHandleText() {
-  const { setText, resetTypingFieldStore, setIsLoading } = useTypingFieldStore();
+export function useHandleText(raceCompleted: boolean) {
+  const { setText, resetTypingFieldStore, setIsLoading, setCanType } = useTypingFieldStore();
   const { currMode, textLength, randomWordsCount, includeNumbers, includeSymbols } = useToolbar();
 
   useEffect(() => {
+    if (raceCompleted) return;
+
     resetTypingFieldStore();
+    setCanType(true);
 
     if (currMode === "random-words") {
       const randomWords = generateRandomWords(randomWordsCount, includeNumbers, includeSymbols);
@@ -18,24 +22,12 @@ export function useHandleText() {
       return;
     }
 
-    const generateNewText = async () => {
-      setIsLoading(true);
-      const { text, error } = await getText(currMode, textLength);
-      setIsLoading(false);
+    (async () => {
+      const text = await generateNewText(currMode, textLength, setIsLoading);
 
-      if (error) {
-        toast.error(error);
-        return;
-      }
-
-      if (!text) {
-        toast.error("Failed to generate text");
-        return;
-      }
+      if (!text) return;
 
       setText(text);
-    };
-
-    generateNewText();
-  }, [currMode, textLength, randomWordsCount, includeNumbers, includeSymbols, setIsLoading]);
+    })();
+  }, [raceCompleted, currMode, textLength, randomWordsCount, includeNumbers, includeSymbols]);
 }

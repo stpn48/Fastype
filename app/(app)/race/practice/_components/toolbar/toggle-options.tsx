@@ -1,18 +1,18 @@
 "use client";
 
-import { AtSign, Hash } from "lucide-react";
 import { useToolbar } from "@/app/(app)/race/practice/hooks/use-toolbar";
+import { AtSign, Hash } from "lucide-react";
 import { ToolbarButton } from "./toolbar-button";
 
 export function ToggleOptions() {
-  const { includeSymbols, includeNumbers, updateIncludeSymbolstuation, updateIncludeNumbers } =
+  const { includeSymbols, includeNumbers, updateIncludeSymbols, updateIncludeNumbers } =
     useToolbar();
 
   return (
     <section className="flex gap-2">
       <ToolbarButton
         isActive={includeSymbols || false}
-        onClick={() => updateIncludeSymbolstuation((prev) => !prev)}
+        onClick={() => updateIncludeSymbols((prev) => !prev)}
       >
         <AtSign className="size-3" />
         <span>punctuation</span>

@@ -15,9 +15,7 @@ type ToolbarContextType = {
   updateCurrMode: (newMode: TypingFieldMode) => void;
   updateRandomWordsCount: (newCount: number) => void;
   updateTextLength: (newLength: race_text_length) => void;
-  updateIncludeSymbolstuation: (
-    newIncludePunctuation: boolean | ((prev: boolean) => boolean),
-  ) => void;
+  updateIncludeSymbols: (newIncludePunctuation: boolean | ((prev: boolean) => boolean)) => void;
   updateIncludeNumbers: (newIncludeNumbers: boolean | ((prev: boolean) => boolean)) => void;
 };
 
@@ -69,7 +67,7 @@ export function ToolbarProvider({ children }: PropsWithChildren) {
     [setTextLength],
   );
 
-  const updateIncludeSymbolstuation = useCallback(
+  const updateIncludeSymbols = useCallback(
     (newIncludePunctuation: boolean | ((prev: boolean) => boolean)) => {
       setIncludeSymbols(newIncludePunctuation);
     },
@@ -94,7 +92,7 @@ export function ToolbarProvider({ children }: PropsWithChildren) {
 
       updateRandomWordsCount,
       updateTextLength,
-      updateIncludeSymbolstuation,
+      updateIncludeSymbols,
       updateIncludeNumbers,
     };
   }, [
@@ -106,7 +104,7 @@ export function ToolbarProvider({ children }: PropsWithChildren) {
     updateCurrMode,
     updateRandomWordsCount,
     updateTextLength,
-    updateIncludeSymbolstuation,
+    updateIncludeSymbols,
     updateIncludeNumbers,
   ]);
 

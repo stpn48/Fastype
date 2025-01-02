@@ -10,7 +10,10 @@ type Response = Promise<{
   text?: string;
 }>;
 
-export async function getText(textType: TypingFieldMode, length: race_text_length): Response {
+export async function getText(
+  textType: Exclude<TypingFieldMode, "random-words">,
+  length: race_text_length,
+): Response {
   if (textType === "quote") {
     const [quotes, fetchQuotesError] = await catchError(
       prisma.race_text.findMany({

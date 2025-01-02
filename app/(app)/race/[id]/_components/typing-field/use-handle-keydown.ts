@@ -1,7 +1,7 @@
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useCallback, useEffect } from "react";
 
-export function useHandleKeydown(text: string, canTypeLock?: boolean) {
+export function useHandleKeydown(text: string) {
   const {
     currWordIndex,
     setCurrWordIndex,
@@ -92,7 +92,7 @@ export function useHandleKeydown(text: string, canTypeLock?: boolean) {
   );
 
   useEffect(() => {
-    if (!canType && !canTypeLock) return;
+    if (!canType) return;
 
     window.addEventListener("keydown", handleKeydown);
 

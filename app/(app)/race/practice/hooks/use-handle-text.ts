@@ -1,17 +1,15 @@
 import { getText } from "@/app/actions/get-random-text";
-import { useEffect } from "react";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { useToolbar } from "./use-toolbar";
+import { useEffect } from "react";
 import { toast } from "sonner";
-import { generateRandomWords } from "../utils/generateRandomWords";
+import { generateRandomWords } from "../utils/generate-random-words";
+import { useToolbar } from "./use-toolbar";
 
 export function useHandleText() {
   const { setText, resetTypingFieldStore, setIsLoading } = useTypingFieldStore();
   const { currMode, textLength, randomWordsCount, includeNumbers, includeSymbols } = useToolbar();
 
   useEffect(() => {
-    if (!currMode) return;
-
     resetTypingFieldStore();
 
     if (currMode === "random-words") {
@@ -39,5 +37,5 @@ export function useHandleText() {
     };
 
     generateNewText();
-  }, [currMode, textLength, randomWordsCount, includeNumbers, includeSymbols]);
+  }, [currMode, textLength, randomWordsCount, includeNumbers, includeSymbols, setIsLoading]);
 }

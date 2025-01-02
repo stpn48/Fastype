@@ -1,7 +1,7 @@
 "use client";
 
-import symbols from "@/public/symbols.json";
 import { shuffleArray } from "@/lib/utils";
+import symbols from "@/public/symbols.json";
 import { generate } from "random-words";
 
 const NUMBER_RATIO = 4;

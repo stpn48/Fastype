@@ -12,18 +12,17 @@ type Props = {
   text: string;
   userId?: string;
   raceId?: string;
-  canTypeLock?: boolean;
 };
 
 const MemoWord = memo(Word);
 
-export function TypingField({ text, userId, raceId, canTypeLock }: Props) {
+export function TypingField({ text, userId, raceId }: Props) {
   const { currWordIndex, userWords, canType, hasMistake, isLoading, resetTypingFieldStore } =
     useTypingFieldStore();
 
   useHandleUserProgress(text, userId, raceId);
 
-  useHandleKeydown(text, canTypeLock);
+  useHandleKeydown(text);
 
   // reset typing field store on mount to prevent leftover state
   useEffect(() => {
@@ -44,7 +43,7 @@ export function TypingField({ text, userId, raceId, canTypeLock }: Props) {
     <div
       className={cn(
         "relative flex w-full flex-wrap gap-2 rounded-lg border border-border p-6 font-geist-mono text-xl text-muted-foreground shadow-lg",
-        !canType && !canTypeLock && "cursor-not-allowed opacity-30",
+        !canType  && "cursor-not-allowed opacity-30",
         hasMistake && "border-red-500",
       )}
     >

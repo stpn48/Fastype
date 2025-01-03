@@ -19,7 +19,6 @@ export default async function ProfilePage({ params }: Props) {
   return (
     <div className="flex flex-1 flex-col gap-10 p-10">
       <MainStats userDetails={userDetails} />
-
       <ActivityGraph />
       <ImprovementChart raceHistory={userDetails.race_history} />
     </div>

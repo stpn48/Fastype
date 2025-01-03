@@ -1,9 +1,11 @@
 import { SignedIn } from "@/components/signed-in";
 import { SignedOut } from "@/components/signed-out";
 import { Button } from "@/components/ui/button";
+import { Trophy } from "lucide-react";
 import Link from "next/link";
 import { SearchUsersDialog } from "./search-users-dialog";
 import { UserDropdown } from "./user-dropdown/user-dropdown";
+import { UserSearch } from "./user-search";
 
 export async function Navbar() {
   return (
@@ -11,12 +13,16 @@ export async function Navbar() {
       <Link href={"/home"}>
         <h1 className="text-xs font-bold">FASTYPE</h1>
       </Link>
-      <div className="flex-1" />
+
+      <div className="flex-1"></div>
 
       <SignedIn>
+        <UserSearch />
         <div className="flex items-center gap-4">
           <SearchUsersDialog />
-
+          <Link href={"/leaderboards"}>
+            <Trophy className="size-4" />
+          </Link>
           <UserDropdown />
         </div>
       </SignedIn>

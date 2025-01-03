@@ -16,22 +16,28 @@ export default function UsernameForm() {
   const router = useRouter();
 
   const handleUsernameSubmit = useCallback(
-    async (formData: FormData) => {
-      setIsLoading(true);
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.currentTarget);
       const username = formData.get("username") as string;
 
-      const { error } = await changeUserUsername(username);
+      try {
+        const { error } = await changeUserUsername(username);
 
-      if (error) {
-        setErrorMsg(error);
-        toast.error(error);
+        if (error) {
+          setErrorMsg(error);
+          toast.error(error);
+          return;
+        }
+
+        router.push("/home");
+      } catch (err) {
+        console.error(err);
+        toast.error("An unexpected error occurred.");
+      } finally {
         setIsLoading(false);
-        return;
       }
-
-      setIsLoading(false);
-
-      router.push("/home");
     },
     [router],
   );
@@ -46,7 +52,7 @@ export default function UsernameForm() {
   }, [errorMsg]);
 
   return (
-    <form className="flex w-full flex-col items-center gap-4" action={handleUsernameSubmit}>
+    <form className="flex w-full flex-col items-center gap-4" onSubmit={handleUsernameSubmit}>
       <div className="flex w-full flex-col items-center gap-1">
         <Input
           className={clsx("w-[80%]", errorMsg && "border-red-500")}

@@ -2,26 +2,29 @@
 
 import { getUsersByQuery } from "@/app/actions/get-users-by-query";
 import { Input } from "@/components/ui/input";
+import clsx from "clsx";
+import { Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type UserSuggestion = {
   id: string;
-  username: string;
+  username: string | null;
 };
 
-type Props = {
-  closeDialog: () => void;
-};
+export function UserSearch() {
+  const [isSearching, setIsSearching] = useState(false);
 
-export function UserSearch({ closeDialog }: Props) {
   const [query, setQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<UserSuggestion[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
+      setIsLoading(true);
       const { error, users } = await getUsersByQuery(query);
+      setIsLoading(false);
 
       if (error) {
         toast.error(error);
@@ -32,12 +35,8 @@ export function UserSearch({ closeDialog }: Props) {
         return;
       }
 
-      const userSuggestions = users.map((user) => {
-        return { id: user.id, username: user.username };
-      });
-
       // Store current suggestions as previous before updating
-      setSuggestions(userSuggestions);
+      setSuggestions(users);
     };
 
     if (!query) {
@@ -49,23 +48,50 @@ export function UserSearch({ closeDialog }: Props) {
   }, [query]);
 
   return (
-    <div className="flex flex-col gap-2">
-      <Input placeholder="Search for user by username" onChange={(e) => setQuery(e.target.value)} />
+    <>
+      <button onClick={() => setIsSearching(!isSearching)}>
+        <Search className="size-4" />
+      </button>
 
-      {suggestions.length > 0 && (
-        <section className="flex flex-col gap-2 rounded-lg border border-border">
-          {suggestions.map((suggestion) => (
-            <Link
-              onClick={closeDialog}
-              className="flex items-center p-2 first:rounded-t-lg last:rounded-b-lg hover:bg-secondary"
-              href={`/profile/${suggestion.id}`}
-              key={suggestion.id}
-            >
-              {suggestion.username}
-            </Link>
-          ))}
-        </section>
+      {isSearching && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 z-10 h-screen w-screen bg-transparent"
+            onClick={() => setIsSearching(false)}
+          />
+
+          {/* Search dialog */}
+          <div className="fixed left-[50%] top-2 z-10 flex -translate-x-[50%] flex-col">
+            {/* Search input */}
+            <Input
+              autoFocus
+              placeholder="Search for user by username"
+              onChange={(e) => setQuery(e.target.value)}
+              className="z-10 w-full max-w-[350px] rounded-b-none bg-background px-4 py-1"
+            />
+
+            {/* Suggestions */}
+            {suggestions.length > 0 && (
+              <section className="flex flex-col rounded-lg rounded-t-none border border-t-0 border-border bg-background">
+                {suggestions.map((suggestion) => (
+                  <Link
+                    onClick={() => setIsSearching(false)}
+                    className={clsx(
+                      "flex items-center p-2 last:rounded-b-lg hover:bg-secondary",
+                      isLoading && "pointer-events-none opacity-50",
+                    )}
+                    href={`/profile/${suggestion.id}`}
+                    key={suggestion.id}
+                  >
+                    {suggestion.username}
+                  </Link>
+                ))}
+              </section>
+            )}
+          </div>
+        </>
       )}
-    </div>
+    </>
   );
 }

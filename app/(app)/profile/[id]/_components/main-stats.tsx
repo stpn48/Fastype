@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { stats, user } from "@prisma/client";
 
 type Props = {
@@ -12,11 +13,13 @@ export function MainStats({ userDetails }: Props) {
   return (
     <div className="flex h-[300px] w-full items-center gap-4 rounded-lg border px-10">
       <section className="flex flex-col items-center justify-center gap-6 md:flex-row">
-        <img
-          className="size-[100px] rounded-full"
-          src={userDetails.image_url || ""}
-          alt="user-image"
-        />
+        <Avatar className="size-[100px]">
+          <AvatarImage src={userDetails.image_url} />
+          <AvatarFallback>
+            {userDetails.username?.charAt(0).toUpperCase() ?? "U"}
+            {userDetails.username?.charAt(0).toUpperCase() ?? "N"}
+          </AvatarFallback>
+        </Avatar>
         <div className="flex flex-col items-center gap-1">
           <h2>{userDetails.username}</h2>
         </div>

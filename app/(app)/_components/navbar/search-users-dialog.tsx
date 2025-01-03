@@ -16,9 +16,7 @@ export function SearchUsersDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Search className="size-4" />
-      </DialogTrigger>
+      <DialogTrigger></DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Search For Users</DialogTitle>

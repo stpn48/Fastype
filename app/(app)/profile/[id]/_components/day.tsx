@@ -16,7 +16,9 @@ export function Day({ activity, day }: Props) {
           <div className={cn("h-full w-full", color)} />
         </TooltipTrigger>
         <TooltipContent className="flex flex-col gap-2 text-center">
-          <span>{activity} races</span>
+          <span>
+            {activity} {activity === 1 ? "race" : "races"}{" "}
+          </span>
           <span>{day}</span>
         </TooltipContent>
       </Tooltip>

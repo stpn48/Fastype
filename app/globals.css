@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  .light {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --muted: 240 4.8% 95.9%;
@@ -84,6 +84,7 @@
     --chart-4: 210 16% 18%;
     --chart-5: 204 103% 49.02%;
   }
+
   .rose {
     --background: 20 14.3% 4.1%;
     --foreground: 0 0% 95%;

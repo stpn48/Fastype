@@ -12,8 +12,8 @@ export function Day({ activity, day }: Props) {
   return (
     <TooltipProvider delayDuration={0.5}>
       <Tooltip>
-        <TooltipTrigger className="cursor-default" asChild>
-          <div className={cn("size-4", color)} />
+        <TooltipTrigger className={cn("size-[3px] cursor-default sm:size-1 md:size-2 lg:size-4")}>
+          <div className={cn("h-full w-full", color)} />
         </TooltipTrigger>
         <TooltipContent className="flex flex-col gap-2 text-center">
           <span>{activity} races</span>

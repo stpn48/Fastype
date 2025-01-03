@@ -36,7 +36,7 @@ export function RaceUpdatesListener({ raceId }: Props) {
       const { started_at, status, type } = payload.new;
 
       // check if race is not solo, has not started yet and is closed, if so, set countdown to 5 (start the race)
-      if (type === "public" && status === "closed" && !started_at) {
+      if (status === "closed" && !started_at) {
         toast.dismiss();
         setCountdown(5);
       }

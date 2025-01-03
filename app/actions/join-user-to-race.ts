@@ -11,29 +11,16 @@ export async function joinUserToRace(raceId: string) {
     return { error: "User not found" };
   }
 
-  const [race, error] = await catchError(
+  const [, error] = await catchError(
     prisma.race.update({
       where: {
         id: raceId,
       },
       data: {
-        type: "private",
-        avgWpm: 0,
+        updated_at: new Date(),
         users: {
           connect: {
             id: user.id,
-          },
-        },
-      },
-      include: {
-        users: {
-          select: {
-            id: true,
-            clerkId: true,
-            username: true,
-            imageUrl: true,
-            firstName: true,
-            lastName: true,
           },
         },
       },
@@ -41,8 +28,8 @@ export async function joinUserToRace(raceId: string) {
   );
 
   if (error) {
-    return { error: error.message, race: null };
+    return { error: error.message };
   }
 
-  return { error: null, race };
+  return { error: null };
 }

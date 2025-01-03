@@ -11,15 +11,10 @@ export function useJoinUserToPrivateRace(raceDetails: race, userId: string) {
   const { raceUsers } = useRaceStore();
 
   const joinUserToThisRace = useCallback(async () => {
-    const { race, error } = await joinUserToRace(raceDetails.id);
+    const { error } = await joinUserToRace(raceDetails.id);
 
     if (error) {
       toast.error("error joining user to this race " + error);
-      return;
-    }
-
-    if (!race || !race.users) {
-      toast.error("Unexpected error joining user to the race, try again");
       return;
     }
   }, [raceDetails.id]);

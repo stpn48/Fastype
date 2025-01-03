@@ -10,32 +10,37 @@ export function useBroadcastUserProgress(userId?: string, raceId?: string) {
   const { userProgress } = useTypingFieldStore();
 
   const channel = useRef<RealtimeChannel | null>(null);
-  const [channelSubscribed, setChannelSubscribed] = useState(false);
 
   const subscribeToRaceChannel = useCallback(() => {
-    // subscribe to this race's channel
+    if (channel.current) return;
+
     channel.current = supabaseJsClient.channel(`race-${raceId}`, {
       config: {
         broadcast: { self: true },
       },
     });
 
-    channel.current.subscribe((status) => {
-      if (status === "SUBSCRIBED" && !channelSubscribed) {
-        setChannelSubscribed(true);
+    channel.current.subscribe();
+  }, [raceId]);
+
+  useEffect(() => {
+    subscribeToRaceChannel();
+
+    return () => {
+      if (channel.current) {
+        channel.current.unsubscribe();
+        supabaseJsClient.removeChannel(channel.current);
       }
-    });
-  }, [raceId, channelSubscribed]);
+    };
+  }, [subscribeToRaceChannel]);
 
   useEffect(() => {
     // dont run in practice races
     if (!userId || !raceId) return;
 
-    // subscribe to channel if not subscribed
-    if (!channelSubscribed || !channel.current) {
-      subscribeToRaceChannel();
-      return;
-    }
+    if (!channel.current) return;
+
+    console.log("sending progress update");
 
     channel.current
       .send({
@@ -47,12 +52,5 @@ export function useBroadcastUserProgress(userId?: string, raceId?: string) {
         },
       })
       .catch((error) => toast.error("Error sending progress update:", error));
-
-    return () => {
-      if (channel.current) {
-        channel.current.unsubscribe();
-        supabaseJsClient.removeChannel(channel.current);
-      }
-    };
-  }, [userProgress, channelSubscribed, subscribeToRaceChannel]);
+  }, [userProgress, subscribeToRaceChannel, userId, raceId]);
 }

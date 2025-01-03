@@ -40,7 +40,9 @@ export default async function RacePage({ params }: { params: Promise<{ id: strin
 
         <TypingField text={raceDetails.text} userId={user.id} raceId={raceId} />
 
-        {raceDetails.type === "private" && <PrivateRaceOptions raceId={raceDetails.id} />}
+        {raceDetails.type === "private" && raceDetails.author_id === user.id && (
+          <PrivateRaceOptions raceId={raceDetails.id} />
+        )}
 
         <Countdown raceType={raceDetails.type} raceId={raceDetails.id} />
       </section>

@@ -1,30 +1,41 @@
 "use client";
 
+import { handleRaceFinish } from "@/app/actions/handle-race-finish";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRaceStore } from "@/hooks/zustand/use-race-store";
+import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
 import { RaceUser } from "@/types/types";
-import { race } from "@prisma/client";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
-import { useRaceProgress } from "./hooks/use-race-progress";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 type Props = {
-  raceDetails: race;
+  userId: string;
   raceUser: RaceUser;
+  raceProgress: number;
 };
 
-export function UserTrack({ raceDetails, raceUser }: Props) {
-  const { raceProgress, wpm, userPlace } = useRaceProgress(
-    raceDetails.id,
-    raceDetails.text,
-    raceUser.id,
-  );
+export function UserTrack({ userId, raceUser, raceProgress }: Props) {
+  const { currPlace, setCurrPlace } = useRaceStore();
+  const { setCanType, userWpm } = useTypingFieldStore();
 
-  const router = useRouter();
+  const [userPlace, setUserPlace] = useState<number | null>(null);
 
-  const handleAvatarClick = useCallback(() => {
-    router.push(`/profile/${raceUser.id}`);
-  }, [raceUser.id, router]);
+  useEffect(() => {
+    if (raceProgress === 100 && userPlace === null) {
+      // do this only for the user that has finished the race, not for everyone. IMPORTANT
+      if (raceUser.id === userId) {
+        setCanType(false);
+        (async () => {
+          await handleRaceFinish(userWpm);
+        })();
+      }
+
+      // do this for everybody
+      setUserPlace(currPlace);
+      setCurrPlace((prev) => prev + 1);
+    }
+  }, [raceUser.id, userId, raceProgress, currPlace, userPlace]);
 
   return (
     <div
@@ -33,31 +44,27 @@ export function UserTrack({ raceDetails, raceUser }: Props) {
         raceProgress === 100 && "rounded-md border-x border-t border-primary last:border-b",
       )}
     >
-      <div className="flex-1">
-        <div
-          className="flex min-w-fit justify-end px-4 transition-all"
-          style={{ width: `${raceProgress}%` }}
-        >
-          {raceProgress === 100 && (
-            <p className="mr-4 flex items-center justify-center text-sm text-muted-foreground">
-              {userPlace}
-              {userPlace === 1 ? "st" : userPlace === 2 ? "nd" : userPlace === 3 ? "rd" : "th"}
-            </p>
-          )}
+      <div
+        className="flex min-w-fit justify-end px-4 transition-all"
+        style={{ width: `${raceProgress}%` }}
+      >
+        {raceProgress === 100 && (
+          <p className="mr-4 flex items-center justify-center text-sm text-muted-foreground">
+            {userPlace}
+            {userPlace === 1 ? "st" : userPlace === 2 ? "nd" : userPlace === 3 ? "rd" : "th"}
+          </p>
+        )}
 
-          <Avatar className="h-8 w-8 cursor-pointer hover:opacity-80" onClick={handleAvatarClick}>
+        <Link href={`/profile/${raceUser.id}`}>
+          <Avatar className="h-8 w-8 cursor-pointer hover:opacity-80">
             <AvatarImage src={raceUser.image_url ?? ""} />
             <AvatarFallback>
               {raceUser.username?.charAt(0) ?? "U"}
               {raceUser.username?.charAt(0) ?? "N"}
             </AvatarFallback>
           </Avatar>
-        </div>
+        </Link>
       </div>
-
-      <p className="flex h-full min-w-[80px] items-center justify-center whitespace-nowrap border-l border-border pl-4 text-sm text-muted-foreground">
-        {wpm} WPM
-      </p>
     </div>
   );
 }

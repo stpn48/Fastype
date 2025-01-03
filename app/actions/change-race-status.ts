@@ -3,9 +3,9 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
-import { RaceStatus } from "@prisma/client";
+import { race_status } from "@prisma/client";
 
-export async function changeRaceStatus(raceId: string, status: RaceStatus) {
+export async function changeRaceStatus(raceId: string, status: race_status) {
   const user = await getUser();
 
   if (!user) {

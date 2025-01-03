@@ -21,7 +21,7 @@ export function ChangeThemeDialog() {
         <div className="flex h-[400px] flex-col gap-4 overflow-y-auto">
           <ThemeButton themeName="dark" />
           <ThemeButton themeName="light" />
-          <ThemeButton themeName="dark-forest" />
+          <ThemeButton themeName="blue" />
           <ThemeButton themeName="rose" />
         </div>
       </DialogContent>

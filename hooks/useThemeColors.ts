@@ -13,7 +13,7 @@ const themeColorsMap = {
     primary: "--primary",
     secondary: "--secondary",
   },
-  "dark-forest": {
+  blue: {
     background: "--background",
     foreground: "--foreground",
     primary: "--primary",

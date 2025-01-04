@@ -49,6 +49,15 @@ export function useHandleKeydown(text: string) {
 
       if (e.key === "Backspace") {
         if (currCharIndex > 0) {
+          if (e.altKey) {
+            setUserWords((prev) => {
+              const newUserWords = [...prev];
+              return newUserWords.slice(0, -1);
+            });
+            setCurrCharIndex(0);
+            return;
+          }
+
           setUserWords((prev) => {
             const newUserWords = [...prev];
             newUserWords[currWordIndex] = newUserWords[currWordIndex].slice(0, -1);
@@ -56,7 +65,21 @@ export function useHandleKeydown(text: string) {
           });
 
           setCurrCharIndex((prev) => prev - 1);
-        } else if (currCharIndex === 0 && currWordIndex > 0 && hasMistake) {
+        }
+
+        if (currCharIndex === 0 && currWordIndex > 0 && hasMistake) {
+          if (e.altKey) {
+            setUserWords((prev) => prev.slice(0, -1));
+            setUserWords((prev) => {
+              const updatedUserWords = [...prev];
+              updatedUserWords[currWordIndex - 1] = "";
+              return updatedUserWords;
+            });
+            setCurrWordIndex((prev) => Math.max(0, prev - 1)); // Ensure it doesn't go negative
+            setCurrCharIndex(0); // Reset character index
+            return;
+          }
+
           const prevUserWord = userWords[currWordIndex - 1];
           setUserWords((prev) => prev.slice(0, -1));
           setCurrWordIndex((prev) => prev - 1);

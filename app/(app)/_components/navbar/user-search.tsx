@@ -2,8 +2,10 @@
 
 import { getUsersByQuery } from "@/app/actions/get-users-by-query";
 import { Input } from "@/components/ui/input";
+import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import clsx from "clsx";
 import { Search } from "lucide-react";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -15,10 +17,11 @@ type UserSuggestion = {
 
 export function UserSearch() {
   const [isSearching, setIsSearching] = useState(false);
-
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<UserSuggestion[]>([]);
+
+  const { setCanType } = useTypingFieldStore();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -47,6 +50,18 @@ export function UserSearch() {
     fetchUsers();
   }, [query]);
 
+  useEffect(() => {
+    if (isSearching) {
+      setCanType(false);
+      return;
+    }
+
+    if (!isSearching) {
+      setCanType(true);
+      return;
+    }
+  }, [isSearching]);
+
   return (
     <>
       <button onClick={() => setIsSearching(!isSearching)}>
@@ -62,7 +77,11 @@ export function UserSearch() {
           />
 
           {/* Search dialog */}
-          <div className="fixed left-[50%] top-2 z-10 flex -translate-x-[50%] flex-col">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed left-[50%] top-2 z-10 flex -translate-x-[50%] flex-col"
+          >
             {/* Search input */}
             <Input
               autoFocus
@@ -89,7 +108,7 @@ export function UserSearch() {
                 ))}
               </section>
             )}
-          </div>
+          </motion.div>
         </>
       )}
     </>

@@ -12,12 +12,12 @@ export default function PracticeRacePageCore() {
 
   const { raceCompleted, setRaceCompleted } = useHandleRaceComplete();
 
-  const { generateNewText } = useHandleText(raceCompleted);
+  const { generateText } = useHandleText(raceCompleted);
 
   return (
     <div className="flex h-full w-full flex-col items-center gap-4">
       <section className="flex h-fit w-full max-w-4xl flex-col items-center justify-center gap-12">
-        <Toolbar generateNewText={generateNewText} />
+        <Toolbar generateText={generateText} />
 
         <TypingField text={text} />
       </section>

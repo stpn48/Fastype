@@ -80,3 +80,28 @@ export async function getUserDetails(userId: string) {
 
   return userDetails;
 }
+
+export async function getTop10AllTimeWpmUsers() {
+  const [users, error] = await catchError(
+    prisma.user.findMany({
+      orderBy: {
+        stats: {
+          avg_wpm_all_time: "desc",
+        },
+      },
+      take: 10,
+      select: {
+        id: true,
+        username: true,
+        image_url: true,
+        stats: true,
+      },
+    }),
+  );
+
+  if (error) {
+    return null;
+  }
+
+  return users;
+}

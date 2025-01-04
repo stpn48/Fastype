@@ -2,6 +2,7 @@
 
 import { handleRaceFinish } from "@/app/actions/handle-race-finish";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatarProfileLink } from "@/components/user-avatar-profile-link";
 import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
@@ -55,15 +56,11 @@ export function UserTrack({ userId, raceUser, raceProgress }: Props) {
           </p>
         )}
 
-        <Link href={`/profile/${raceUser.id}`}>
-          <Avatar className="h-8 w-8 cursor-pointer hover:opacity-80">
-            <AvatarImage src={raceUser.image_url ?? ""} />
-            <AvatarFallback>
-              {raceUser.username?.charAt(0) ?? "U"}
-              {raceUser.username?.charAt(0) ?? "N"}
-            </AvatarFallback>
-          </Avatar>
-        </Link>
+        <UserAvatarProfileLink
+          id={raceUser.id}
+          username={raceUser.username}
+          image_url={raceUser.image_url}
+        />
       </div>
     </div>
   );

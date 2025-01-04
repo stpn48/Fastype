@@ -6,17 +6,17 @@ import { Repeat } from "lucide-react";
 import { useCallback } from "react";
 
 type Props = {
-  generateNewText: () => void;
+  generateText: () => void;
 };
 
-export function RegenerateTextButton({ generateNewText }: Props) {
+export function RegenerateTextButton({ generateText }: Props) {
   const { resetTypingFieldStore, setCanType } = useTypingFieldStore();
 
   const handleClick = useCallback(() => {
     resetTypingFieldStore();
     setCanType(true);
-    generateNewText();
-  }, [generateNewText]);
+    generateText();
+  }, [generateText]);
 
   return (
     <TooltipProvider>

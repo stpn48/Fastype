@@ -21,8 +21,7 @@ type Props = {
 export function ResultsDialog({ raceCompleted, setRaceCompleted }: Props) {
   const [time, setTime] = useState<string | null>(null);
 
-  const { userWpm, totalMistakes, startedTypingAt, text, resetTypingFieldStore, setUserProgress } =
-    useTypingFieldStore();
+  const { userWpm, totalMistakes, startedTypingAt, text } = useTypingFieldStore();
 
   useEffect(() => {
     const duration = (new Date().getTime() - new Date(startedTypingAt || 0).getTime()) / 1000;

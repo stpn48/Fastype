@@ -8,14 +8,14 @@ import { ModeOptions } from "./mode-options";
 import { TextLengthOptions } from "./text-length-options";
 import { ToggleOptions } from "./toggle-options";
 
-export function Toolbar({ generateNewText }: { generateNewText: () => void }) {
+export function Toolbar({ generateText }: { generateText: () => void }) {
   const { currMode } = useToolbar();
   const { isTyping } = useTypingFieldStore();
 
   return (
     <div
       className={clsx(
-        "duration-400 flex w-fit gap-6 rounded-lg bg-foreground/5 px-[24px] py-[12px] text-xs transition-all",
+        "flex w-fit gap-6 rounded-lg bg-foreground/5 px-[24px] py-[12px] text-xs transition-all duration-400",
         isTyping && "scale-0 opacity-0",
       )}
     >
@@ -34,7 +34,7 @@ export function Toolbar({ generateNewText }: { generateNewText: () => void }) {
 
       <div className="w-[4px] rounded-lg bg-foreground/10" />
 
-      <RegenerateTextButton generateNewText={generateNewText} />
+      <RegenerateTextButton generateText={generateText} />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { race_text_length } from "@prisma/client";
 import { toast } from "sonner";
 
 export async function generateNewText(
-  currMode: TypingFieldMode,
+  currMode: Exclude<TypingFieldMode, "random-words">,
   textLength: race_text_length,
   setIsLoading?: (val: boolean) => void,
 ) {

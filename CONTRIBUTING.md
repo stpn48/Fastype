@@ -9,7 +9,7 @@ This project wouldn't be where it is today without the amazing community that he
 1. **Fork the repository** - Create your own copy of this repository to make changes.
 2. **Clone your fork** - Clone your fork to your local machine to work on it.
    ```bash
-   git clone https://github.com/your-username/fast-type.git
+   git clone https://github.com/your-username/Fastype.git
    ```
 3. **Create a branch** - For every change or fix, create a new branch.
    ```bash

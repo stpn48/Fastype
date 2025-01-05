@@ -11,6 +11,7 @@ export async function getUsersByQuery(query: string) {
           contains: query,
         },
       },
+      take: 20,
       select: {
         id: true,
         username: true,

@@ -13,17 +13,17 @@ This project wouldn't be where it is today without the amazing community that he
    git clone https://github.com/your-username/Fastype.git
    ```
    
-4. **Navigate to the project** -
+4. **Navigate to the project** 
    ```bash
    cd your/path/to/Fastype
    ```
    
-5. **Install dependecies** -
+5. **Install dependecies** 
     ```bash
    pnpm install
    ```
     
-6. **Spin up the dev server** -
+6. **Spin up the dev server** 
    ```bash
    pnpm dev
    ```

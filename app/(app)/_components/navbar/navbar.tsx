@@ -20,9 +20,7 @@ export async function Navbar() {
         <UserSearch />
         <div className="flex items-center gap-4">
           <SearchUsersDialog />
-          <Link href={"/leaderboards"}>
-            <Trophy className="size-4" />
-          </Link>
+
           <UserDropdown />
         </div>
       </SignedIn>

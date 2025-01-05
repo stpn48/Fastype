@@ -2,6 +2,7 @@ import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { UserDetails } from "@/types/types";
+import { stats, user } from "@prisma/client";
 
 export async function getUser(): Promise<UserDetails | null> {
   const supabase = await createClient();
@@ -81,12 +82,37 @@ export async function getUserDetails(userId: string) {
   return userDetails;
 }
 
-export async function getTop10AllTimeWpmUsers() {
+export async function getTop10AvgWpmUsers() {
+  const [users, error] = await catchError(
+    prisma.$queryRaw<(user & { stats: stats })[]>`
+      SELECT id, username, image_url, stats
+      FROM "user"
+      WHERE array_length("race_history", 1) > 500
+      ORDER BY "stats"->>'avg_wpm_all_time' DESC
+      LIMIT 10;
+    `,
+  );
+
+  if (error) {
+    return null;
+  }
+
+  return users;
+}
+
+export async function getTop10AllTimeBestWpmUsers() {
   const [users, error] = await catchError(
     prisma.user.findMany({
+      where: {
+        stats: {
+          best_race_wpm: {
+            gt: 0,
+          },
+        },
+      },
       orderBy: {
         stats: {
-          avg_wpm_all_time: "desc",
+          best_race_wpm: "desc",
         },
       },
       take: 10,

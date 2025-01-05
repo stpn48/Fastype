@@ -1,9 +1,9 @@
-import { getTop10AllTimeWpmUsers } from "@/server/queries";
+import { getTop10AvgWpmUsers } from "@/server/queries";
 import Leaderboard from "./leaderboard";
 import { UserRow } from "./user-row";
 
 export async function AvgAllTimeWpmLeaderboard() {
-  const users = await getTop10AllTimeWpmUsers();
+  const users = await getTop10AvgWpmUsers();
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return (

@@ -82,7 +82,7 @@ export async function getUserDetails(userId: string) {
   return userDetails;
 }
 
-export async function getTop10AllTimeWpmUsers() {
+export async function getTop10AvgWpmUsers() {
   const [users, error] = await catchError(
     prisma.$queryRaw<(user & { stats: stats })[]>`
       SELECT id, username, image_url, stats

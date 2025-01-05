@@ -3,7 +3,7 @@
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { supabaseJsClient } from "@/lib/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 export function useBroadcastUserProgress(userId?: string, raceId?: string) {

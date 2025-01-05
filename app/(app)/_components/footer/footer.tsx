@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ChangeThemeDialog } from "./change-theme-dialog";
 
 export default function Footer() {

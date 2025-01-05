@@ -14,9 +14,7 @@ import { useEffect, useState } from "react";
 import { useToolbar } from "../../hooks/use-toolbar";
 import { ToolbarButton } from "./toolbar-button";
 
-type Props = {};
-
-export function ChooseCustomWordCountDialog({}: Props) {
+export function ChooseCustomWordCountDialog() {
   const { setCanType } = useTypingFieldStore();
   const { updateRandomWordsCount } = useToolbar();
   const [isOpen, setIsOpen] = useState(false);

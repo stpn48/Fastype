@@ -2,9 +2,7 @@ import { getTop10AllTimeBestWpmUsers } from "@/server/queries";
 import Leaderboard from "./leaderboard";
 import { UserRow } from "./user-row";
 
-type Props = {};
-
-export async function AllTimeBestWpmLeaderboard({}: Props) {
+export async function AllTimeBestWpmLeaderboard() {
   const users = await getTop10AllTimeBestWpmUsers();
 
   return (

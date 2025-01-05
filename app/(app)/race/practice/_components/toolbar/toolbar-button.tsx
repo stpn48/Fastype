@@ -1,6 +1,5 @@
 "use client";
 
-import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
 type Props = {

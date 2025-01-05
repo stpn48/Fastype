@@ -1,4 +1,3 @@
-import { UsersRound } from "lucide-react";
 import { PlayWithFriendsButton } from "./play-with-friends-button";
 
 export function PlayWithFriendsSection() {

@@ -1,13 +1,11 @@
 "use client";
 
 import { handleRaceFinish } from "@/app/actions/handle-race-finish";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserAvatarProfileLink } from "@/components/user-avatar-profile-link";
 import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
 import { RaceUser } from "@/types/types";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -36,7 +34,7 @@ export function UserTrack({ userId, raceUser, raceProgress }: Props) {
       setUserPlace(currPlace);
       setCurrPlace((prev) => prev + 1);
     }
-  }, [raceUser.id, userId, raceProgress, currPlace, userPlace]);
+  }, [raceUser.id, userId, raceProgress, currPlace, userPlace, userWpm]);
 
   return (
     <div

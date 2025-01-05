@@ -1,5 +1,3 @@
-type Props = {};
-
-export default async function Loading({}: Props) {
+export default async function Loading() {
   return <div>Loading</div>;
 }

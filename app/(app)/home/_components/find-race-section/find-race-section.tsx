@@ -1,4 +1,3 @@
-import { Earth } from "lucide-react";
 import { FindRaceButton } from "./find-race-button";
 
 export function FindRaceSection() {

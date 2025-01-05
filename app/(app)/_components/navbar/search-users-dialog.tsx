@@ -7,7 +7,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Search } from "lucide-react";
 import { useState } from "react";
 import { UserSearch } from "./user-search";
 
@@ -22,7 +21,7 @@ export function SearchUsersDialog() {
           <DialogTitle>Search For Users</DialogTitle>
         </DialogHeader>
 
-        <UserSearch closeDialog={() => setOpen(false)} />
+        <UserSearch />
       </DialogContent>
     </Dialog>
   );

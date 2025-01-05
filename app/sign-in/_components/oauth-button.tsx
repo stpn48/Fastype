@@ -24,7 +24,7 @@ export function OAuthButton({ provider }: Props) {
     if (url) {
       router.push(url);
     }
-  }, [router]);
+  }, [router, provider]);
 
   return (
     <Button

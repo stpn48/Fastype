@@ -40,7 +40,7 @@ export function useRaceProgress(raceId: string) {
       channel.unsubscribe();
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [raceId]);
 
   return { progresses };
 }

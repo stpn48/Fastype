@@ -1,4 +1,3 @@
-import { BookOpen } from "lucide-react";
 import { PlayAloneButton } from "./play-alone-button";
 
 export function PracticeAloneSection() {

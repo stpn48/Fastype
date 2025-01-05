@@ -1,7 +1,6 @@
 import { SignedIn } from "@/components/signed-in";
 import { SignedOut } from "@/components/signed-out";
 import { Button } from "@/components/ui/button";
-import { Trophy } from "lucide-react";
 import Link from "next/link";
 import { SearchUsersDialog } from "./search-users-dialog";
 import { UserDropdown } from "./user-dropdown/user-dropdown";

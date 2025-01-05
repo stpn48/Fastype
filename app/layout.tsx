@@ -2,8 +2,8 @@ import { NextThemeProvider } from "@/app/_components/next-theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import "./globals.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

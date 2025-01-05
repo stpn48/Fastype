@@ -16,7 +16,7 @@ export function useHandleRaceComplete() {
       setRaceCompleted(true);
       handleRaceFinishAsync();
     }
-  }, [userProgress]);
+  }, [userProgress, userWpm]);
 
   return { raceCompleted, setRaceCompleted };
 }

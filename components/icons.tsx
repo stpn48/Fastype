@@ -1,5 +1,3 @@
-import clsx from "clsx";
-
 export function GlobeIcon({ color = "currentColor", className = "" }) {
   return (
     <svg

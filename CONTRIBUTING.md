@@ -7,24 +7,44 @@ This project wouldn't be where it is today without the amazing community that he
 ## How to Contribute
 
 1. **Fork the repository** - Create your own copy of this repository to make changes.
-2. **Clone your fork** - Clone your fork to your local machine to work on it.
+
+3. **Clone your fork** - Clone your fork to your local machine to work on it.
    ```bash
    git clone https://github.com/your-username/Fastype.git
    ```
-3. **Create a branch** - For every change or fix, create a new branch.
+   
+4. **Navigate to the project** -
+   ```bash
+   cd your/path/to/Fastype
+   ```
+   
+5. **Install dependecies** -
+    ```bash
+   pnpm install
+   ```
+    
+6. **Spin up the dev server** -
+   ```bash
+   pnpm dev
+   ```
+
+7. **Create a branch** - For every change or fix, create a new branch.
    ```bash
    git checkout -b my-awesome-feature
    ```
-4. **Make your changes** - Implement your changes, ensuring that they align with the project's goals and maintain code quality.
-5. **Commit your changes** - Write meaningful commit messages to describe the changes you've made.
+8. **Make your changes** - Implement your changes, ensuring that they align with the project's goals and maintain code quality.
+   
+10. **Commit your changes** - Write meaningful commit messages to describe the changes you've made.
    ```bash
    git commit -m "Add cool new feature"
    ```
-6. **Push your changes** - Push your changes to your fork.
+
+11. **Push your changes** - Push your changes to your fork.
    ```bash
    git push origin my-awesome-feature
    ```
-7. **Create a Pull Request** - Go to the repository's page and submit a pull request to the main project.
+
+11. **Create a Pull Request** - Go to the repository's page and submit a pull request to the main project.
 
 ## Code Style
 

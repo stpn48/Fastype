@@ -12,6 +12,7 @@ export async function getUser(): Promise<UserDetails | null> {
   } = await supabase.auth.getUser();
 
   if (!user) {
+    console.log("User not found supbase");
     return null;
   }
 
@@ -28,6 +29,7 @@ export async function getUser(): Promise<UserDetails | null> {
   );
 
   if (error) {
+    console.log("User not found prisma");
     console.error(error);
     return null;
   }

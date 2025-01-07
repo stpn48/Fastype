@@ -14,7 +14,7 @@ import {
 
 import { changeRaceStatus } from "@/app/actions/change-race-status";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
@@ -42,7 +42,7 @@ export function StartRaceButton({ raceId, setRaceStarted }: Props) {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button>
-          {loading && <Loader2 className="size-5 animate-spin" />}
+          {loading && <Loader className="size-5 animate-spin" />}
           <span>Start Race</span>
         </Button>
       </AlertDialogTrigger>

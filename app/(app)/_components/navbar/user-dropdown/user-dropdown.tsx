@@ -39,10 +39,6 @@ export async function UserDropdown() {
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <Link href={`/user-settings`}>Settings</Link>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem asChild>
           <Link href={`/leaderboards`}>Leaderboards</Link>
         </DropdownMenuItem>
 

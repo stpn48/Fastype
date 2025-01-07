@@ -3,6 +3,7 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/server/queries";
+import { revalidatePath } from "next/cache";
 
 export async function changeUserUsername(username: string) {
   const user = await getUser();
@@ -38,5 +39,6 @@ export async function changeUserUsername(username: string) {
     return { error: "failed to update username" };
   }
 
+  revalidatePath("/");
   return { error: null };
 }

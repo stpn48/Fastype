@@ -1,11 +1,19 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getUser } from "@/server/queries";
 import { stats, user } from "@prisma/client";
+import { ChangeUsernameDialog } from "./change-username-dialog/change-username-dialog";
 
 type Props = {
   userDetails: user & { stats: stats | null };
 };
 
-export function MainStats({ userDetails }: Props) {
+export async function MainStats({ userDetails }: Props) {
+  const user = await getUser();
+
+  if (!user) {
+    return null;
+  }
+
   if (!userDetails.stats) {
     return null;
   }
@@ -20,8 +28,12 @@ export function MainStats({ userDetails }: Props) {
             {userDetails.username?.charAt(0).toUpperCase() ?? "N"}
           </AvatarFallback>
         </Avatar>
-        <div className="flex flex-col items-center gap-1">
-          <h2>{userDetails.username}</h2>
+
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col items-center gap-1">
+            <h2>{userDetails.username}</h2>
+          </div>
+          {userDetails.id === user.id && <ChangeUsernameDialog />}
         </div>
       </section>
 

@@ -2,7 +2,7 @@
 
 import { openNewRace } from "@/app/actions/open-new-race";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ export function PlayWithFriendsButton() {
 
   return (
     <Button disabled={isLoading} onClick={handleClick} className="z-10 h-10 w-full text-base">
-      {isLoading && <Loader2 className="size-5 animate-spin" />}
+      {isLoading && <Loader className="size-5 animate-spin" />}
       <span>Create Lobby</span>
     </Button>
   );

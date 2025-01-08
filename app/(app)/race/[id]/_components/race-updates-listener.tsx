@@ -56,21 +56,21 @@ export function RaceUpdatesListener({ raceId }: Props) {
     let channel: RealtimeChannel | null = null;
 
     (async () => {
-      const onSubscribe = () => {
-        toast.success("Subscribed to race updates");
-      };
+      // const onSubscribe = () => {
+      //   toast.success("Subscribed to race updates");
+      // };
 
-      channel = await listenForRaceUpdates(raceId, onRaceUpdate, onSubscribe);
+      channel = await listenForRaceUpdates(raceId, onRaceUpdate);
 
       if (!channel) {
-        toast.error("Error subscribing to race updates");
+        // toast.error("Error subscribing to race updates");
         return;
       }
     })();
 
     return () => {
       if (channel) {
-        toast.info("Unsubscribing from race updates");
+        // toast.info("Unsubscribing from race updates");
         channel.unsubscribe();
         supabaseJsClient.removeChannel(channel);
       }

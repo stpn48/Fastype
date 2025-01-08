@@ -67,9 +67,13 @@ export async function getRaceDetails(raceId: string) {
 export async function getUserDetails(userId: string) {
   const [userDetails, error] = await catchError(
     prisma.user.findUnique({
+      cacheStrategy: {
+        ttl: 10,
+      },
       where: {
         id: userId,
       },
+
       include: {
         stats: true,
         race_history: true,

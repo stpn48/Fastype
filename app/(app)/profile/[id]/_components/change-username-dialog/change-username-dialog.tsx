@@ -13,8 +13,6 @@ import { PencilLine } from "lucide-react";
 import { useState } from "react";
 import { ChangeUsernameForm } from "./change-username-form";
 
-type Props = {};
-
 export function ChangeUsernameDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
 

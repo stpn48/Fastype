@@ -2,8 +2,8 @@
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useEffect } from "react";
-import { useBroadcastUserProgress } from "./use-broadcast-user-progress";
 import { calculateUserWpm } from "../_components/race-track/hooks/use-race-progress";
+import { useBroadcastUserProgress } from "./use-broadcast-user-progress";
 
 export function useHandleUserProgress(text: string, userId?: string, raceId?: string) {
   const {
@@ -33,7 +33,7 @@ export function useHandleUserProgress(text: string, userId?: string, raceId?: st
       setStartedTypingAt((prev) => (prev ? prev : new Date().toISOString()));
     }
 
-    // if curr letter is not matching with the acctual letter increment total mistakes
+    // if curr letter is not matching with the actual letter increment total mistakes
     if (
       currWord &&
       currUserWord &&

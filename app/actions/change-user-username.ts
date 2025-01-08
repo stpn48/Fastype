@@ -12,6 +12,14 @@ export async function changeUserUsername(username: string) {
     return { error: "unauthorized" };
   }
 
+  if (!username || typeof username !== "string") {
+    return { error: "Invalid username" };
+  }
+
+  if (username.length < 5) {
+    return { error: "Username must be at least 5 characters long" };
+  }
+
   // check if username already exists
   const [alreadyExists, findUsernameError] = await catchError(
     prisma.user.findUnique({

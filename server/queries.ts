@@ -12,7 +12,6 @@ export async function getUser(): Promise<UserDetails | null> {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    console.log("User not found supbase");
     return null;
   }
 
@@ -29,13 +28,10 @@ export async function getUser(): Promise<UserDetails | null> {
   );
 
   if (error) {
-    console.log("User not found prisma");
-    console.error(error);
     return null;
   }
 
   if (!userDetails) {
-    console.error("User details not found");
     return null;
   }
 
@@ -67,9 +63,6 @@ export async function getRaceDetails(raceId: string) {
 export async function getUserDetails(userId: string) {
   const [userDetails, error] = await catchError(
     prisma.user.findUnique({
-      cacheStrategy: {
-        ttl: 10,
-      },
       where: {
         id: userId,
       },

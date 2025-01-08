@@ -4,7 +4,7 @@ import { changeUserUsername } from "@/app/actions/change-user-username";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
-import { FormEvent, useCallback, useState } from "react";
+import { useActionState, useCallback } from "react";
 import { toast } from "sonner";
 
 type Props = {
@@ -12,65 +12,41 @@ type Props = {
 };
 
 export function ChangeUsernameForm({ closeDialog }: Props) {
-  const [isPending, setIsPending] = useState(false);
-
   const handleChangeUsername = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+    async (_: unknown, formData: FormData) => {
+      const newUsername = formData.get("username") as string;
 
-      try {
-        setIsPending(true);
-        const form = e.currentTarget;
-        const formData = new FormData(form);
-        const newUsername = formData.get("username") as string;
+      const { error } = await changeUserUsername(newUsername);
 
-        if (!newUsername || typeof newUsername !== "string") {
-          toast.error("Invalid username");
-          return;
-        }
-
-        if (newUsername.length < 5) {
-          toast.error("Your new username must be longer than 5 characters");
-          return;
-        }
-
-        const { error } = await changeUserUsername(newUsername);
-
-        if (error) {
-          toast.error(error);
-          return;
-        }
-
-        toast.info("Username changed successfully ! Enjoy your new username");
-        closeDialog();
-      } catch (error) {
-        toast.error("Something went wrong. Please try again.");
-      } finally {
-        setIsPending(false);
+      if (error) {
+        return { error };
       }
+
+      toast.info("Username changed successfully ! Enjoy your new username");
+      closeDialog();
+
+      return { error: null };
     },
     [closeDialog],
   );
 
+  const [data, submitActon, isPending] = useActionState(handleChangeUsername, { error: null });
+
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleChangeUsername}>
-      <Input
-        name="username"
-        placeholder="New Username"
-        required
-        minLength={5}
-        disabled={isPending}
-        pattern="^[a-zA-Z0-9_]+$"
-      />
+    <form className="flex flex-col gap-4" action={submitActon}>
+      <div className="flex flex-col gap-2">
+        <Input
+          name="username"
+          placeholder="New Username"
+          disabled={isPending}
+          pattern="^[a-zA-Z0-9_]+$"
+        />
+        {data.error && <p className="text-red-500">{data.error}</p>}
+      </div>
+
       <Button type="submit" disabled={isPending}>
-        {isPending ? (
-          <>
-            <Loader className="mr-2 size-4 animate-spin" />
-            Changing...
-          </>
-        ) : (
-          "Change"
-        )}
+        {isPending && <Loader className="mr-2 size-4 animate-spin" />}
+        Change
       </Button>
     </form>
   );

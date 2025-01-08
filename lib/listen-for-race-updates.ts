@@ -2,8 +2,9 @@
 
 import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { supabaseJsClient } from "./supabase/client";
+import { subscribeToChannel } from "./utils";
 
-export function listenForRaceUpdates(
+export async function listenForRaceUpdates(
   raceId: string,
   callback: (
     payload: RealtimePostgresUpdatePayload<{
@@ -12,23 +13,22 @@ export function listenForRaceUpdates(
   ) => void,
   onSubscribe?: () => void,
 ) {
-  const channel = supabaseJsClient
-    .channel("race-updates")
-    .on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "race",
-        filter: `id=eq.${raceId}`,
-      },
-      callback,
-    )
-    .subscribe((status) => {
-      if (status === "SUBSCRIBED") {
-        onSubscribe?.();
-      }
-    });
+  const channel = supabaseJsClient.channel(`race-updates${raceId}`).on(
+    "postgres_changes",
+    {
+      event: "UPDATE",
+      schema: "public",
+      table: "race",
+      filter: `id=eq.${raceId}`,
+    },
+    callback,
+  );
+
+  const chanelSubscribed = await subscribeToChannel(channel, onSubscribe);
+
+  if (!chanelSubscribed) {
+    return null;
+  }
 
   return channel;
 }

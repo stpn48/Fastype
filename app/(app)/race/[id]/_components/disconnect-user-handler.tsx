@@ -5,6 +5,7 @@ import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
+import { toast } from "sonner";
 
 type Props = {
   userId: string;
@@ -20,7 +21,12 @@ export function DisconnectUserHandler({ userId, raceId }: Props) {
   const { resetRaceStore } = useRaceStore();
 
   const dcUser = useCallback(async () => {
-    await disconnectUserFromRace(userId, raceId);
+    const { error } = await disconnectUserFromRace(userId, raceId);
+
+    if (error) {
+      toast.error(error);
+      return;
+    }
 
     // reset the stores
     resetTypingFieldStore();
@@ -29,7 +35,6 @@ export function DisconnectUserHandler({ userId, raceId }: Props) {
 
   useEffect(() => {
     const handleBeforeUnload = () => {
-      router.prefetch("/home");
       dcUser();
       router.push("/home");
     };
@@ -44,9 +49,10 @@ export function DisconnectUserHandler({ userId, raceId }: Props) {
   useEffect(() => {
     setTimeout(() => {
       mounted.current = true;
-    }, 100);
+    }, 150);
   }, []);
 
+  // on component unmount, disconnect user from race
   useEffect(() => {
     return () => {
       if (mounted.current) {

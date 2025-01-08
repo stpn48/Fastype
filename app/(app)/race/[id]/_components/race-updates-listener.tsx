@@ -5,7 +5,7 @@ import { useRaceStore } from "@/hooks/zustand/use-race-store";
 import { listenForRaceUpdates } from "@/lib/listen-for-race-updates";
 import { supabaseJsClient } from "@/lib/supabase/client";
 import { RaceUser } from "@/types/types";
-import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
+import { RealtimeChannel, RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -53,11 +53,27 @@ export function RaceUpdatesListener({ raceId }: Props) {
   }, [getRaceParticipants, raceId]);
 
   useEffect(() => {
-    const channel = listenForRaceUpdates(raceId, onRaceUpdate, () => console.log("subscribed"));
+    let channel: RealtimeChannel | null = null;
+
+    (async () => {
+      const onSubscribe = () => {
+        toast.success("Subscribed to race updates");
+      };
+
+      channel = await listenForRaceUpdates(raceId, onRaceUpdate, onSubscribe);
+
+      if (!channel) {
+        toast.error("Error subscribing to race updates");
+        return;
+      }
+    })();
 
     return () => {
-      channel.unsubscribe();
-      supabaseJsClient.removeChannel(channel);
+      if (channel) {
+        toast.info("Unsubscribing from race updates");
+        channel.unsubscribe();
+        supabaseJsClient.removeChannel(channel);
+      }
     };
   }, [raceId, onRaceUpdate]);
 

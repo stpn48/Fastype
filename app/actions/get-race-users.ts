@@ -11,7 +11,7 @@ export async function getRaceUsers(raceId: string) {
     throw new Error("Unauthenticated");
   }
 
-  const [raceDetails, error] = await catchError(
+  const [raceUsers, error] = await catchError(
     prisma.user.findMany({
       where: {
         race_id: raceId,
@@ -28,5 +28,5 @@ export async function getRaceUsers(raceId: string) {
     return null;
   }
 
-  return raceDetails;
+  return raceUsers;
 }

@@ -21,22 +21,6 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
     return { error: "Unexpected error getting user or race" };
   }
 
-  if (race.type === "solo") {
-    const [, deleteRaceError] = await catchError(
-      prisma.race.delete({
-        where: {
-          id: raceId,
-        },
-      }),
-    );
-
-    if (deleteRaceError) {
-      return { error: deleteRaceError.message };
-    }
-
-    return { error: null };
-  }
-
   // If the author of this race is the user, delete the race
   if (race.author_id === user.id) {
     const [, deleteRaceError] = await catchError(
@@ -73,21 +57,6 @@ export async function disconnectUserFromRace(userId: string, raceId: string) {
   if (disconnectUserFromRaceError) {
     return { error: disconnectUserFromRaceError.message };
   }
-
-  // const [, resetUserRaceDetailsError] = await catchError(
-  //   prisma.user.update({
-  //     where: {
-  //       id: userId,
-  //     },
-  //     data: {
-  //       raceId: null,
-  //     },
-  //   }),
-  // );
-
-  // if (resetUserRaceDetailsError) {
-  //   return { error: resetUserRaceDetailsError.message };
-  // }
 
   return { error: null };
 }

@@ -16,6 +16,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## TASKS
 
+[] - fix countdown not visible with light theme
 [] - profile settings, change username, change avatar, email, change password
 [] - rework homepage design
 [] - add typing field settings to change font, font size, caret movement and other (save it to user config in the db)

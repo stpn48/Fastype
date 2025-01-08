@@ -1,3 +1,4 @@
+import { RealtimeChannel } from "@supabase/supabase-js";
 import clsx, { ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -14,4 +15,17 @@ export function shuffleArray<T>(array: T[]): T[] {
     [shuffled[i], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[i]];
   }
   return shuffled;
+}
+
+export async function subscribeToChannel(channel: RealtimeChannel, onSubscribe?: () => void) {
+  return await new Promise<boolean>((resolve) => {
+    channel.subscribe((status) => {
+      if (status === "SUBSCRIBED") {
+        onSubscribe?.();
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  });
 }

@@ -13,7 +13,7 @@ export async function listenForRaceUpdates(
   ) => void,
   onSubscribe?: () => void,
 ) {
-  const channel = supabaseJsClient.channel(`race-updates${raceId}`).on(
+  const channel = supabaseJsClient.channel(`race-updates-${raceId}`).on(
     "postgres_changes",
     {
       event: "UPDATE",

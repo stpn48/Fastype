@@ -35,12 +35,10 @@ export function useBroadcastUserProgress(userId?: string, raceId?: string) {
   }, [subscribeToRaceChannel]);
 
   useEffect(() => {
-    // dont run in practice races
+    // don't run in practice races
     if (!userId || !raceId) return;
 
     if (!channel.current) return;
-
-    console.log("sending progress update");
 
     channel.current
       .send({

@@ -2,6 +2,7 @@
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useCallback, useEffect } from "react";
+import { generateJSWords } from "../utils/generate-js-words";
 import { generateNewText } from "../utils/generate-new-text";
 import { generateRandomWords } from "../utils/generate-random-words";
 import { useToolbar } from "./use-toolbar";
@@ -22,6 +23,18 @@ export function useHandleText(raceCompleted: boolean) {
 
       const randomWords = generateRandomWords(wordCount, includeNumbers, includeSymbols);
       setText(randomWords);
+      return;
+    }
+
+    if (currMode === "javascript") {
+      let wordCount = randomWordsCount;
+
+      if (wordCount > MAXIMUM_RANDOM_WORDS_COUNT) {
+        wordCount = MAXIMUM_RANDOM_WORDS_COUNT;
+      }
+
+      const jsWords = generateJSWords(wordCount);
+      setText(jsWords);
       return;
     }
 

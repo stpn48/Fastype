@@ -29,7 +29,7 @@ export function TextLengthOptions() {
   }
 
   // For "random-words" mode, render random word count options (25, 50, 100, 150)
-  if (currMode === "random-words") {
+  if (currMode === "random-words" || currMode === "javascript") {
     return (
       <section className="flex gap-2">
         {randomWordsOptions.map((count) => (

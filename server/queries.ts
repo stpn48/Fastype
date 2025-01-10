@@ -23,6 +23,7 @@ export async function getUser(): Promise<UserDetails | null> {
       include: {
         stats: true,
         race_history: true,
+        user_config: true,
       },
     }),
   );

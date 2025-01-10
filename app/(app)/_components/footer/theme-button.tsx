@@ -2,11 +2,11 @@
 
 import { useThemeColorsFor } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
-import { Theme } from "@/types/types";
+import { theme } from "@prisma/client";
 import { useTheme } from "next-themes";
 
 type Props = {
-  themeName: Theme;
+  themeName: theme;
 };
 
 export function ThemeButton({ themeName }: Props) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { TypingField } from "@/app/(app)/race/_components/typing-field";
+import { TypingField } from "@/app/(app)/race/_components/typing-field/typing-field";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { ResultsDialog } from "./_components/results-dialog";
 import { Toolbar } from "./_components/toolbar/toolbar";

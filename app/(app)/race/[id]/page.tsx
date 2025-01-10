@@ -1,7 +1,7 @@
 import { getRaceDetails, getUser } from "@/server/queries";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { TypingField } from "../_components/typing-field";
+import { TypingField } from "../_components/typing-field/typing-field";
 import { Countdown } from "./_components/countdown";
 import { DisconnectUserHandler } from "./_components/disconnect-user-handler";
 import { PrivateRaceOptions } from "./_components/private-race-options";

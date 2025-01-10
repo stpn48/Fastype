@@ -3,10 +3,11 @@
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
 import { memo, useEffect } from "react";
-import { Caret } from "../[id]/_components/typing-field/caret";
-import { useHandleKeydown } from "../[id]/_components/typing-field/use-handle-keydown";
-import { Word } from "../[id]/_components/typing-field/word";
-import { useHandleUserProgress } from "../[id]/hooks/use-handle-user-progress";
+import { useHandleUserProgress } from "../../[id]/hooks/use-handle-user-progress";
+import { Caret } from "./caret";
+import { SettingsPopover } from "./settings-popover/settings-popover";
+import { useHandleKeydown } from "./use-handle-keydown";
+import { Word } from "./word";
 
 type Props = {
   text: string;
@@ -25,6 +26,7 @@ export function TypingField({ text, userId, raceId }: Props) {
     isLoading,
     resetTypingFieldStore,
     isTyping,
+    startedTypingAt,
   } = useTypingFieldStore();
 
   useHandleUserProgress(text, userId, raceId);
@@ -65,6 +67,8 @@ export function TypingField({ text, userId, raceId }: Props) {
           userWord={wordIndex <= currWordIndex ? userWords[wordIndex] : null}
         />
       ))}
+
+      {!startedTypingAt && <SettingsPopover />}
     </div>
   );
 }

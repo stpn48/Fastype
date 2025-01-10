@@ -1,7 +1,7 @@
 "use client";
 
 import { useToolbar } from "@/app/(app)/race/practice/hooks/use-toolbar";
-import { Dices, Quote, TypeOutline } from "lucide-react";
+import { Dices, Quote, Terminal, TypeOutline } from "lucide-react";
 import { ToolbarButton } from "./toolbar-button";
 
 export function ModeOptions() {
@@ -34,6 +34,15 @@ export function ModeOptions() {
       >
         <TypeOutline className="size-4" />
         text
+      </ToolbarButton>
+
+      <ToolbarButton
+        className="flex gap-2"
+        isActive={currMode === "javascript"}
+        onClick={() => updateCurrMode("javascript")}
+      >
+        <Terminal className="size-4" />
+        javascript
       </ToolbarButton>
     </section>
   );

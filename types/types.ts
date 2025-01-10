@@ -4,7 +4,7 @@ import { User } from "@supabase/supabase-js";
 
 export type Theme = "light" | "dark" | "blue" | "rose";
 
-export type TypingFieldMode = "quote" | "random-words" | "text";
+export type TypingFieldMode = "quote" | "random-words" | "text" | "javascript";
 
 export type RaceUser = {
   id: string;

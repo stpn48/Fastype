@@ -4,7 +4,7 @@ import { createParser } from "nuqs";
 
 export const parseAsTypingFieldMode = createParser({
   parse(queryValue: unknown): TypingFieldMode | null {
-    const validModes: TypingFieldMode[] = ["quote", "random-words", "text"];
+    const validModes: TypingFieldMode[] = ["quote", "random-words", "text", "javascript"];
 
     if (typeof queryValue === "string" && validModes.includes(queryValue as TypingFieldMode)) {
       return queryValue as TypingFieldMode;

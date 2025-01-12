@@ -36,6 +36,18 @@ enum race_text_length {
   long
 }
 
+enum theme {
+  light
+  dark
+  blue
+  rose
+}
+
+enum font_family {
+  geist_mono
+  geist_sans
+}
+
 // basic data like name, email, avatar are in clerk, here is the stats for this user
 model user {
   id           String           @id @default(uuid())
@@ -45,6 +57,16 @@ model user {
   race_id      String?
   race_history completed_race[]
   stats        stats?
+  user_config  user_config?
+}
+
+model user_config {
+  id                        String      @id @default(uuid())
+  typing_field_font_size    Int         @default(16)
+  typing_field_font_family  font_family @default(geist_mono)
+  typing_field_smooth_caret Boolean     @default(false)
+  user                      user        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id                   String      @unique
 }
 
 model stats {

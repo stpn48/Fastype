@@ -1,10 +1,10 @@
 "use client";
 
+import { TypingField } from "@/app/(app)/race/_components/typing-field/typing-field";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { useEffect, useState } from "react";
-import { TypingField } from "@/app/(app)/race/_components/typing-field";
-import { ToolbarProvider } from "./hooks/use-toolbar";
 import { Toolbar } from "./_components/toolbar/toolbar";
+import { ToolbarProvider } from "./hooks/use-toolbar";
 
 export function PracticeRaceCore() {
   const [raceCompleted, setRaceCompleted] = useState(false);

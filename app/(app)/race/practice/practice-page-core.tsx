@@ -1,8 +1,8 @@
 "use client";
 
-import { TypingField } from "@/app/(app)/race/_components/typing-field";
+import { TypingField } from "@/app/(app)/race/_components/typing-field/typing-field";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { ResultsDialog } from "./_components/results-dialog";
+import { ResultsDialog } from "../../_components/results-dialog";
 import { Toolbar } from "./_components/toolbar/toolbar";
 import { useHandleRaceComplete } from "./hooks/use-handle-race-complete";
 import { useHandleText } from "./hooks/use-handle-text";

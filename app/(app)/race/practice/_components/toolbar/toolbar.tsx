@@ -3,7 +3,7 @@
 import { useToolbar } from "@/app/(app)/race/practice/hooks/use-toolbar";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import clsx from "clsx";
-import { RegenerateTextButton } from "../regenerate-text-button";
+import { RegenerateTextButton } from "./regenerate-text-button";
 import { ModeOptions } from "./mode-options";
 import { TextLengthOptions } from "./text-length-options";
 import { ToggleOptions } from "./toggle-options";

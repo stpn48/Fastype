@@ -16,7 +16,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## TASKS
 
-[] - fix countdown not visible with light theme
-[] - rework homepage design
 [] - show stats after a public race ends
-[] - add typing field settings to change font, font size, caret movement and other (save it to user config in the db)
+[] - rework homepage design

@@ -16,7 +16,7 @@ type Props = {
 export function Countdown({ raceType, raceId }: Props) {
   const [isMounted, setIsMounted] = useState(false);
 
-  const { countdown, setCountdown } = useRaceStore();
+  const { countdown, setCountdown, setRaceStartedAt } = useRaceStore();
 
   const { setCanType } = useTypingFieldStore();
 
@@ -43,7 +43,10 @@ export function Countdown({ raceType, raceId }: Props) {
   useEffect(() => {
     if (countdown === 0) {
       const asyncUpdateRaceStartedAt = async () => {
-        const { error } = await updateRaceStartedAt(raceId, new Date());
+        const raceStartedAt = new Date();
+
+        setRaceStartedAt(raceStartedAt);
+        const { error } = await updateRaceStartedAt(raceId, raceStartedAt);
 
         if (error) {
           toast.error(error.message);

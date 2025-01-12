@@ -13,10 +13,6 @@ export function SettingsForm() {
   const { fontSize, setFontSize, smoothCaret, setSmoothCaret, fontFamily, setFontFamily } =
     useTypingFieldStore();
 
-  if (fontSize === null || smoothCaret === null || !fontFamily) {
-    return;
-  }
-
   const fontSizeInputOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (typeof e.target.value !== "string") {
       return;
@@ -34,6 +30,10 @@ export function SettingsForm() {
 
     setFontSize(parseInt(e.target.value));
   }, []);
+
+  if (fontSize === null || smoothCaret === null || !fontFamily) {
+    return;
+  }
 
   return (
     <form className="flex flex-col gap-4">

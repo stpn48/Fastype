@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useActionState, useCallback, useState } from "react";
+import { useActionState, useCallback } from "react";
 import { toast } from "sonner";
 
 export default function UsernameForm() {

@@ -2,7 +2,6 @@ import { SignedIn } from "@/components/signed-in";
 import { SignedOut } from "@/components/signed-out";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { SearchUsersDialog } from "./search-users-dialog";
 import { UserDropdown } from "./user-dropdown/user-dropdown";
 import { UserSearch } from "./user-search";
 
@@ -16,10 +15,8 @@ export async function Navbar() {
       <div className="flex-1"></div>
 
       <SignedIn>
-        <UserSearch />
         <div className="flex items-center gap-4">
-          <SearchUsersDialog />
-
+          <UserSearch />
           <UserDropdown />
         </div>
       </SignedIn>

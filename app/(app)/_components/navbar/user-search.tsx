@@ -85,7 +85,7 @@ export function UserSearch() {
             {/* Search input */}
             <Input
               autoFocus
-              placeholder="Some username"
+              placeholder="Search for username"
               onChange={(e) => setQuery(e.target.value)}
               className="z-10 w-full max-w-[350px] rounded-b-none bg-background px-4 py-1"
             />

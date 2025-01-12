@@ -8,11 +8,8 @@ import { toast } from "sonner";
 export async function generateNewText(
   currMode: Exclude<TypingFieldMode, "random-words">,
   textLength: race_text_length,
-  setIsLoading?: (val: boolean) => void,
 ) {
-  setIsLoading?.(true);
   const { text, error } = await getText(currMode, textLength);
-  setIsLoading?.(false);
 
   if (error) {
     toast.error(error);

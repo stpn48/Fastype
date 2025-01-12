@@ -1,6 +1,7 @@
 import { getUser } from "@/app/actions/get-user";
 import { updateUserConfig } from "@/app/actions/update-user-config";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { font_family } from "@prisma/client";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -13,7 +14,6 @@ export function useHandleUserConfig() {
     setFontSize,
     setSmoothCaret,
     setIsLoading,
-    setIsLoadingUserConfig,
   } = useTypingFieldStore();
 
   // update user config when the user config changes
@@ -25,7 +25,7 @@ export function useHandleUserConfig() {
     (async () => {
       await updateUserConfig({
         typing_field_font_size: fontSize,
-        typing_field_font_family: fontFamily,
+        typing_field_font_family: fontFamily as font_family,
         typing_field_smooth_caret: smoothCaret,
       });
     })();
@@ -34,7 +34,6 @@ export function useHandleUserConfig() {
   // get user config on mount
   useEffect(() => {
     (async () => {
-      setIsLoadingUserConfig(true);
       const user = await getUser();
 
       setIsLoading(false);
@@ -44,12 +43,9 @@ export function useHandleUserConfig() {
         return;
       }
 
-      console.log(user.user_config);
-
-      setFontFamily(user.user_config!.typing_field_font_family);
       setFontSize(user.user_config!.typing_field_font_size);
       setSmoothCaret(user.user_config!.typing_field_smooth_caret);
-      setIsLoadingUserConfig(false);
+      setFontFamily(user.user_config!.typing_field_font_family);
     })();
   }, []);
 }

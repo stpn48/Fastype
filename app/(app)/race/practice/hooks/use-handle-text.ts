@@ -38,7 +38,9 @@ export function useHandleText(raceCompleted: boolean) {
       return;
     }
 
-    const text = await generateNewText(currMode, textLength, setIsLoading);
+    setIsLoading(true);
+    const text = await generateNewText(currMode, textLength);
+    setIsLoading(false);
 
     if (!text) return;
 

@@ -51,9 +51,6 @@ type TypingFieldStore = {
     smoothCaret: boolean | null | ((prev: boolean | null) => boolean | null),
   ) => void;
 
-  isLoadingUserConfig: boolean;
-  setIsLoadingUserConfig: (isLoadingUserConfig: boolean) => void;
-
   resetTypingFieldStore: () => void;
 };
 
@@ -129,9 +126,6 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       smoothCaret: typeof smoothCaret === "function" ? smoothCaret(state.smoothCaret) : smoothCaret,
     })),
 
-  isLoadingUserConfig: true,
-  setIsLoadingUserConfig: (isLoadingUserConfig) => set({ isLoadingUserConfig }),
-
   resetTypingFieldStore: () =>
     set({
       currWordIndex: 0,
@@ -145,6 +139,5 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       totalMistakes: 0,
       startedTypingAt: null,
       isTyping: false,
-      isLoadingUserConfig: false,
     }),
 }));

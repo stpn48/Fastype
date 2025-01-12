@@ -10,21 +10,26 @@ import {
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { font_family } from "@prisma/client";
 
-const fontFamilies: font_family[] = ["geist_mono"];
+const fontFamilies = ["Geist Mono", "Geist Sans"];
 
-export function FontFamilyDropdown() {
+export function FontFamilySelect() {
   const { fontFamily, setFontFamily } = useTypingFieldStore();
 
   return (
     <Select
       onValueChange={(value) => {
-        setFontFamily(value as font_family);
+        if (value === "Geist Mono") {
+          setFontFamily("geist_mono");
+        }
+
+        if (value === "Geist Sans") {
+          setFontFamily("geist_sans");
+        }
       }}
-      defaultValue={fontFamily!}
       name="font-family"
     >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Font Family" />
+        <SelectValue placeholder={getFontFamilyName(fontFamily!)} />
       </SelectTrigger>
       <SelectContent>
         {fontFamilies.map((fontFamily) => (
@@ -35,4 +40,15 @@ export function FontFamilyDropdown() {
       </SelectContent>
     </Select>
   );
+}
+
+function getFontFamilyName(fontFamily: font_family) {
+  switch (fontFamily) {
+    case "geist_mono":
+      return "Geist Mono";
+    case "geist_sans":
+      return "Geist Sans";
+    default:
+      return fontFamily;
+  }
 }

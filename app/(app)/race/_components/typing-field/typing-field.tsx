@@ -2,12 +2,14 @@
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { cn } from "@/lib/utils";
+import { font_family } from "@prisma/client";
 import { memo, useEffect } from "react";
 import { useHandleUserProgress } from "../../[id]/hooks/use-handle-user-progress";
 import { Caret } from "./caret";
+import { getFontFamilyTwClass } from "./utils/get-font-family-tw-class";
 import { SettingsPopover } from "./settings-popover/settings-popover";
-import { useHandleKeydown } from "./use-handle-keydown";
-import { useHandleUserConfig } from "./use-handle-user-config";
+import { useHandleKeydown } from "./hooks/use-handle-keydown";
+import { useHandleUserConfig } from "./hooks/use-handle-user-config";
 import { Word } from "./word";
 
 type Props = {
@@ -29,7 +31,8 @@ export function TypingField({ text, userId, raceId }: Props) {
     isTyping,
     startedTypingAt,
     fontSize,
-    isLoadingUserConfig,
+    fontFamily,
+    smoothCaret,
   } = useTypingFieldStore();
 
   useHandleUserProgress(text, userId, raceId);
@@ -43,7 +46,7 @@ export function TypingField({ text, userId, raceId }: Props) {
     resetTypingFieldStore();
   }, [resetTypingFieldStore]);
 
-  if (isLoading || isLoadingUserConfig) {
+  if (isLoading || fontFamily === null || fontSize === null || smoothCaret === null) {
     return (
       <div className="flex h-full w-full flex-col gap-4 rounded-lg border border-border p-6">
         <div className="h-[18px] w-full animate-pulse rounded-sm bg-secondary" />
@@ -56,11 +59,15 @@ export function TypingField({ text, userId, raceId }: Props) {
   return (
     <div
       className={cn(
-        "relative flex w-full flex-wrap gap-2 rounded-lg border border-border p-6 font-geist-mono text-muted-foreground shadow-lg",
+        "relative flex w-full flex-wrap gap-2 rounded-lg border border-border p-6 text-muted-foreground shadow-lg",
         !canType && "cursor-not-allowed opacity-30",
         hasMistake && "border-red-500",
+        getFontFamilyTwClass(fontFamily as font_family),
       )}
-      style={{ fontSize: `${fontSize}px`, lineHeight: `${fontSize || 0 / 1.5}px` }}
+      style={{
+        fontSize: `${fontSize}px`,
+        lineHeight: `${fontSize || 0 / 1.5}px`,
+      }}
     >
       {isTyping && <Caret />}
 

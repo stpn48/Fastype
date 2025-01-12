@@ -45,6 +45,7 @@ enum theme {
 
 enum font_family {
   geist_mono
+  geist_sans
 }
 
 // basic data like name, email, avatar are in clerk, here is the stats for this user

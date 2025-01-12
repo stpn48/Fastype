@@ -3,49 +3,56 @@
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { FontFamilyDropdown } from "./font-family-dropdown";
-import { SettingsFormSkeleton } from "./settings-form-skeleton";
+import { useCallback } from "react";
+import { FontFamilySelect } from "./font-family-select";
+import { PopoverItem } from "./popover-item";
+
+const FONT_SIZE_CAP = 54;
 
 export function SettingsForm() {
-  const { fontSize, setFontSize, smoothCaret, setSmoothCaret, fontFamily } = useTypingFieldStore();
+  const { fontSize, setFontSize, smoothCaret, setSmoothCaret, fontFamily, setFontFamily } =
+    useTypingFieldStore();
 
   if (fontSize === null || smoothCaret === null || !fontFamily) {
-    return <SettingsFormSkeleton />;
+    return;
   }
+
+  const fontSizeInputOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (typeof e.target.value !== "string") {
+      return;
+    }
+
+    if (e.target.value === "") {
+      setFontSize(0);
+      return;
+    }
+
+    if (parseInt(e.target.value) > FONT_SIZE_CAP) {
+      setFontSize(FONT_SIZE_CAP);
+      return;
+    }
+
+    setFontSize(parseInt(e.target.value));
+  }, []);
 
   return (
     <form className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground" htmlFor="font-size-input">
-          Font Size
-        </label>
+      <PopoverItem label="Font Size" resetButton resetFn={() => setFontSize(16)}>
         <Input
-          onChange={(e) => {
-            if (e.target.value === "") {
-              setFontSize(0);
-              return;
-            }
-
-            setFontSize(parseInt(e.target.value));
-          }}
-          id="font-size-input"
+          value={fontSize}
+          onChange={fontSizeInputOnChange}
           placeholder="Font Size"
           type="number"
-          name="font-size"
           className="w-full"
-          defaultValue={fontSize}
         />
-      </div>
+      </PopoverItem>
+      <PopoverItem label="Font Family" resetButton resetFn={() => setFontFamily("geist_mono")}>
+        <FontFamilySelect />
+      </PopoverItem>
 
-      <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground">Font Family</label>
-        <FontFamilyDropdown />
-      </div>
-
-      <div className="w full mt-2 flex justify-between">
-        <label className="text-sm text-foreground">Smooth Caret</label>
-        <Switch name="smooth-caret" defaultChecked={smoothCaret} onCheckedChange={setSmoothCaret} />
-      </div>
+      <PopoverItem label="Smooth Caret" resetButton resetFn={() => setSmoothCaret(true)}>
+        <Switch name="smooth-caret" checked={smoothCaret} onCheckedChange={setSmoothCaret} />
+      </PopoverItem>
     </form>
   );
 }

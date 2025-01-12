@@ -28,5 +28,5 @@ export const useRaceStore = create<RaceStore>((set) => ({
   raceUsers: [],
   setRaceUsers: (users) => set({ raceUsers: users }),
 
-  resetRaceStore: () => set({ currPlace: 1, raceStartedAt: null, countdown: null, raceUsers: [] }),
+  resetRaceStore: () => set({ currPlace: 1, countdown: null, raceUsers: [] }),
 }));

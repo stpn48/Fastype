@@ -10,8 +10,8 @@ import {
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useEffect, useState } from "react";
-import { calculateAccuracy } from "../utils/calculate-accuracy";
-import { Statistic } from "./statistic";
+import { Statistic } from "../race/practice/_components/statistic";
+import { calculateAccuracy } from "../race/practice/utils/calculate-accuracy";
 
 type Props = {
   raceCompleted: boolean;

@@ -11,6 +11,9 @@ type RaceStore = {
   raceUsers: RaceUser[];
   setRaceUsers: (users: RaceUser[]) => void;
 
+  raceStartedAt: Date | null;
+  setRaceStartedAt: (startedAt: Date | null | ((prev: Date | null) => Date | null)) => void;
+
   resetRaceStore: () => void;
 };
 
@@ -27,6 +30,12 @@ export const useRaceStore = create<RaceStore>((set) => ({
 
   raceUsers: [],
   setRaceUsers: (users) => set({ raceUsers: users }),
+
+  raceStartedAt: null,
+  setRaceStartedAt: (startedAt) =>
+    set((state) => ({
+      raceStartedAt: typeof startedAt === "function" ? startedAt(state.raceStartedAt) : startedAt,
+    })),
 
   resetRaceStore: () => set({ currPlace: 1, countdown: null, raceUsers: [] }),
 }));

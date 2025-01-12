@@ -6,9 +6,11 @@ import { Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SettingsForm } from "./settings-form";
 
-type Props = {};
+type Props = {
+  isPracticeMode: boolean;
+};
 
-export function SettingsPopover({}: Props) {
+export function SettingsPopover({ isPracticeMode }: Props) {
   const { setCanType } = useTypingFieldStore();
 
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -17,14 +19,16 @@ export function SettingsPopover({}: Props) {
     if (popoverOpen) {
       setCanType(false);
     } else {
-      setCanType(true);
+      if (isPracticeMode) {
+        setCanType(true);
+      }
     }
   }, [popoverOpen]);
 
   return (
     <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-      <PopoverTrigger className="absolute bottom-4 right-4">
-        <Settings className="size-3 cursor-pointer text-muted-foreground opacity-100 hover:text-foreground" />
+      <PopoverTrigger>
+        <Settings className="size-3 cursor-pointer text-foreground opacity-100" />
       </PopoverTrigger>
       <PopoverContent>
         <SettingsForm />

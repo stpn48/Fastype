@@ -1,5 +1,6 @@
 "use client";
 
+import { ResultsDialog } from "@/app/(app)/_components/results-dialog";
 import { handleRaceFinish } from "@/app/actions/handle-race-finish";
 import { UserAvatarProfileLink } from "@/components/user-avatar-profile-link";
 import { useRaceStore } from "@/hooks/zustand/use-race-store";
@@ -15,7 +16,7 @@ type Props = {
 };
 
 export function UserTrack({ userId, raceUser, raceProgress }: Props) {
-  const { currPlace, setCurrPlace } = useRaceStore();
+  const { currPlace, setCurrPlace, setRaceCompleted, raceCompleted } = useRaceStore();
   const { setCanType, userWpm } = useTypingFieldStore();
 
   const [userPlace, setUserPlace] = useState<number | null>(null);
@@ -24,6 +25,7 @@ export function UserTrack({ userId, raceUser, raceProgress }: Props) {
     if (raceProgress === 100 && userPlace === null) {
       // do this only for the user that has finished the race, not for everyone. IMPORTANT
       if (raceUser.id === userId) {
+        setRaceCompleted(true);
         setCanType(false);
         (async () => {
           await handleRaceFinish(userWpm);
@@ -60,6 +62,10 @@ export function UserTrack({ userId, raceUser, raceProgress }: Props) {
           image_url={raceUser.image_url}
         />
       </div>
+
+      {raceCompleted && (
+        <ResultsDialog raceCompleted={raceCompleted} setRaceCompleted={setRaceCompleted} />
+      )}
     </div>
   );
 }

@@ -14,6 +14,9 @@ type RaceStore = {
   raceStartedAt: Date | null;
   setRaceStartedAt: (startedAt: Date | null | ((prev: Date | null) => Date | null)) => void;
 
+  raceCompleted: boolean;
+  setRaceCompleted: (completed: boolean | ((prev: boolean) => boolean)) => void;
+
   resetRaceStore: () => void;
 };
 
@@ -37,5 +40,11 @@ export const useRaceStore = create<RaceStore>((set) => ({
       raceStartedAt: typeof startedAt === "function" ? startedAt(state.raceStartedAt) : startedAt,
     })),
 
-  resetRaceStore: () => set({ currPlace: 1, countdown: null, raceUsers: [] }),
+  raceCompleted: false,
+  setRaceCompleted: (completed) =>
+    set((state) => ({
+      raceCompleted: typeof completed === "function" ? completed(state.raceCompleted) : completed,
+    })),
+
+  resetRaceStore: () => set({ currPlace: 1, countdown: null, raceUsers: [], raceCompleted: false }),
 }));

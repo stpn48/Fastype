@@ -37,7 +37,7 @@ export function SettingsForm() {
 
   return (
     <form className="flex flex-col gap-4">
-      <PopoverItem label="Font Size" resetButton resetFn={() => setFontSize(16)}>
+      <PopoverItem label="Font Size" resetButton resetFn={() => setFontSize(20)}>
         <Input
           value={fontSize}
           onChange={fontSizeInputOnChange}

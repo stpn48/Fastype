@@ -1,11 +1,12 @@
 "use client";
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
+import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 
 export function Caret() {
   const caretRef = useRef<HTMLDivElement | null>(null);
-  const { currWordIndex, currCharIndex } = useTypingFieldStore();
+  const { currWordIndex, currCharIndex, smoothCaret, fontSize } = useTypingFieldStore();
 
   useEffect(() => {
     const activeWord: HTMLSpanElement | null = document.querySelector(`.word-${currWordIndex}`);
@@ -39,5 +40,11 @@ export function Caret() {
     caretRef.current.style.top = `${currChar.offsetTop}px`;
   }, [currCharIndex, currWordIndex]);
 
-  return <div ref={caretRef} className="absolute h-[24px] w-[2px] bg-primary transition-all" />;
+  return (
+    <div
+      ref={caretRef}
+      className={cn("absolute w-[2px] bg-primary", smoothCaret && "transition-all")}
+      style={{ height: `${fontSize}px` }}
+    />
+  );
 }

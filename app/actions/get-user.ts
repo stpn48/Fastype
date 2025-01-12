@@ -3,7 +3,6 @@
 import { catchError } from "@/lib/catch-error";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
-import { UserDetails } from "@/types/types";
 
 export async function getUser() {
   const supabase = await createClient();

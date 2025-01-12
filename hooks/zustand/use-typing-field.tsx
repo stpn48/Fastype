@@ -1,3 +1,4 @@
+import { font_family } from "@prisma/client";
 import { create } from "zustand";
 
 type TypingFieldStore = {
@@ -36,6 +37,22 @@ type TypingFieldStore = {
 
   isTyping: boolean;
   setIsTyping: (isTyping: boolean) => void;
+
+  fontSize: number | null;
+  setFontSize: (fontSize: number | null | ((prev: number | null) => number | null)) => void;
+
+  fontFamily: font_family | null;
+  setFontFamily: (
+    fontFamily: font_family | null | ((prev: font_family | null) => font_family | null),
+  ) => void;
+
+  smoothCaret: boolean | null;
+  setSmoothCaret: (
+    smoothCaret: boolean | null | ((prev: boolean | null) => boolean | null),
+  ) => void;
+
+  isLoadingUserConfig: boolean;
+  setIsLoadingUserConfig: (isLoadingUserConfig: boolean) => void;
 
   resetTypingFieldStore: () => void;
 };
@@ -94,6 +111,27 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
   isTyping: false,
   setIsTyping: (isTyping) => set({ isTyping }),
 
+  fontSize: null,
+  setFontSize: (fontSize) =>
+    set((state) => ({
+      fontSize: typeof fontSize === "function" ? fontSize(state.fontSize) : fontSize,
+    })),
+
+  fontFamily: "geist_mono",
+  setFontFamily: (fontFamily) =>
+    set((state) => ({
+      fontFamily: typeof fontFamily === "function" ? fontFamily(state.fontFamily) : fontFamily,
+    })),
+
+  smoothCaret: false,
+  setSmoothCaret: (smoothCaret) =>
+    set((state) => ({
+      smoothCaret: typeof smoothCaret === "function" ? smoothCaret(state.smoothCaret) : smoothCaret,
+    })),
+
+  isLoadingUserConfig: true,
+  setIsLoadingUserConfig: (isLoadingUserConfig) => set({ isLoadingUserConfig }),
+
   resetTypingFieldStore: () =>
     set({
       currWordIndex: 0,
@@ -107,5 +145,6 @@ export const useTypingFieldStore = create<TypingFieldStore>((set) => ({
       totalMistakes: 0,
       startedTypingAt: null,
       isTyping: false,
+      isLoadingUserConfig: false,
     }),
 }));

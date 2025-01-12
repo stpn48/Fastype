@@ -7,18 +7,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import { font_family } from "@prisma/client";
-
-type Props = {
-  disabled?: boolean;
-  defaultValue?: font_family;
-};
 
 const fontFamilies: font_family[] = ["geist_mono"];
 
-export function FontFamilyDropdown({ disabled, defaultValue }: Props) {
+export function FontFamilyDropdown() {
+  const { fontFamily, setFontFamily } = useTypingFieldStore();
+
   return (
-    <Select defaultValue={defaultValue} name="font-family" disabled={disabled}>
+    <Select
+      onValueChange={(value) => {
+        setFontFamily(value as font_family);
+      }}
+      defaultValue={fontFamily!}
+      name="font-family"
+    >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Font Family" />
       </SelectTrigger>

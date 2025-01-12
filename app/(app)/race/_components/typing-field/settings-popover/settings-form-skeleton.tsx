@@ -1,6 +1,5 @@
 "use clients";
 
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 
 export function SettingsFormSkeleton() {
@@ -22,10 +21,6 @@ export function SettingsFormSkeleton() {
         <label className="text-sm text-foreground">Smooth Caret</label>
         <Switch disabled={true} />
       </div>
-
-      <Button disabled={true} className="mt-2">
-        Save
-      </Button>
     </div>
   );
 }

@@ -13,8 +13,6 @@ export function SettingsPopover({}: Props) {
 
   const [popoverOpen, setPopoverOpen] = useState(false);
 
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
   useEffect(() => {
     if (popoverOpen) {
       setCanType(false);
@@ -29,7 +27,7 @@ export function SettingsPopover({}: Props) {
         <Settings className="size-3 cursor-pointer text-muted-foreground opacity-100 hover:text-foreground" />
       </PopoverTrigger>
       <PopoverContent>
-        <SettingsForm closePopover={() => setPopoverOpen(false)} />
+        <SettingsForm />
       </PopoverContent>
     </Popover>
   );

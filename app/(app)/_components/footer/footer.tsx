@@ -9,13 +9,13 @@ export default function Footer() {
         </p>
         <p className="cursor-pointer text-muted-foreground hover:text-foreground">Privacy Policy</p>
         <p className="cursor-pointer text-muted-foreground hover:text-foreground">Contact</p>
-        <a
+        {/* <a
           href="https://github.com/stpn48/Fastype/blob/main/CONTRIBUTING.md"
           target="_blank"
           className="cursor-pointer text-muted-foreground hover:text-foreground"
         >
           Contribute
-        </a>
+        </a> */}
       </section>
 
       <section>

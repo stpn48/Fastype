@@ -36,7 +36,7 @@ export function TypingField({ text, userId, raceId }: Props) {
     smoothCaret,
   } = useTypingFieldStore();
 
-  const { raceStartedAt } = useRaceStore();
+  const { raceStartedAt, resetRaceStore } = useRaceStore();
 
   const isPracticeMode = !raceId || !userId;
 
@@ -49,7 +49,8 @@ export function TypingField({ text, userId, raceId }: Props) {
   // reset typing field store on mount to prevent leftover state
   useEffect(() => {
     resetTypingFieldStore();
-  }, [resetTypingFieldStore]);
+    resetRaceStore();
+  }, [resetTypingFieldStore, resetRaceStore]);
 
   if (isLoading || fontFamily === null || fontSize === null || smoothCaret === null) {
     return (

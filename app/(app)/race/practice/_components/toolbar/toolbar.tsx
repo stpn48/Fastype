@@ -3,13 +3,14 @@
 import { useToolbar } from "@/app/(app)/race/practice/hooks/use-toolbar";
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
 import clsx from "clsx";
-import { RegenerateTextButton } from "./regenerate-text-button";
 import { ModeOptions } from "./mode-options";
+import { RegenerateTextButton } from "./regenerate-text-button";
 import { TextLengthOptions } from "./text-length-options";
 import { ToggleOptions } from "./toggle-options";
 
 export function Toolbar({ generateText }: { generateText: () => void }) {
   const { currMode } = useToolbar();
+
   const { isTyping } = useTypingFieldStore();
 
   return (

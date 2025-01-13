@@ -52,7 +52,7 @@ export function TypingField({ text, userId, raceId }: Props) {
     resetRaceStore();
   }, [resetTypingFieldStore, resetRaceStore]);
 
-  if (isLoading || fontFamily === null || fontSize === null || smoothCaret === null) {
+  if (isLoading || fontFamily === null || fontSize === null || smoothCaret === null || !text) {
     return (
       <div className="flex h-full w-full flex-col gap-4 rounded-lg border border-border p-6">
         <div className="h-[18px] w-full animate-pulse rounded-sm bg-secondary" />

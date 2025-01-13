@@ -16,5 +16,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## TASKS
 
-[] - show stats after a public race ends
+[x] - show stats after a public race ends
 [] - rework homepage design

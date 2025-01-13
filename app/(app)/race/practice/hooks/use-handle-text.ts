@@ -1,7 +1,7 @@
 "use client";
 
 import { useTypingFieldStore } from "@/hooks/zustand/use-typing-field";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { generateJSWords } from "../utils/generate-js-words";
 import { generateNewText } from "../utils/generate-new-text";
 import { generateRandomWords } from "../utils/generate-random-words";
@@ -12,6 +12,7 @@ const MAXIMUM_RANDOM_WORDS_COUNT = 10000;
 export function useHandleText(raceCompleted: boolean) {
   const { setText, resetTypingFieldStore, setIsLoading, setCanType } = useTypingFieldStore();
   const { currMode, textLength, randomWordsCount, includeNumbers, includeSymbols } = useToolbar();
+  const [isMounted, setIsMounted] = useState(false);
 
   const generateText = useCallback(async () => {
     if (currMode === "random-words") {
@@ -49,13 +50,15 @@ export function useHandleText(raceCompleted: boolean) {
 
   // after closing the dialog, reset typing field store and generate new text
   useEffect(() => {
-    if (raceCompleted) return;
+    setIsMounted(true);
+
+    if (raceCompleted || !isMounted) return;
 
     resetTypingFieldStore();
     setCanType(true);
 
     generateText();
-  }, [raceCompleted, generateText]);
+  }, [raceCompleted, generateText, isMounted]);
 
   return { generateText };
 }

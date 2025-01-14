@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { ToolbarProvider } from "./hooks/use-toolbar";
 import PracticeRacePageCore from "./practice-page-core";
 
@@ -9,8 +10,10 @@ export const metadata: Metadata = {
 
 export default function PracticeRacePage() {
   return (
-    <ToolbarProvider>
-      <PracticeRacePageCore />
-    </ToolbarProvider>
+    <Suspense fallback={<div>Loading...</div>}>
+      <ToolbarProvider>
+        <PracticeRacePageCore />
+      </ToolbarProvider>
+    </Suspense>
   );
 }
